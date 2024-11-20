@@ -1,4 +1,4 @@
-const inventoryModel = require('../models/inventaryModel');
+const inventoryModel = require('../models/inventoryModel');
 
 
 async function createOneInventory(req, res){
@@ -30,8 +30,8 @@ async function createOneInventory(req, res){
 
 async function getallInvetory(req, res) {
     try {
-      const inventary = await inventaryModel.find();
-      res.status(200).json(inventary);
+      const inventory = await inventoryModel.find();
+      res.status(200).json(inventory);
     } catch (error) {
       res.status(500).json({ message: "Error al obtener la lista de negocios", error: error.message });
     }
@@ -40,7 +40,7 @@ async function getallInvetory(req, res) {
   async function getOneInvetory(req, res) {
     const idNegocio = req.params.id;
     try {
-      const negocio = await inventaryModel.findById(idNegocio);
+      const negocio = await inventoryModel.findById(idNegocio);
       if (!negocio) {
         return res.status(404).json({ message: "Negocio no encontrada " });
       }
@@ -55,7 +55,7 @@ async function getallInvetory(req, res) {
    console.log(IdNegocio);
   
     try {
-      const deleteteNegocio = await inventaryModel.findOneAndDelete(IdNegocio);
+      const deleteteNegocio = await inventoryModel.findOneAndDelete(IdNegocio);
   
       if (!deleteteNegocio) {
         return res.status(404).json({ message: "Negocio no encontrada o no autorizada para eliminar" });
