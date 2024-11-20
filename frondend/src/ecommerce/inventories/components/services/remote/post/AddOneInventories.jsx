@@ -1,8 +1,8 @@
 import axios from "axios";
-
+const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventory'}`;
 export const AddOneInventory = async (inventory) => {
     try {
-        const response = await axios.post("http://localhost:3000/api/v1/inventory/", inventory);
+        const response = await axios.post(apiUrl, inventory);
         return response;
     } catch (error) {
         console.error("Error en AddOneInventory:", error.response?.data || error.message);

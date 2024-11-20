@@ -5,16 +5,16 @@ async function createOneInventory(req, res){
     const nuevoNegocio = new inventoryModel({
         nombre: req.body.nombre,
         direccion: {
-            calle: req.body.calle || "",
-            numero: req.body.numero || "",
-            colonia: req.body.numero || "",
-            ciudad: req.body.numero || "",
-            estado: req.body.numero || "",
-            codigo_postal: req.body.codigo_postal || "",
+            calle: req.body.direccion.calle || "",
+            numero: req.body.direccion.numero || "",
+            colonia: req.body.direccion.colonia || "",
+            ciudad: req.body.direccion.ciudad || "",
+            estado: req.body.direccion.estado || "",
+            codigo_postal: req.body.direccion.codigo_postal || "",
         },
         contacto: {
-            telefono: req.body.telefono || "",
-            email: req.body.email || ""
+            telefono: req.body.contacto.telefono || "",
+            email: req.body.contacto.email || ""
         },
         almacenes: [],
         detail_row: {}

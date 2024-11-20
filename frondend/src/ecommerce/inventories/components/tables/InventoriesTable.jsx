@@ -9,38 +9,33 @@ import { getAllInventories } from "../services/remote/get/GetAllInventories";
 import AddInventoryModal from "../modals/AddInventoriesModal";
 
 const InventoriesColumns = [
+  
   {
     accessorKey: "_id",
     header: "ID",
     size: 150,
   },
   {
-    accessorKey: "IdInstitutoOK",
-    header: "ID Instituto",
+    accessorKey: "Nombre",
+    header: "Nombre",
     size: 150,
   },
   {
-    accessorKey: "IdProdServOK",
-    header: "ID Producto/Servicio",
+    accessorKey: "Direccion",
+    header: "Dirección",
     size: 150,
   },
   {
-    accessorKey: "IdPresentaOK",
-    header: "ID Presentación",
+    accessorKey: "Telefono",
+    header: "Telefono",
     size: 150,
   },
   {
-    accessorKey: "negocios",
-    header: "Negocios",
-    Cell: ({ row }) => row.original.negocios?.length > 0 ? "Sí" : "No",
-    size: 100,
+    accessorKey: "Email",
+    header: "Email",
+    size: 150,
   },
-  {
-    accessorKey: "series",
-    header: "Series",
-    Cell: ({ row }) => row.original.series?.length > 0 ? "Sí" : "No",
-    size: 100,
-  },
+ 
 ];
 
 const InventoriesTable = () => {
@@ -53,13 +48,15 @@ const InventoriesTable = () => {
       const allInventoriesData = await getAllInventories();
       const validatedData = allInventoriesData.map((item) => ({
         _id: item._id || "No disponible",
-        IdInstitutoOK: item.IdInstitutoOK || "No disponible",
-        IdProdServOK: item.IdProdServOK || "No disponible",
-        IdPresentaOK: item.IdPresentaOK || "No disponible",
-        negocios: item.negocios || [],
-        series: item.series || [],
-      }));
+        Nombre: item.nombre || "No disponible",
+        Telefono: item.contacto?.telefono || "No disponible",
+        Email: item.contacto?.email || "No disponible",
+        Direccion: item.direccion?.codigo_postal || "No disponible",
+      }
 
+    )
+    );
+      console.log(allInventoriesData[1])
       setInventoriesData(validatedData);
       setLoadingTable(false);
     } catch (error) {
@@ -110,6 +107,7 @@ const InventoriesTable = () => {
         showAddModal={addInventoryShowModal}
         setShowAddModal={setAddInventoryShowModal}
         fetchData={fetchData}
+        onClose={() => setAddInventoryShowModal(false)}
       />
     </Box>
   );
