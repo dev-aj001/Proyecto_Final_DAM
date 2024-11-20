@@ -58,7 +58,6 @@ const EstatusSchema = new mongoose.Schema({
   });
   
   const NegocioSchema = new mongoose.Schema({
-    id_negocio: { type: String, required: true },
     nombre: { type: String, required: true },
     direccion: {
       calle: { type: String, required: true },
