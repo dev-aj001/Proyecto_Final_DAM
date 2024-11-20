@@ -30,21 +30,28 @@ const DeleteInventoryModal = ({ showDeleteModal, setShowDeleteModal, fetchData }
     const [isSearchDisabled, setIsSearchDisabled] = useState(false); // Deshabilitar búsqueda tras encontrar un inventario
 
     // Función para buscar un inventario por ID
-    const handleSearchById = async () => {
-        setMensajeErrorAlert(null); // Limpiar mensajes de error previos
-        setMensajeExitoAlert(null); // Limpiar mensajes de éxito previos
-        setLoading(true); // Indicar que está cargando
-        try {
-            const data = await getInventoryById(inventoryId); // Obtener datos del inventario
+   // Función para buscar un inventario por ID
+const handleSearchById = async () => {
+    setMensajeErrorAlert(null); // Limpiar mensajes de error previos
+    setMensajeExitoAlert(null); // Limpiar mensajes de éxito previos
+    setLoading(true); // Indicar que está cargando
+    try {
+        const data = await getInventoryById(inventoryId); // Obtener datos del inventario
+        
+        if (!data) { // Si no se obtiene ningún inventario, mostrar mensaje de error
+            setMensajeErrorAlert("No se pudo encontrar el inventario con ese ID.");
+            setInventoryData(null); // Limpiar datos previos si no se encuentra
+        } else {
             setInventoryData(data); // Guardar datos obtenidos
             setIsSearchDisabled(true); // Deshabilitar campo de búsqueda
-        } catch (error) {
-            setInventoryData(null); // Limpiar datos si no se encuentra
-            setMensajeErrorAlert("No se pudo encontrar el inventario con ese ID."); // Mostrar mensaje de error
-        } finally {
-            setLoading(false); // Finalizar estado de carga
         }
-    };
+    } catch (error) {
+        setInventoryData(null); // Limpiar datos si no se encuentra
+        setMensajeErrorAlert("No se pudo encontrar el inventario con ese ID."); // Mostrar mensaje de error
+    } finally {
+        setLoading(false); // Finalizar estado de carga
+    }
+};
 
     // Función para eliminar un inventario
     const handleDeleteInventory = async () => {
