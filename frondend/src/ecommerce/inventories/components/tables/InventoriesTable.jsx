@@ -7,41 +7,27 @@ import InfoIcon from "@mui/icons-material/Info";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
 import AddInventoryModal from "../modals/AddInventoriesModal";
+import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
+import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
+import DetailsInventoryModal from "../modals/DetailsInventoryModal";
 
 const InventoriesColumns = [
-  
-  {
-    accessorKey: "_id",
-    header: "ID",
-    size: 150,
-  },
-  {
-    accessorKey: "Nombre",
-    header: "Nombre",
-    size: 150,
-  },
-  {
-    accessorKey: "Direccion",
-    header: "Dirección",
-    size: 150,
-  },
-  {
-    accessorKey: "Telefono",
-    header: "Telefono",
-    size: 150,
-  },
-  {
-    accessorKey: "Email",
-    header: "Email",
-    size: 150,
-  },
- 
+  { accessorKey: "_id", header: "ID", size: 150 },
+  { accessorKey: "Nombre", header: "Nombre", size: 150 },
+  { accessorKey: "Direccion", header: "Dirección", size: 150 },
+  { accessorKey: "Telefono", header: "Telefono", size: 150 },
+  { accessorKey: "Email", header: "Email", size: 150 },
 ];
 
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
   const [addInventoryShowModal, setAddInventoryShowModal] = useState(false);
+  const [updateInventoryShowModal, setUpdateInventoryShowModal] = useState(false);
+  const [deleteInventoryShowModal, setDeleteInventoryShowModal] = useState(false); // Estado para el modal de eliminación
+  const [selectedInventory, setSelectedInventory] = useState(null);
+  const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
+
 
   const fetchData = async () => {
     try {
@@ -52,11 +38,7 @@ const InventoriesTable = () => {
         Telefono: item.contacto?.telefono || "No disponible",
         Email: item.contacto?.email || "No disponible",
         Direccion: item.direccion?.codigo_postal || "No disponible",
-      }
-
-    )
-    );
-      console.log(allInventoriesData[1])
+      }));
       setInventoriesData(validatedData);
       setLoadingTable(false);
     } catch (error) {
@@ -83,21 +65,30 @@ const InventoriesTable = () => {
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Editar">
-              <IconButton>
+              <IconButton onClick={() => setUpdateInventoryShowModal(true)}>
                 <EditIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Eliminar">
-              <IconButton>
+              <IconButton onClick={() => setDeleteInventoryShowModal(true)}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Detalles">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  setDetailsInventoryShowModal(true);
+                }}
+              >
                 <InfoIcon />
               </IconButton>
             </Tooltip>
+
+
           </Stack>
         )}
       />
@@ -109,6 +100,29 @@ const InventoriesTable = () => {
         fetchData={fetchData}
         onClose={() => setAddInventoryShowModal(false)}
       />
+
+      {/* Modal para actualizar inventario */}
+      <UpdateInventoryModal
+        showUpdateModal={updateInventoryShowModal}
+        setShowUpdateModal={setUpdateInventoryShowModal}
+        fetchData={fetchData}
+      />
+
+      {/* Modal para eliminar inventario */}
+      <DeleteInventoryModal
+        showDeleteModal={deleteInventoryShowModal}
+        setShowDeleteModal={setDeleteInventoryShowModal}
+        fetchData={fetchData}
+        onClose={() => setDeleteInventoryShowModal(false)}
+      />
+
+      {/* Modal para ver detalles del inventario */}
+      <DetailsInventoryModal
+        showDetailsModal={detailsInventoryShowModal}
+        setShowDetailsModal={setDetailsInventoryShowModal}
+        inventories={inventoriesData}
+      />
+
     </Box>
   );
 };

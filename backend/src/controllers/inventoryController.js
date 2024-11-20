@@ -55,7 +55,8 @@ async function getallInvetory(req, res) {
    console.log(IdNegocio);
   
     try {
-      const deleteteNegocio = await inventoryModel.findOneAndDelete(IdNegocio);
+      const deleteteNegocio = await inventoryModel.findByIdAndDelete(IdNegocio);
+      console.log(deleteteNegocio);
   
       if (!deleteteNegocio) {
         return res.status(404).json({success: false, message: "Negocio no encontrada o no autorizada para eliminar" });
