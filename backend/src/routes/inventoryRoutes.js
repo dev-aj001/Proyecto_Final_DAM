@@ -1,11 +1,14 @@
 const express = require('express');
 
-const createOneInventory 
-    = require('../controllers/createOneInventory');
+const inventoryController = require('../controllers/inventoryController');
 
 
 const router = express.Router();
 
-router.post('/', createOneInventory);
+router.post('/', inventoryController.createOneInventory);
+router.get('/',inventoryController.getallInvetory);
+router.get('/negocio/:id', inventoryController.getOneInvetory);
+router.delete('/inventory/:id',inventoryController.deleteOneInvetory);
+router.put("/updateOneInventary/:id", inventoryController.updateOneInventary);
 
 module.exports = router;
