@@ -37,7 +37,7 @@ const InventoriesTable = () => {
         Nombre: item.nombre || "No disponible",
         Telefono: item.contacto?.telefono || "No disponible",
         Email: item.contacto?.email || "No disponible",
-        Direccion: item.direccion?.codigo_postal || "No disponible",
+        Direccion: "C.P.:" + item.direccion?.codigo_postal + ", Colonia: " + item.direccion?.colonia || "No disponible",
       }));
       setInventoriesData(validatedData);
       setLoadingTable(false);
