@@ -87,13 +87,27 @@ const InventoriesTable = () => {
                 <InfoIcon />
               </IconButton>
             </Tooltip>
-
-
           </Stack>
         )}
+        muiTableBodyCellProps={{
+          sx: {
+            color: "#C5A3FF", // Texto en tonalidades moradas para las celdas de datos
+          },
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            color: "#FFFFFF", // Texto blanco para los encabezados
+            fontWeight: "bold", // Resaltar los encabezados
+          },
+        }}
+        muiTableContainerProps={{
+          sx: {
+            backgroundColor: "#1E1B29", // Fondo oscuro para la tabla
+          },
+        }}
       />
 
-      {/* Modal para agregar inventario */}
+      {/* Modales */}
       <AddInventoryModal
         showAddModal={addInventoryShowModal}
         setShowAddModal={setAddInventoryShowModal}
@@ -101,14 +115,12 @@ const InventoriesTable = () => {
         onClose={() => setAddInventoryShowModal(false)}
       />
 
-      {/* Modal para actualizar inventario */}
       <UpdateInventoryModal
         showUpdateModal={updateInventoryShowModal}
         setShowUpdateModal={setUpdateInventoryShowModal}
         fetchData={fetchData}
       />
 
-      {/* Modal para eliminar inventario */}
       <DeleteInventoryModal
         showDeleteModal={deleteInventoryShowModal}
         setShowDeleteModal={setDeleteInventoryShowModal}
@@ -116,14 +128,13 @@ const InventoriesTable = () => {
         onClose={() => setDeleteInventoryShowModal(false)}
       />
 
-      {/* Modal para ver detalles del inventario */}
       <DetailsInventoryModal
         showDetailsModal={detailsInventoryShowModal}
         setShowDetailsModal={setDetailsInventoryShowModal}
         inventories={inventoriesData}
       />
-
     </Box>
+
   );
 };
 

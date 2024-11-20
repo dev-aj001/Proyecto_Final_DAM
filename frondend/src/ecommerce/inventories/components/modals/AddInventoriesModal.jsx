@@ -12,17 +12,14 @@ import * as Yup from "yup";
 import { AddOneInventory } from "../services/remote/post/AddOneInventories";
 
 const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetchData }) => {
-    // Estados para manejar mensajes de error, éxito y estado de carga
     const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
     const [Loading, setLoading] = useState(false);
 
-    // Configuración de formulario utilizando Formik
     const formik = useFormik({
-        // Valores iniciales del formulario
         initialValues: {
-            nombre: "", // Nombre del inventario
-            direccion: { // Dirección del inventario
+            nombre: "",
+            direccion: {
                 calle: "",
                 numero: "",
                 colonia: "",
@@ -30,17 +27,16 @@ const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fe
                 estado: "",
                 codigo_postal: "",
             },
-            contacto: { // Información de contacto
+            contacto: {
                 telefono: "",
                 email: "",
             },
-            Activo: false, // Estado del inventario (activo/inactivo)
-            Borrado: false, // Indicador de borrado
+            Activo: false,
+            Borrado: false,
         },
-        // Validación del formulario usando Yup
         validationSchema: Yup.object({
-            nombre: Yup.string().required("El nombre es obligatorio"), // Valida que el nombre esté presente
-            direccion: Yup.object().shape({ // Valida los campos dentro de dirección
+            nombre: Yup.string().required("El nombre es obligatorio"),
+            direccion: Yup.object().shape({
                 calle: Yup.string().required("La calle es obligatoria"),
                 numero: Yup.string().required("El número es obligatorio"),
                 colonia: Yup.string().required("La colonia es obligatoria"),
@@ -48,75 +44,66 @@ const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fe
                 estado: Yup.string().required("El estado es obligatorio"),
                 codigo_postal: Yup.string().required("El código postal es obligatorio"),
             }),
-            contacto: Yup.object().shape({ // Valida los campos dentro de contacto
+            contacto: Yup.object().shape({
                 telefono: Yup.string(),
-                email: Yup.string().email("Correo inválido"), // Valida el formato del correo electrónico
+                email: Yup.string().email("Correo inválido"),
             }),
         }),
-        // Lógica que se ejecuta cuando el formulario es enviado
         onSubmit: async (values) => {
-            setMensajeErrorAlert(null); // Limpia mensajes de error previos
-            setMensajeExitoAlert(null); // Limpia mensajes de éxito previos
-            setLoading(true); // Indica que la operación está en curso
+            setMensajeErrorAlert(null);
+            setMensajeExitoAlert(null);
+            setLoading(true);
             try {
-                // Envía los datos al servidor
                 const response = await AddOneInventory(values);
-                // Verifica si la respuesta del servidor fue exitosa
                 if (response && ![200, 201].includes(response.status)) {
                     throw new Error(response.data?.message || "Error al crear inventario");
                 }
 
-                // Mensaje de éxito
+                // Actualiza el mensaje de éxito
                 setMensajeExitoAlert("Inventario creado correctamente");
 
-                // Actualiza los datos del inventario
+                // Actualiza la tabla
                 fetchData();
 
-                // Reinicia los valores del formulario
+                // Reinicia el formulario
                 formik.resetForm();
 
-                // Limpia el mensaje de éxito después de 3 segundos
+                // Limpia mensajes después de 3 segundos (opcional)
                 setTimeout(() => {
                     setMensajeExitoAlert(null);
                 }, 3000);
 
             } catch (e) {
-                // Captura y muestra el error
                 console.error("Error:", e);
                 setMensajeErrorAlert(e.message || "Error al crear inventario");
             } finally {
-                setLoading(false); // Detiene el estado de carga
+                setLoading(false);
             }
         },
     });
 
-    // Propiedades comunes para todos los campos de texto
     const commonTextFieldProps = {
-        onChange: formik.handleChange, // Maneja los cambios de valor
-        onBlur: formik.handleBlur, // Maneja la salida del campo
-        fullWidth: true, // El campo ocupa todo el ancho
-        margin: "dense", // Espaciado denso entre campos
+        onChange: formik.handleChange,
+        onBlur: formik.handleBlur,
+        fullWidth: true,
+        margin: "dense",
     };
 
     return (
         <Dialog open={showAddModal} onClose={() => setShowAddModal(false)} fullWidth>
-            {/* Formulario del modal */}
             <form onSubmit={formik.handleSubmit}>
-                {/* Título del modal */}
                 <DialogTitle>
                     <Typography variant="h6" component="div">
                         <strong>Agregar Nuevo Inventario</strong>
                     </Typography>
                 </DialogTitle>
-                {/* Contenido del modal */}
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column' }} dividers>
-                    {/* Campo: Nombre */}
                     <TextField id="nombre" label="Nombre*" {...commonTextFieldProps}
-                        value={formik.values.nombre} // Valor del campo
-                        error={formik.touched.nombre && Boolean(formik.errors.nombre)} // Muestra error si existe
-                        helperText={formik.touched.nombre && formik.errors.nombre} // Texto de ayuda si hay error
+                        value={formik.values.nombre}
+                        error={formik.touched.nombre && Boolean(formik.errors.nombre)}
+                        helperText={formik.touched.nombre && formik.errors.nombre}
                     />
-                    {/* Grupo de campos: Dirección */}
+                    {/* Dirección */}
                     <Typography variant="subtitle1" gutterBottom><strong>Dirección</strong></Typography>
                     <TextField id="direccion.calle" label="Calle*" {...commonTextFieldProps}
                         value={formik.values.direccion.calle}
@@ -148,7 +135,6 @@ const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fe
                         error={formik.touched.direccion?.codigo_postal && Boolean(formik.errors.direccion?.codigo_postal)}
                         helperText={formik.touched.direccion?.codigo_postal && formik.errors.direccion?.codigo_postal}
                     />
-                    {/* Grupo de campos: Contacto */}
                     <Typography variant="subtitle1" gutterBottom><strong>Contacto</strong></Typography>
                     <TextField id="contacto.telefono" label="Teléfono" {...commonTextFieldProps}
                         value={formik.values.contacto.telefono}
@@ -160,22 +146,17 @@ const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fe
                         error={formik.touched.contacto?.email && Boolean(formik.errors.contacto?.email)}
                         helperText={formik.touched.contacto?.email && formik.errors.contacto?.email}
                     />
-                    {/* Campos de selección */}
                     <FormControlLabel control={<Checkbox id="Activo" checked={formik.values.Activo} onChange={formik.handleChange} />}
                         label="Activo" />
                     <FormControlLabel control={<Checkbox id="Borrado" checked={formik.values.Borrado} onChange={formik.handleChange} />}
                         label="Borrado" />
                 </DialogContent>
-                {/* Acciones del modal */}
                 <DialogActions>
-                    {/* Mensajes de error o éxito */}
                     <Box m="auto">
                         {mensajeErrorAlert && <Alert severity="error"><b>¡ERROR!</b> {mensajeErrorAlert}</Alert>}
                         {mensajeExitoAlert && <Alert severity="success"><b>¡ÉXITO!</b> {mensajeExitoAlert}</Alert>}
                     </Box>
-                    {/* Botón: Cerrar */}
                     <LoadingButton color="secondary" startIcon={<CloseIcon />} variant="outlined" onClick={() => setShowAddModal(false)}>CERRAR</LoadingButton>
-                    {/* Botón: Guardar */}
                     <LoadingButton color="primary" startIcon={<SaveIcon />} variant="contained" type="submit" loading={Loading}>GUARDAR</LoadingButton>
                 </DialogActions>
             </form>

@@ -6,7 +6,7 @@ export default function Footer() {
           <span >
             © 2024 Instituto Tecnologico de Tepic <br />
             <a>
-                Kennby G. 
+                Proyecto Final Equipo 4
             </a>
           </span>
         </center>
