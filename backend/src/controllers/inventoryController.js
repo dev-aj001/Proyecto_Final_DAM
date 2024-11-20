@@ -68,7 +68,7 @@ async function getallInvetory(req, res) {
   }
 
   async function updateInventory(req, res) {
-    const username = req.user.username; // Usuario autenticado
+    
     const inventoryId = req.params.id; // ID del instituto a actualizar
   
     // Validaciones
@@ -77,7 +77,6 @@ async function getallInvetory(req, res) {
     }
   
     const filter = {
-      username, // Verificar que el instituto pertenece al usuario
       _id: inventoryId, // Filtrar por ID del instituto
     };
   
