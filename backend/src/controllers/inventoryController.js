@@ -22,18 +22,18 @@ async function createOneInventory(req, res){
     try {
         console.log(nuevoNegocio);
         await nuevoNegocio.save();
-        res.status(201).json(nuevoNegocio);
+        res.status(201).json({ success: false, message: nuevoNegocio});
     } catch (error) {
-        res.status(500).json({ message: "Error al guardar el negocio", error: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 }
 
 async function getallInvetory(req, res) {
     try {
       const inventory = await inventoryModel.find();
-      res.status(200).json(inventory);
+      res.status(200).json({ success: true, data:inventory });
     } catch (error) {
-      res.status(500).json({ message: "Error al obtener la lista de negocios", error: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
   
@@ -42,12 +42,12 @@ async function getallInvetory(req, res) {
     try {
       const negocio = await inventoryModel.findById(idNegocio);
       if (!negocio) {
-        return res.status(404).json({ message: "Negocio no encontrada " });
+        return res.status(404).json({ success: false, message: "Negocio no encontrada" });
       }
   
-      res.status(200).json(negocio);
+      res.status(200).json({ success: true, data: negocio });
       } catch (error) {
-      res.status(500).json({ message: "Error al obtener a un negocios", error: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
   async function deleteOneInvetory(req, res) {
@@ -58,12 +58,12 @@ async function getallInvetory(req, res) {
       const deleteteNegocio = await inventoryModel.findOneAndDelete(IdNegocio);
   
       if (!deleteteNegocio) {
-        return res.status(404).json({ message: "Negocio no encontrada o no autorizada para eliminar" });
+        return res.status(404).json({success: false, message: "Negocio no encontrada o no autorizada para eliminar" });
       }
   
-      res.status(200).json({message:"Neogocio eliminado ",deleteteNegocio});
+      res.status(200).json({ success: true, data: deleteteNegocio });
     } catch (error) {
-      res.status(500).json({ message: "Error al eliminar un negocio", error: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -73,7 +73,7 @@ async function getallInvetory(req, res) {
   
     // Validaciones
     if (!req.body.nombre && !req.body.direccion && !req.body.contacto) {
-      return res.status(400).json({ message: "Debe proporcionar al menos un campo para actualizar: 'nombre', 'direccion' o 'contacto'." });
+      return res.status(400).json({ success: false, message: "Debe proporcionar al menos un campo para actualizar: 'nombre', 'direccion' o 'contacto'." });
     }
   
     const filter = {
@@ -99,12 +99,12 @@ async function getallInvetory(req, res) {
       const updatedInventory = await inventoryModel.findOneAndUpdate(filter, update, { new: true });
   
       if (!updatedInventory) {
-        return res.status(404).json({ message: "Instituto no encontrado o no autorizado para actualizar" });
+        return res.status(404).json({ success: false, message: "Instituto no encontrado o no autorizado para actualizar" });
       }
   
-      res.status(200).json(updatedInventory);
+      res.status(200).json({ success: true, data: updatedInventory });
     } catch (error) {
-      res.status(500).json({ message: "Error al actualizar el instituto", error: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
