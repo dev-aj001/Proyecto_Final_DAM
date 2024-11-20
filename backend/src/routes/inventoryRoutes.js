@@ -7,6 +7,6 @@ const inventoryController = require('../controllers/inventoryController');
 const router = express.Router();
 
 
-router.delete('/inventory/:IdNegocio',inventoryController.deleteOneInvetory);
+router.delete('/inventory/:id',inventoryController.deleteOneInvetory);
 
 module.exports = router;
