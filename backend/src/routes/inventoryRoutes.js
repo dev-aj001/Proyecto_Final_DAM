@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.post('/', inventoryController.createOneInventory);
 router.get('/',inventoryController.getallInvetory);
-router.get('/negocio/:id', inventoryController.getOneInvetory);
-router.delete('/inventory/:id',inventoryController.deleteOneInvetory);
-router.put("/updateOneInventary/:id", inventoryController.updateInventory);
+router.get('/:id', inventoryController.getOneInvetory);
+router.delete('/:id',inventoryController.deleteOneInvetory);
+router.put("/:id", inventoryController.updateInventory);
 
 module.exports = router;
