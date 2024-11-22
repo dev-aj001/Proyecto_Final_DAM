@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { MaterialReactTable } from "material-react-table";
-import { Box, Stack, Tooltip, IconButton } from "@mui/material";
+import { getIsRowSelected, MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import { Box, Stack, Tooltip, IconButton, tableBodyClasses } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
@@ -10,6 +10,7 @@ import AddInventoryModal from "../modals/AddInventoriesModal";
 import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
+import { object } from "yup";
 
 const InventoriesColumns = [
   { accessorKey: "_id", header: "ID", size: 150 },
@@ -19,7 +20,7 @@ const InventoriesColumns = [
   { accessorKey: "Email", header: "Email", size: 150 },
 ];
 
-const InventoriesTable = () => {
+const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
   const [addInventoryShowModal, setAddInventoryShowModal] = useState(false);
@@ -27,6 +28,7 @@ const InventoriesTable = () => {
   const [deleteInventoryShowModal, setDeleteInventoryShowModal] = useState(false); // Estado para el modal de eliminación
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
+  const [rowSelection, setRowSelection] = useState({});
 
 
   const fetchData = async () => {
@@ -56,10 +58,29 @@ const InventoriesTable = () => {
       <MaterialReactTable
         columns={InventoriesColumns}
         data={inventoriesData}
-        state={{ isLoading: loadingTable }}
+        state={{
+          isLoading: loadingTable,
+          rowSelection,
+        }}
+        onRowSelectionChange={setRowSelection}
         initialState={{ density: "compact", showGlobalFilter: true }}
+        enableRowSelection={true}
+
         renderTopToolbarCustomActions={() => (
           <Stack direction="row" sx={{ m: 1 }}>
+
+            <Tooltip title="Agregar">
+              <IconButton onClick={() => {
+
+                const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+                console.log("Datos seleccionados:", selectedData); // Mostrar datos seleccionados en consola
+
+              }}>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+
+
             <Tooltip title="Agregar">
               <IconButton onClick={() => setAddInventoryShowModal(true)}>
                 <AddCircleIcon />
@@ -67,9 +88,22 @@ const InventoriesTable = () => {
             </Tooltip>
 
             <Tooltip title="Editar">
-              <IconButton onClick={() => setUpdateInventoryShowModal(true)}>
-                <EditIcon />
-              </IconButton>
+            <IconButton
+        onClick={() => {
+            const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+
+            if (selectedData.length !== 1) {
+                alert("Por favor, seleccione una sola fila para editar.");
+                return;
+            }
+
+            // Pasa solo el ID del inventario seleccionado al modal de actualización
+            setUpdateInventoryShowModal(true);
+            setSelectedInventory(selectedData[0]);  // Guardamos el inventario seleccionado
+        }}
+    >
+        <EditIcon />
+    </IconButton>
             </Tooltip>
 
             <Tooltip title="Eliminar">
@@ -91,7 +125,7 @@ const InventoriesTable = () => {
         )}
         muiTableBodyCellProps={{
           sx: {
-            color: "#C5A3FF", // Texto en tonalidades moradas para las celdas de datos
+            color: "#FFFFFF", // Texto en tonalidades moradas para las celdas de datos
           },
         }}
         muiTableHeadCellProps={{
@@ -118,6 +152,7 @@ const InventoriesTable = () => {
       <UpdateInventoryModal
         showUpdateModal={updateInventoryShowModal}
         setShowUpdateModal={setUpdateInventoryShowModal}
+        selectedInventory={selectedInventory} // Pasa el inventario seleccionado
         fetchData={fetchData}
       />
 

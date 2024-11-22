@@ -153,7 +153,9 @@ const handleSearchById = async () => {
                 )}
                 {/* Botón para recargar formulario */}
                 <LoadingButton
-                    onClick={handleReloadForm}
+                    onClick={() => {
+                        handleReloadForm()}}
+                
                     variant="outlined"
                     color="secondary"
                     startIcon={<RefreshIcon />}
