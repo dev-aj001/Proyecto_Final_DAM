@@ -10,7 +10,11 @@ import AddInventoryModal from "../modals/AddInventoriesModal";
 import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
-import { object } from "yup";
+import {Tabs, Tab} from "@mui/material";
+
+
+
+
 
 const InventoriesColumns = [
   { accessorKey: "_id", header: "ID", size: 150 },
@@ -20,7 +24,7 @@ const InventoriesColumns = [
   { accessorKey: "Email", header: "Email", size: 150 },
 ];
 
-const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
+const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
   const [addInventoryShowModal, setAddInventoryShowModal] = useState(false);
@@ -29,7 +33,12 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
 
+
+
+
+ 
 
   const fetchData = async () => {
     try {
@@ -54,7 +63,24 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
   }, []);
 
   return (
+    
     <Box>
+       <Tabs
+    value={selectedTab}
+    onChange={(e, newValue) => setSelectedTab(newValue)}
+    sx={{
+      marginBottom: 2,
+      "& .MuiTabs-indicator": { backgroundColor: "#1976d2" }, // Color indicador
+      "& .MuiTab-root": { color: "#FFFFFF", fontWeight: "bold" }, // Texto blanco
+    }}
+  >
+    <Tab label="Inventarios" />
+    <Tab label="Nueva Tabla" />s
+  </Tabs>
+      
+
+       {/* Contenido según la pestaña seleccionada */}
+       {selectedTab === 0 && (
       <MaterialReactTable
         columns={InventoriesColumns}
         data={inventoriesData}
@@ -107,17 +133,29 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
             </Tooltip>
 
             <Tooltip title="Eliminar">
-              <IconButton onClick={() => setDeleteInventoryShowModal(true)}>
+              <IconButton onClick={() => {
+            const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+
+           
+
+            // Pasa solo el ID del inventario seleccionado al modal de actualización
+            setDeleteInventoryShowModal(true);
+            setSelectedInventory(selectedData);  // Guardamos el inventario seleccionado
+        }}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
 
             <Tooltip title="Detalles">
-              <IconButton
-                onClick={() => {
-                  setDetailsInventoryShowModal(true);
-                }}
-              >
+            <IconButton onClick={() => {
+            const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+
+           
+
+            // Pasa solo el ID del inventario seleccionado al modal de actualización
+            setDetailsInventoryShowModal(true);
+            setSelectedInventory(selectedData);  // Guardamos el inventario seleccionado
+        }}>
                 <InfoIcon />
               </IconButton>
             </Tooltip>
@@ -140,7 +178,81 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
           },
         }}
       />
+      )}
+       
+       {selectedTab === 1 && (
+        <MaterialReactTable
+        columns={InventoriesColumns}
+        data={inventoriesData}
+        state={{
+          isLoading: loadingTable,
+          rowSelection,
+        }}
+        onRowSelectionChange={setRowSelection}
+        initialState={{ density: "compact", showGlobalFilter: true }}
+        enableRowSelection={true}
 
+        renderTopToolbarCustomActions={() => (
+          <Stack direction="row" sx={{ m: 1 }}>
+
+            
+
+            <Tooltip title="Agregar">
+              <IconButton onClick={() => {}}>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+
+
+            <Tooltip title="Agregar">
+              <IconButton onClick={() => {}}>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Editar">
+            <IconButton
+        onClick={() => {}}
+    >
+        <EditIcon />
+    </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Eliminar">
+              <IconButton onClick={() => {  }}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Detalles">
+            <IconButton onClick={() => {}}>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
+            <h4 style={{ color: "white" }}>tabla 2</h4>
+          </Stack>
+        )}
+        muiTableBodyCellProps={{
+          sx: {
+            color: "#FFFFFF", // Texto en tonalidades moradas para las celdas de datos
+          },
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            color: "#FFFFFF", // Texto blanco para los encabezados
+            fontWeight: "bold", // Resaltar los encabezados
+          },
+        }}
+        muiTableContainerProps={{
+          sx: {
+            backgroundColor: "#1E1B29", // Fondo oscuro para la tabla
+          },
+        }}
+      />
+      )}
+
+
+     
       {/* Modales */}
       <AddInventoryModal
         showAddModal={addInventoryShowModal}
@@ -154,12 +266,14 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
         setShowUpdateModal={setUpdateInventoryShowModal}
         selectedInventory={selectedInventory} // Pasa el inventario seleccionado
         fetchData={fetchData}
+        onClose={() => setUpdateInventoryShowModal(false)}
       />
 
       <DeleteInventoryModal
         showDeleteModal={deleteInventoryShowModal}
         setShowDeleteModal={setDeleteInventoryShowModal}
         fetchData={fetchData}
+        selectInventory={selectedInventory}
         onClose={() => setDeleteInventoryShowModal(false)}
       />
 
@@ -167,6 +281,8 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
         showDetailsModal={detailsInventoryShowModal}
         setShowDetailsModal={setDetailsInventoryShowModal}
         inventories={inventoriesData}
+        selectedInventory={selectedInventory} // Pasa el inventario seleccionado
+        onClose={() => setDetailsInventoryShowModal(false)}
       />
     </Box>
 
@@ -174,3 +290,6 @@ const InventoriesTable = ({ dataInventories, onSelectionExport }) => {
 };
 
 export default InventoriesTable;
+
+
+
