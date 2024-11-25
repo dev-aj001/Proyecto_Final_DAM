@@ -1,138 +1,87 @@
 import React, { useState, useEffect } from "react";
 import {
   Dialog, DialogContent, DialogTitle, Typography, TextField,
-  DialogActions, Alert, Box, FormControlLabel, Checkbox, Button
+  DialogActions, Alert, Button
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 // Services
-import { UpdateOneInventory } from "../services/remote/put/UpdateOneInventories";
-import { getInventoryById } from "../services/remote/get/GetInventoriesById"; // Asegúrate de tener esta función en el servicio
+import { UpdateOneAlmacen } from "../services/remote/put/UpdateOneAlmacenes";
+import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
 
-const UpdateInventoryModal = ({ showUpdateModal, setShowUpdateModal, selectedInventory, fetchData }) => {
+const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlmacenes, fetchData }) => {
   const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
   const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
   const [Loading, setLoading] = useState(false);
-  const [inventoryData, setInventoryData] = useState(null);
+  const [almacenesData, setAlmacenesData] = useState(null);
 
- useEffect(() => {
-  if (selectedInventory?._id) {
-    const fetchData = async () => {
-      try {
-        const response = await getInventoryById(selectedInventory._id);
-        console.log('Datos del inventario:', response); // Verifica la respuesta
-        setInventoryData(response.data); // Actualiza el estado
-      } catch (error) {
-        console.error('Error al obtener los datos del inventario:', error);
-      }
-    };
-    handleSearchById();
-    fetchData();
-  }
-}, [selectedInventory?._id]);
-
-
-
-const handleSearchById = async () => {
-    setMensajeErrorAlert(null);
-    setMensajeExitoAlert(null);
-    setLoading(true);
-    try {
-        const data = await getInventoryById(selectedInventory?._id);
-        formik.setValues({
-            nombre: data.nombre || "",
-            direccion: {
-                calle: data.direccion?.calle || "",
-                numero: data.direccion?.numero || "",
-                colonia: data.direccion?.colonia || "",
-                ciudad: data.direccion?.ciudad || "",
-                estado: data.direccion?.estado || "",
-                codigo_postal: data.direccion?.codigo_postal || "",
-            },
-            contacto: {
-                telefono: data.contacto?.telefono || "",
-                email: data.contacto?.email || "",
-            },
-            Activo: data.Activo || false,
-            Borrado: data.Borrado || false,
-        });
-        setIsSearchDisabled(true); // Deshabilitar la búsqueda después de buscar
-    } catch (error) {
-    } finally {
-        setLoading(false);
+  // Carga los datos del almacén cuando el modal se abre
+  useEffect(() => {
+    if (selectedAlmacenes?._id) {
+      const fetchData = async () => {
+        try {
+          const response = await getAlmacenesById(selectedAlmacenes?.idNeg, selectedAlmacenes?._id);
+          setAlmacenesData(response); // Actualiza el estado con los datos del almacén
+        } catch (error) {
+          console.error("Error al obtener los datos del almacén:", error);
+        }
+      };
+      fetchData();
     }
-};
+  }, [selectedAlmacenes?._id, selectedAlmacenes?.idNeg]);
 
-
-  // Actualiza los valores del formulario cuando los datos del inventario cambian
+  // Configuración de Formik
   const formik = useFormik({
-    enableReinitialize: true, // Esto permite reiniciar el formulario con los nuevos valores
+    enableReinitialize: true, // Permite actualizar los valores iniciales
     initialValues: {
-        nombre: "",
-        direccion: {
-            calle: "",
-            numero: "",
-            colonia: "",
-            ciudad: "",
-            estado: "",
-            codigo_postal: "",
-        },
-        contacto: {
-            telefono: "",
-            email: "",
-        },
-        Activo: false,
-        Borrado: false,
+      id_almacen: almacenesData?.id_almacen || "",
+      cantidadActual: almacenesData?.cantidadActual || "",
+      cantidadDisponible: almacenesData?.cantidadDisponible || "",
+      cantidadApartada: almacenesData?.cantidadApartada || "",
+      cantidadMerma: almacenesData?.cantidadMerma || "",
+      stockMaximo: almacenesData?.stockMaximo || "",
+      stockMinimo: almacenesData?.stockMinimo || "",
     },
     validationSchema: Yup.object({
-      nombre: Yup.string().required("El nombre es obligatorio"),
-      direccion: Yup.object().shape({
-        calle: Yup.string().required("La calle es obligatoria"),
-        numero: Yup.string().required("El número es obligatorio"),
-        colonia: Yup.string().required("La colonia es obligatoria"),
-        ciudad: Yup.string().required("La ciudad es obligatoria"),
-        estado: Yup.string().required("El estado es obligatorio"),
-        codigo_postal: Yup.string().required("El código postal es obligatorio"),
-      }),
-      contacto: Yup.object().shape({
-        telefono: Yup.string(),
-        email: Yup.string().email("Correo inválido"),
-      }),
+      id_almacen: Yup.string().required("El ID del almacén es requerido"),
+      cantidadActual: Yup.number().required("La cantidad actual es requerida"),
+      cantidadDisponible: Yup.number().required("La cantidad disponible es requerida"),
+      cantidadApartada: Yup.number().required("La cantidad apartada es requerida"),
+      cantidadMerma: Yup.number().required("La cantidad de merma es requerida"),
+      stockMaximo: Yup.number().required("El stock máximo es requerido"),
+      stockMinimo: Yup.number().required("El stock mínimo es requerido"),
     }),
     onSubmit: async (values) => {
       setMensajeErrorAlert(null);
       setMensajeExitoAlert(null);
       setLoading(true);
       try {
-        const response = await UpdateOneInventory(selectedInventory._id, values); // Usamos el _id desde selectedInventory
-        if (response && ![200, 201].includes(response.status)) {
-          throw new Error(response.data?.message || "Error al actualizar inventario");
+
+        console.log("Valores del formulario:", values);
+        const response = await UpdateOneAlmacen(selectedAlmacenes.idNeg, selectedAlmacenes._id, values);
+        if (!response || ![200, 201].includes(response.status)) {
+          throw new Error(response.data?.message || "Error al actualizar almacén");
         }
+        setMensajeExitoAlert("Almacén actualizado con éxito");
+        fetchData(); // Refresca la tabla
+    
+        setTimeout(() => setMensajeExitoAlert(null), 3000);
 
-        setMensajeExitoAlert("Inventario actualizado correctamente");
-        fetchData(); // Actualiza la tabla después de la actualización
-        formik.resetForm(); // Reinicia el formulario
-
-        setTimeout(() => {
-          setMensajeExitoAlert(null);
-        }, 3000);
-
-        // Cierra el modal después de guardar
-        setShowUpdateModal(false);
-
-      } catch (e) {
-        setMensajeErrorAlert(e.message || "Error al actualizar inventario");
+       
+      } catch (error) {
+        setMensajeErrorAlert(error.message || "Error al actualizar almacén");
       } finally {
         setLoading(false);
       }
-    },
+    }
   });
 
+  // Cierra el modal y reinicia el formulario
   const handleClose = () => {
-    formik.resetForm(); // Reinicia los valores del formulario
-    setShowUpdateModal(false); // Cierra el modal
+    formik.resetForm();
+    setShowUpdateModal(false);
   };
 
   return (
@@ -140,145 +89,99 @@ const handleSearchById = async () => {
       <form onSubmit={formik.handleSubmit}>
         <DialogTitle>
           <Typography variant="h6" component="div">
-            <strong>Actualizar Inventario</strong>
+            <strong>Actualizar Almacén</strong>
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ marginTop: 1 }}>
-            ID: <strong>{selectedInventory?._id}</strong> {/* Aquí muestra el ID */}
+            ID Inventario: <strong>{selectedAlmacenes?._id}</strong>
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column' }} dividers>
-          {/* Mensaje de éxito o error */}
-          {mensajeErrorAlert && (
-            <Alert severity="error">{mensajeErrorAlert}</Alert>
-          )}
-          {mensajeExitoAlert && (
-            <Alert severity="success">{mensajeExitoAlert}</Alert>
-          )}
+          {/* Mensajes de éxito o error */}
+          {mensajeErrorAlert && <Alert severity="error">{mensajeErrorAlert}</Alert>}
+          {mensajeExitoAlert && <Alert severity="success">{mensajeExitoAlert}</Alert>}
 
-          {/* Nombre */}
+          {/* Campos del formulario */}
           <TextField
-            label="Nombre"
+            label="ID del Almacén"
             fullWidth
-            name="nombre"
-            value={formik.values.nombre}
+            name="id_almacen"
+            value={formik.values.id_almacen}
             onChange={formik.handleChange}
-            error={formik.touched.nombre && Boolean(formik.errors.nombre)}
-            helperText={formik.touched.nombre && formik.errors.nombre}
-            sx={{ marginBottom: 2 }}
-          />
-
-          {/* Dirección */}
-          <TextField
-            label="Calle"
-            fullWidth
-            name="direccion.calle"
-            value={formik.values.direccion.calle}
-            onChange={formik.handleChange}
-            error={formik.touched.direccion?.calle && Boolean(formik.errors.direccion?.calle)}
-            helperText={formik.touched.direccion?.calle && formik.errors.direccion?.calle}
+            error={formik.touched.id_almacen && Boolean(formik.errors.id_almacen)}
+            helperText={formik.touched.id_almacen && formik.errors.id_almacen}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Número"
+            label="Cantidad Actual"
             fullWidth
-            name="direccion.numero"
-            value={formik.values.direccion.numero}
+            name="cantidadActual"
+            type="number"
+            value={formik.values.cantidadActual}
             onChange={formik.handleChange}
-            error={formik.touched.direccion?.numero && Boolean(formik.errors.direccion?.numero)}
-            helperText={formik.touched.direccion?.numero && formik.errors.direccion?.numero}
+            error={formik.touched.cantidadActual && Boolean(formik.errors.cantidadActual)}
+            helperText={formik.touched.cantidadActual && formik.errors.cantidadActual}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Colonia"
+            label="Cantidad Disponible"
             fullWidth
-            name="direccion.colonia"
-            value={formik.values.direccion.colonia}
+            name="cantidadDisponible"
+            type="number"
+            value={formik.values.cantidadDisponible}
             onChange={formik.handleChange}
-            error={formik.touched.direccion?.colonia && Boolean(formik.errors.direccion?.colonia)}
-            helperText={formik.touched.direccion?.colonia && formik.errors.direccion?.colonia}
+            error={formik.touched.cantidadDisponible && Boolean(formik.errors.cantidadDisponible)}
+            helperText={formik.touched.cantidadDisponible && formik.errors.cantidadDisponible}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Ciudad"
+            label="Cantidad Apartada"
             fullWidth
-            name="direccion.ciudad"
-            value={formik.values.direccion.ciudad}
+            name="cantidadApartada"
+            type="number"
+            value={formik.values.cantidadApartada}
             onChange={formik.handleChange}
-            error={formik.touched.direccion?.ciudad && Boolean(formik.errors.direccion?.ciudad)}
-            helperText={formik.touched.direccion?.ciudad && formik.errors.direccion?.ciudad}
+            error={formik.touched.cantidadApartada && Boolean(formik.errors.cantidadApartada)}
+            helperText={formik.touched.cantidadApartada && formik.errors.cantidadApartada}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Estado"
+            label="Cantidad Merma"
             fullWidth
-            name="direccion.estado"
-            value={formik.values.direccion.estado}
+            name="cantidadMerma"
+            type="number"
+            value={formik.values.cantidadMerma}
             onChange={formik.handleChange}
-            error={formik.touched.direccion?.estado && Boolean(formik.errors.direccion?.estado)}
-            helperText={formik.touched.direccion?.estado && formik.errors.direccion?.estado}
+            error={formik.touched.cantidadMerma && Boolean(formik.errors.cantidadMerma)}
+            helperText={formik.touched.cantidadMerma && formik.errors.cantidadMerma}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Código Postal"
+            label="Stock Máximo"
             fullWidth
-            name="direccion.codigo_postal"
-            value={formik.values.direccion.codigo_postal}
+            name="stockMaximo"
+            type="number"
+            value={formik.values.stockMaximo}
             onChange={formik.handleChange}
-            error={formik.touched.direccion?.codigo_postal && Boolean(formik.errors.direccion?.codigo_postal)}
-            helperText={formik.touched.direccion?.codigo_postal && formik.errors.direccion?.codigo_postal}
-            sx={{ marginBottom: 2 }}
-          />
-
-          {/* Contacto */}
-          <TextField
-            label="Teléfono"
-            fullWidth
-            name="contacto.telefono"
-            value={formik.values.contacto.telefono}
-            onChange={formik.handleChange}
-            error={formik.touched.contacto?.telefono && Boolean(formik.errors.contacto?.telefono)}
-            helperText={formik.touched.contacto?.telefono && formik.errors.contacto?.telefono}
+            error={formik.touched.stockMaximo && Boolean(formik.errors.stockMaximo)}
+            helperText={formik.touched.stockMaximo && formik.errors.stockMaximo}
             sx={{ marginBottom: 2 }}
           />
           <TextField
-            label="Correo electrónico"
+            label="Stock Mínimo"
             fullWidth
-            name="contacto.email"
-            value={formik.values.contacto.email}
+            name="stockMinimo"
+            type="number"
+            value={formik.values.stockMinimo}
             onChange={formik.handleChange}
-            error={formik.touched.contacto?.email && Boolean(formik.errors.contacto?.email)}
-            helperText={formik.touched.contacto?.email && formik.errors.contacto?.email}
+            error={formik.touched.stockMinimo && Boolean(formik.errors.stockMinimo)}
+            helperText={formik.touched.stockMinimo && formik.errors.stockMinimo}
             sx={{ marginBottom: 2 }}
           />
-
-          {/* Activo / Borrado */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="Activo"
-                  checked={formik.values.Activo}
-                  onChange={formik.handleChange}
-                />
-              }
-              label="Activo"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="Borrado"
-                  checked={formik.values.Borrado}
-                  onChange={formik.handleChange}
-                />
-              }
-              label="Borrado"
-            />
-          </Box>
         </DialogContent>
-
-        {/* Acciones */}
         <DialogActions>
-          <Button color="secondary" onClick={handleClose}>Cancelar</Button>
+          <Button color="secondary" onClick={handleClose}>Cerrar</Button>
+
+
           <LoadingButton
             loading={Loading}
             loadingPosition="start"
@@ -295,4 +198,4 @@ const handleSearchById = async () => {
   );
 };
 
-export default UpdateInventoryModal;
+export default UpdateAlmacenesModal;

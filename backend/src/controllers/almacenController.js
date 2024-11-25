@@ -35,53 +35,8 @@ async function createOne(req, res) {
   }
 }
 
-async function updateOne(req, res) {
-  try {
-    const id = req.params.id;
-    const idAlmacen = req.params.idAlmacen;
-    const { error, value } = Validator.AlmacenUpdateSchemaJoi.validate(
-      req.body,
-      {
-        abortEarly: false,
-      }
-    );
 
-    if (error) {
-      throw new Error(
-        `Validacion fallida: ${error.details
-          .map((details) => details.message)
-          .join(", ")}`
-      );
-    }
 
-     value._id = idAlmacen;
-
-    console.log(id, idAlmacen);
-
-    const almacen = await inventoryModel.findOneAndUpdate(
-      { _id: id, "almacenes._id": idAlmacen }, // Encuentra el documento y el elemento específico
-      {
-        $set: {
-          "almacenes.$": value, // Actualiza solo el elemento coincidente
-        },
-      }
-    );
-
-    console.log(almacen);
-
-    return res.status(200).json({ success: true, message: almacen });
-  } catch (error) {
-    if (error.name === "CastError") {
-      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
-      return res
-        .status(404)
-        .json({ success: false, message: "Inventario no encontrado" });
-    }
-    // Cualquier otro error se maneja normalmente
-    console.log(error);
-    return res.status(400).json({ success: false, message: error.message });
-  }
-}
 
 async function readOne(req, res) {
 try {
@@ -126,7 +81,8 @@ async function readAll(req, res) {
     // Extraemos únicamente los IDs en formato de objeto
     const almacenes = inventory.flatMap((negocio) => 
       negocio.almacenes.map((almacen) => ({
-         nombre: negocio.nombre,
+        id: negocio._id,
+       nombre: negocio.nombre,
         almacen: almacen}))
     );
 
@@ -154,6 +110,57 @@ async function deleteOne(req, res) {
         .json({ success: false, message: "Inventario no encontrado" });
     }
 }}
+
+
+
+
+async function updateOne(req, res) {
+  try {
+    const id = req.params.id;
+    const idAlmacen = req.params.id_almacen;
+    const { error, value } = Validator.AlmacenUpdateSchemaJoi.validate(
+      req.body,
+      {
+        abortEarly: false,
+      }
+    );
+
+    if (error) {
+      throw new Error(
+        `Validacion fallida: ${error.details
+          .map((details) => details.message)
+          .join(", ")}`
+      );
+    }
+
+     value._id = idAlmacen;
+
+    console.log("ID del inventario:", id, idAlmacen);
+
+    const almacen = await inventoryModel.findOneAndUpdate(
+      { _id: id, "almacenes._id": idAlmacen }, // Encuentra el documento y el elemento específico
+      {
+        $set: {
+          "almacenes.$": value, // Actualiza solo el elemento coincidente
+        },
+      }
+    );
+
+    console.log(almacen);
+
+    return res.status(200).json({ success: true, message: almacen });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res
+        .status(404)
+        .json({ success: false, message: "Inventario no encontrado" });
+    }
+    // Cualquier otro error se maneja normalmente
+    console.log(error);
+    return res.status(400).json({ success: false, message: error.message });
+  }
+}
 
 module.exports = {
   createOne,
