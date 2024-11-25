@@ -95,7 +95,7 @@ const InventoriesTable = () => {
         renderTopToolbarCustomActions={() => (
           <Stack direction="row" sx={{ m: 1 }}>
 
-            <Tooltip title="Agregar">
+       {/*      <Tooltip title="Agregar">
               <IconButton onClick={() => {
 
                 const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
@@ -105,7 +105,7 @@ const InventoriesTable = () => {
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
-
+ */}
 
             <Tooltip title="Agregar">
               <IconButton onClick={() => setAddInventoryShowModal(true)}>
