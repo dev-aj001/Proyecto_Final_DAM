@@ -99,7 +99,7 @@ const AddAlmacenesModal = ({ showAddModal, setShowAddModal, fetchData }) => {
         </DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column" }} dividers>
         <FormControl fullWidth margin="dense">
-  <InputLabel id="id_negocio-label">ID negocio*</InputLabel>
+  <InputLabel id="id_negocio-label">Negocio</InputLabel>
   <Select
     labelId="id_negocio-label"
     id="id_negocio"
@@ -111,7 +111,7 @@ const AddAlmacenesModal = ({ showAddModal, setShowAddModal, fetchData }) => {
   >
     {inventories.map((inventory) => (
       <MenuItem key={inventory._id} value={inventory._id}>
-        {inventory._id + " - " + inventory.Nombre}
+        { inventory.Nombre}
       </MenuItem>
     ))}
   </Select>
