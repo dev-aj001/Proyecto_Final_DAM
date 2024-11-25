@@ -54,12 +54,12 @@ async function updateOne(req, res) {
       );
     }
 
-    // value._id = idAlmacen;
+     value._id = idAlmacen;
 
     console.log(id, idAlmacen);
 
     const almacen = await inventoryModel.findOneAndUpdate(
-      { _id: id, "almacenes": idAlmacen }, // Encuentra el documento y el elemento específico
+      { _id: id, "almacenes._id": idAlmacen }, // Encuentra el documento y el elemento específico
       {
         $set: {
           "almacenes.$": value, // Actualiza solo el elemento coincidente
@@ -118,7 +118,7 @@ async function readAll(req, res) {
     const almacenes = inventory.flatMap((negocio) => 
       negocio.almacenes.map((almacen) => ({
          nombre: negocio.nombre,
-         almacen: almacen}))
+        almacen: almacen}))
     );
 
     res.status(200).json({ success: true, data: almacenes });
