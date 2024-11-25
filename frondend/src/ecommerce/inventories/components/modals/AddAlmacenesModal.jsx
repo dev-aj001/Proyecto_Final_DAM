@@ -111,7 +111,7 @@ const AddAlmacenesModal = ({ showAddModal, setShowAddModal, fetchData }) => {
   >
     {inventories.map((inventory) => (
       <MenuItem key={inventory._id} value={inventory._id}>
-        {inventory._id}
+        {inventory._id + " - " + inventory.Nombre}
       </MenuItem>
     ))}
   </Select>

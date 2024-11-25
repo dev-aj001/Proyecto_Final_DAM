@@ -82,8 +82,8 @@ async function readAll(req, res) {
     const almacenes = inventory.flatMap((negocio) => 
       negocio.almacenes.map((almacen) => ({
         id: negocio._id,
-       nombre: negocio.nombre,
-        almacen: almacen}))
+        nombre: negocio.nombre,
+       almacen: almacen}))
     );
 
     res.status(200).json({ success: true, data: almacenes });

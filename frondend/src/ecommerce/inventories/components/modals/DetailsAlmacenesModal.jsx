@@ -67,7 +67,10 @@ return (
                                             }}
                                         >
                                             <Typography variant="body2">
-                                                <strong>ID de inventario:</strong> {selectedAlmacenes[index].idNeg}
+                                                <strong>ID de negocio:</strong> {selectedAlmacenes[index].idNeg}
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                <strong>Nombre negocio:</strong> {selectedAlmacenes[index].nombre}
                                             </Typography>
                                             <Typography variant="body2">
                                                 <strong>Nombre almacen:</strong> {almacenes.id_almacen}
