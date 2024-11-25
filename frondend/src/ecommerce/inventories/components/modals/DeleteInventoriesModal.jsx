@@ -37,6 +37,7 @@ const DeleteInventoryModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
                 }
                 setMensajeExitoAlert("Inventarios eliminados correctamente."); // Mostrar mensaje de éxito
                 fetchData(); // Actualizar la lista de inventarios
+                
             } else {
                 setMensajeErrorAlert("No se seleccionaron inventarios para eliminar."); // Si no se seleccionó ningún inventario
             }

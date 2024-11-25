@@ -10,11 +10,14 @@ import AddInventoryModal from "../modals/AddInventoriesModal";
 import UpdateInventoryModal from "../modals/UpdateInventoriesModal"; 
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
-import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal";
 import AddAlmacenesModal from "../modals/AddAlmacenesModal";
 import UpdateAlmacenesModal from "../modals/UpdateAlmacenesModal";
+import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal"; // Importar el modal
+import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
+
 import {Tabs, Tab} from "@mui/material";
 import { getAllAlmacenes  } from "../services/remote/get/GetAllAlmacenes";
+
 
 
 
@@ -53,6 +56,7 @@ const InventoriesTable = () => {
   const [selectedAlmacenes, setSelectedAlmacenes] = useState(null);
   const [updateAlmacenesShowModal, setUpdateAlmacenesShowModal] = useState(false);
   const [deleteAlmacenesShowModal, setDeleteAlmacenesShowModal] = useState(false);
+  const [detailsAlmacenesShowModal, setDetailsAlmacenesShowModal] = useState(false);
 
   const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
@@ -98,7 +102,7 @@ const InventoriesTable = () => {
       setAlmacenesData(validatedAlmacenesData);
       setLoadingTable(false);
 
-    //  console.log("Almacenes obtenidos:", validatedAlmacenesData);
+     console.log("Almacenes obtenidos:", validatedAlmacenesData);
 
 
     } catch (error) {
@@ -291,21 +295,30 @@ const InventoriesTable = () => {
             </Tooltip>
 
             <Tooltip title="Eliminar">
-              <IconButton onClick={() => { 
-                const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
-                if (selectedData.length < 1) {
-                  alert("Por favor, seleccione al menos una fila para eliminar.");
-                  return;
-                }
-                setDeleteAlmacenesShowModal(true);
-                setSelectedAlmacenes(selectedData);
+              <IconButton onClick={() => {  
+                 const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+
+           
+
+                 // Pasa solo el ID del inventario seleccionado al modal de actualización
+                 setDeleteAlmacenesShowModal(true);
+                 setSelectedAlmacenes(selectedData);  // Guardamos el inventario seleccionado
               }}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
 
             <Tooltip title="Detalles">
-            <IconButton onClick={() => {}}>
+            <IconButton onClick={() => {
+               const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+
+           
+
+               // Pasa solo el ID del inventario seleccionado al modal de actualización
+               setDetailsAlmacenesShowModal(true);
+               setSelectedAlmacenes(selectedData);  // Guardamos el inventario seleccionado
+           
+            }}>
                 <InfoIcon />
               </IconButton>
             </Tooltip>
@@ -466,15 +479,19 @@ const InventoriesTable = () => {
       />
 
 <DeleteAlmacenesModal
-      showDeleteModal={deleteAlmacenesShowModal}
-      setShowDeleteModal={setDeleteAlmacenesShowModal}
-      selectData={selectedAlmacenes}
-      fetchData={fetchData}
-      onClose={() => setDeleteAlmacenesShowModal(false)}
-  />
-
-
-
+        showDeleteModal={deleteAlmacenesShowModal}
+        setShowDeleteModal={setDeleteAlmacenesShowModal}
+        fetchData={fetchData}
+        selectAlmacenes={selectedAlmacenes}
+        onClose={() => setDeleteAlmacenesShowModal(false)}
+      />
+<DetailsAlmacenesModal
+        showDetailsModal={detailsAlmacenesShowModal}
+        setShowDetailsModal={setDetailsAlmacenesShowModal}
+        almacenes={almacenesData}
+        selectedAlmacenes={selectedAlmacenes} // Pasa el inventario seleccionado
+        onClose={() => setDetailsAlmacenesShowModal(false)}
+      />
 
 
     </Box>

@@ -2,9 +2,9 @@ import axios from "axios";
 
 const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/almacenes/'}`;
 
-export const DeleteOneAlmacen = async (inventoryId, almacenId) => {
+export const DeleteOneAlmacen = async (idNeg,idAlm) => {
     try {
-        const response = await axios.delete(`${apiUrl}${inventoryId}/almacen/${almacenId}`);
+        const response = await axios.delete(apiUrl + idNeg + '/almacen/' + idAlm);
         return response;
     } catch (error) {
         console.error("Error en DeleteOneInventory:", error.response?.data || error.message);

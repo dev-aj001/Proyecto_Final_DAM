@@ -97,35 +97,8 @@ async function readAll(req, res) {
   }
 }
 
-async function deleteOne(req, res) {
-  try {
-    const id = req.params.id; // ID del inventario
-    const idAlmacen = req.params.idAlmacen; // ID del almacén a eliminar
 
-    // Encuentra el documento y elimina el almacén específico
-    const resultado = await inventoryModel.findOneAndUpdate(
-      { _id: id }, // Busca el documento por ID
-      { $pull: { almacenes: { _id: idAlmacen } } }, // Elimina el almacén con el ID especificado
-      { new: true } // Retorna el documento actualizado
-    );
 
-    if (!resultado) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Inventario o almacén no encontrado" });
-    }
-
-    return res.status(200).json({ success: true, message: "Almacén eliminado", data: resultado });
-  } catch (error) {
-    if (error.name === "CastError") {
-      return res
-        .status(404)
-        .json({ success: false, message: "ID de inventario no válido" });
-    }
-
-    console.log(error);
-    return res.status(400).json({ success: false, message: error.message });
-  }} 
 
 async function updateOne(req, res) {
   try {
@@ -174,6 +147,56 @@ async function updateOne(req, res) {
     return res.status(400).json({ success: false, message: error.message });
   }
 }
+
+
+async function deleteOne(req, res) {
+  try {
+    const id = req.params.id; // ID del inventario
+    const id_almacen = req.params.id_almacen; // ID del almacén a eliminar
+
+    console.log("ID del inventario:", id, "ID del almacén:", id_almacen);
+
+    // Busca y elimina el almacén específico en el inventario
+    const result = await inventoryModel.findOneAndUpdate(
+      { _id: id }, // Condición: busca el inventario por su ID
+      { $pull: { almacenes: { _id: id_almacen } } }, // Operación: elimina el almacén
+      { new: true } // Opción: devuelve el documento actualizado
+    );
+
+    // Si no se encontró el inventario o no se eliminó nada
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Inventario no encontrado o almacén no existe" });
+    }
+
+    // Confirmar que el almacén fue eliminado
+    const deletedAlmacen = result.almacenes.find((almacen) => almacen._id == id_almacen);
+    if (deletedAlmacen) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No se pudo eliminar el almacén" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Almacén eliminado exitosamente",
+      data: result,
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Manejo de errores relacionados con IDs inválidos
+      return res
+        .status(404)
+        .json({ success: false, message: "ID de inventario o almacén inválido" });
+    }
+    // Otros errores
+    console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+
 
 module.exports = {
   createOne,
