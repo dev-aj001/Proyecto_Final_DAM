@@ -113,15 +113,13 @@ const handleSearchById = async () => {
 
         setMensajeExitoAlert("Inventario actualizado correctamente");
         fetchData(); // Actualiza la tabla después de la actualización
-        formik.resetForm(); // Reinicia el formulario
+      
 
         setTimeout(() => {
           setMensajeExitoAlert(null);
         }, 3000);
 
-        // Cierra el modal después de guardar
-        setShowUpdateModal(false);
-
+       
       } catch (e) {
         setMensajeErrorAlert(e.message || "Error al actualizar inventario");
       } finally {
@@ -278,13 +276,16 @@ const handleSearchById = async () => {
 
         {/* Acciones */}
         <DialogActions>
-          <Button color="secondary" onClick={handleClose}>Cancelar</Button>
+          <Button color="secondary" onClick={handleClose}>Cerrar</Button>
+
+
           <LoadingButton
             loading={Loading}
             loadingPosition="start"
             startIcon={<SaveIcon />}
             variant="contained"
             color="primary"
+            
             type="submit"
           >
             Guardar Cambios

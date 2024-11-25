@@ -7,10 +7,11 @@ import InfoIcon from "@mui/icons-material/Info";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
 import AddInventoryModal from "../modals/AddInventoriesModal";
-import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
+import UpdateInventoryModal from "../modals/UpdateInventoriesModal"; 
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
 import AddAlmacenesModal from "../modals/AddAlmacenesModal";
+import UpdateAlmacenesModal from "../modals/UpdateAlmacenesModal";
 import {Tabs, Tab} from "@mui/material";
 import { getAllAlmacenes  } from "../services/remote/get/GetAllAlmacenes";
 
@@ -47,6 +48,10 @@ const InventoriesTable = () => {
   const [addAlmacenesShowModal, setAddAlmacenesShowModal] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
 
+
+  const [selectedAlmacenes, setSelectedAlmacenes] = useState(null);
+  const [updateAlmacenesShowModal, setUpdateAlmacenesShowModal] = useState(false);
+
   const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
@@ -63,6 +68,7 @@ const InventoriesTable = () => {
       /* esto es de inventarios */
       const allInventoriesData = await getAllInventories();
       const validatedData = allInventoriesData.map((item) => ({
+        
         _id: item._id || "No disponible",
         Nombre: item.nombre || "No disponible",
         Telefono: item.contacto?.telefono || "No disponible",
@@ -76,6 +82,7 @@ const InventoriesTable = () => {
       /* esto es de almacenes */
       const allAlmacenesData = await getAllAlmacenes();
       const validatedAlmacenesData = allAlmacenesData.map((item) => ({
+        idNeg:item.id,
         id_almacen: item.almacen?.id_almacen || "No disponible",
         _id: item.almacen?._id || "No disponible", 
         nombre: item.nombre || "No disponible",
@@ -89,7 +96,7 @@ const InventoriesTable = () => {
       setAlmacenesData(validatedAlmacenesData);
       setLoadingTable(false);
 
-     console.log("Almacenes obtenidos:", allAlmacenesData);
+     console.log("Almacenes obtenidos:", validatedAlmacenesData);
 
 
     } catch (error) {
@@ -265,7 +272,17 @@ const InventoriesTable = () => {
 
             <Tooltip title="Editar">
             <IconButton
-        onClick={() => {}}
+        onClick={() => {
+            const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+            if (selectedData.length !== 1) {
+              alert("Por favor, seleccione una sola fila para editar.");
+              return;
+          }
+         setUpdateAlmacenesShowModal(true);
+         setSelectedAlmacenes(selectedData[0]);  // Guardamos el inventario seleccionado
+
+            console.log("Datos seleccionados:", selectedData);
+        }}
     >
         <EditIcon />
     </IconButton>
@@ -395,13 +412,13 @@ const InventoriesTable = () => {
         onClose={() => setAddInventoryShowModal(false)}
       />
 
-      <UpdateInventoryModal
+      {<UpdateInventoryModal
         showUpdateModal={updateInventoryShowModal}
         setShowUpdateModal={setUpdateInventoryShowModal}
         selectedInventory={selectedInventory} // Pasa el inventario seleccionado
         fetchData={fetchData}
         onClose={() => setUpdateInventoryShowModal(false)}
-      />
+      /> }
 
       <DeleteInventoryModal
         showDeleteModal={deleteInventoryShowModal}
@@ -428,6 +445,14 @@ const InventoriesTable = () => {
         setShowAddModal={setAddAlmacenesShowModal}
         fetchData={fetchData}
         onClose={() => setAddAlmacenesShowModal(false)}
+      />
+
+<UpdateAlmacenesModal
+        showUpdateModal={updateAlmacenesShowModal}
+        setShowUpdateModal={setUpdateAlmacenesShowModal}
+        selectedAlmacenes={selectedAlmacenes} // Pasa el inventario seleccionado
+        fetchData={fetchData}
+        onClose={() => setUpdateAlmacenesShowModal(false)}
       />
 
 
