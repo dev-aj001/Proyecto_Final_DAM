@@ -86,8 +86,17 @@ async function updateOne(req, res) {
 async function readOne(req, res) {
 try {
   const id = req.params.id;
-  const inventory = await inventoryModel.findById(id);
-  res.status(200).json({ success: true, data: inventory });
+  const id_almacen = req.params.id_almacen;
+
+  console.log(id_almacen);
+
+  const { almacenes } = await inventoryModel.findById(id);
+
+  const almacen = almacenes.find((e)=> e._id == id_almacen );
+
+  console.log(almacen, almacenes);
+  
+  res.status(200).json({ success: true, data: almacen });
 } catch (error) {
   if (error.name === 'CastError') {
     // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
