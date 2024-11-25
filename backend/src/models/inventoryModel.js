@@ -1,105 +1,80 @@
 const mongoose = require("mongoose");
 
-const DetailRowRegSchema = new mongoose.Schema({
-  fechaReg: { type: Date, required: true },
-  usuarioReg: { type: String },
-},
-{ _id: false }
-);
+const EstatusSchema = new mongoose.Schema({
+    estado: { type: String, required: true },
+    fecha: { type: Date, required: true },
+  });
+  
+  const InfoAdSchema = new mongoose.Schema({
+    clave: { type: String },
+    descripcion: { type: String },
+    marca: { type: String },
+    modelo: { type: String },
+    anio: { type: Number },
+  });
+  
+  const UbicacionSchema = new mongoose.Schema({
+    pasillo: { type: Number },
+    estante: { type: String },
+  });
+  
+  const DetailRowSchema = new mongoose.Schema({
+    descripcion: { type: String },
+    costo: { type: Number },
+    precio_venta: { type: Number },
+    categoria: { type: String },
+    tipo_negocio: { type: String },
+    num_empleados: { type: Number },
+    ingresos_anuales: { type: Number },
+  });
+  
+  const SerieSchema = new mongoose.Schema({
+    id_serie: { type: String, required: true },
+    numero_serie: { type: String, required: true },
+    estatus_fisico: [EstatusSchema],
+    estatus_venta: [EstatusSchema],
+    info_ad: [InfoAdSchema],
+    ubicaciones: [UbicacionSchema],
+    detail_row: DetailRowSchema,
+  });
+  
+  const MovimientoSchema = new mongoose.Schema({
+    id_movimiento: { type: String, required: true },
+    tipo: { type: String, required: true },
+    fecha: { type: Date, required: true },
+    cantidad: { type: Number, required: true },
+  });
+  
+  const AlmacenSchema = new mongoose.Schema({
+    id_almacen: { type: String, required: true },
+    nombre: { type: String, required: true },
+    ubicacion: {
+      latitud: { type: Number, required: true },
+      longitud: { type: Number, required: true },
+    },
+    info_ad: [InfoAdSchema],
+    movtos: [MovimientoSchema],
+    series: [SerieSchema],
+  });
+  
+  const NegocioSchema = new mongoose.Schema({
+    nombre: { type: String, required: true },
+    direccion: {
+      calle: { type: String, required: true },
+      numero: { type: String, required: true },
+      colonia: { type: String, required: true },
+      ciudad: { type: String, required: true },
+      estado: { type: String, required: true },
+      codigo_postal: { type: String, required: true },
+    },
+    contacto: {
+      telefono: { type: String },
+      email: { type: String },
+    },
+    almacenes: [AlmacenSchema],
+    detail_row: DetailRowSchema,
+  });
+  
+  const Inventario = mongoose.model("Inventario", NegocioSchema);
 
-const DetailRowSchema = new mongoose.Schema({
-  activo: { type: Boolean },
-  borrado: { type: Boolean },
-  detail_row_reg: [DetailRowRegSchema],
-},
-{ _id: false }
-);
-
-const EstatusVentaSchema = new mongoose.Schema({
-  idTipoStatusOK: { type: String, required: true },
-  actual: { type: Boolean, required: true },
-  observacion: { type: String, required: true },
-  detail_row: DetailRowSchema,
-});
-
-const EstatusFisicoSchema = new mongoose.Schema({
-  idTipoStatusOK: { type: String, required: true },
-  actual: { type: Boolean, required: true },
-  observacion: { type: String, required: true },
-  detail_row: DetailRowSchema,
-});
-
-const UbicacionSchema = new mongoose.Schema({
-  idTipoStatusOK: { type: String, required: true },
-  ubicacion: { type: String, required: true },
-  actual: { type: Boolean, required: true },
-  detail_row: DetailRowSchema,
-});
-
-const InfoAdSchema = new mongoose.Schema({
-  idEtiquetaOK: { type: String, required: true },
-  idEtiqueta: { type: String, required: true },
-  etiqueta: { type: String, required: true },
-  valor: { type: Number, required: true },
-  idTipoSeleccionOK: { type: String, required: true },
-  secuencia: { type: Number, required: true },
-  detail_row: DetailRowSchema,
-});
-
-const SerieSchema = new mongoose.Schema({
-  id_serie: { type: String, required: true },
-  numero_serie: { type: String, required: true },
-  numero_placa: { type: String, required: true },
-  observacion: { type: String },
-  estatus_fisico: [EstatusFisicoSchema],
-  estatus_venta: [EstatusVentaSchema],
-  info_ad: [InfoAdSchema],
-  ubicaciones: [UbicacionSchema],
-  detail_row: DetailRowSchema,
-});
-
-const MovimientoSchema = new mongoose.Schema({
-  id_movimiento: { type: String, required: true },
-  tipo: { type: String, required: true },
-  cantidadAnterior: { type: Number, required: true },
-  cantidadMovimiento: { type: Number, required: true },
-  cantidadActual: { type: Number, required: true },
-  referencia: { type: String, required: true },
-  detail_row: DetailRowSchema,
-});
-
-const AlmacenSchema = new mongoose.Schema({
-  id_almacen: { type: String, required: true },
-  principal: { type: Boolean, required: true },
-  cantidadActual: { type: Number, default: 0 },
-  cantidadDisponible: { type: Number, default: 0 },
-  cantidadApartada: { type: Number, default: 0 },
-  cantidadMerma: { type: Number, default: 0 },
-  stockMaximo: { type: Number, default: 0 },
-  stockMinimo: { type: Number, default: 0 },
-  info_ad: [InfoAdSchema],
-  movtos: [MovimientoSchema],
-  series: [SerieSchema],
-});
-
-const NegocioSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  direccion: {
-    calle: { type: String },
-    numero: { type: String },
-    colonia: { type: String },
-    ciudad: { type: String },
-    estado: { type: String },
-    codigo_postal: { type: String, required: true },
-  },
-  contacto: {
-    telefono: { type: String },
-    email: { type: String },
-  },
-  almacenes: [AlmacenSchema],
-  detail_row: DetailRowSchema,
-});
-
-const Inventario = mongoose.model("Inventario", NegocioSchema);
-
-module.exports = Inventario;
+  module.exports = Inventario;
