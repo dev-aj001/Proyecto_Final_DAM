@@ -67,6 +67,7 @@ const SerieSchemaJoi = Joi.object({
 
 // Esquema de validacion del modelo "Almacen"
 const AlmacenSchemaJoi = Joi.object({
+    id_negocio: Joi.string(),
     id_almacen: Joi.string().required(),
     principal: Joi.boolean().required(),
     cantidadActual: Joi.number().default(0),

@@ -10,7 +10,9 @@ import AddInventoryModal from "../modals/AddInventoriesModal";
 import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
+import AddAlmacenesModal from "../modals/AddAlmacenesModal";
 import {Tabs, Tab} from "@mui/material";
+import { getAllAlmacenes  } from "../services/remote/get/GetAllAlmacenes";
 
 
 
@@ -24,16 +26,31 @@ const InventoriesColumns = [
   { accessorKey: "Email", header: "Email", size: 150 },
 ];
 
+const AlamacenesColumns = [
+  { accessorKey: "nombre", header: "Negocio", size: 150 },
+  { accessorKey: "id_almacen", header: "Almacen", size: 150 },
+  { accessorKey: "_id", header: "ID", size: 150 },
+  { accessorKey: "cantidadActual", header: "cantidadActual", size: 150 },
+  { accessorKey: "cantidadDisponible", header: "cantidadDisponible", size: 150 },
+  { accessorKey: "cantidadApartada", header: "cantidadApartada", size: 150 },
+  { accessorKey: "cantidadMerma", header: "cantidadMerma", size: 150 },
+  { accessorKey: "stockMaximo", header: "stockMaximo", size: 150 },
+  { accessorKey: "stockMinimo", header: "stockMinimo", size: 150 },
+];
+
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
   const [addInventoryShowModal, setAddInventoryShowModal] = useState(false);
   const [updateInventoryShowModal, setUpdateInventoryShowModal] = useState(false);
   const [deleteInventoryShowModal, setDeleteInventoryShowModal] = useState(false); // Estado para el modal de eliminación
+  const [addAlmacenesShowModal, setAddAlmacenesShowModal] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
+
   const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
+  const [almacenesData, setAlmacenesData] = useState([]);
 
 
 
@@ -42,6 +59,8 @@ const InventoriesTable = () => {
 
   const fetchData = async () => {
     try {
+
+      /* esto es de inventarios */
       const allInventoriesData = await getAllInventories();
       const validatedData = allInventoriesData.map((item) => ({
         _id: item._id || "No disponible",
@@ -52,6 +71,27 @@ const InventoriesTable = () => {
       }));
       setInventoriesData(validatedData);
       setLoadingTable(false);
+
+
+      /* esto es de almacenes */
+      const allAlmacenesData = await getAllAlmacenes();
+      const validatedAlmacenesData = allAlmacenesData.map((item) => ({
+        id_almacen: item.almacen?.id_almacen || "No disponible",
+        _id: item.almacen?._id || "No disponible", 
+        nombre: item.nombre || "No disponible",
+        cantidadActual: item.almacen?.cantidadActual || "Sin cantidad",
+        cantidadDisponible: item.almacen?.cantidadDisponible || "Sin disponible",
+        cantidadApartada: item.almacen?.cantidadApartada || "Sin apartada",
+        cantidadMerma: item.almacen?.cantidadMerma || "Sin merma",
+        stockMaximo: item.almacen?.stockMaximo || "Sin stock",
+        stockMinimo: item.almacen?.stockMinimo || "Sin stock",
+      }));
+      setAlmacenesData(validatedAlmacenesData);
+      setLoadingTable(false);
+
+     console.log("Almacenes obtenidos:", allAlmacenesData);
+
+
     } catch (error) {
       console.error("Error al obtener los inventarios:", error);
       setLoadingTable(false);
@@ -198,8 +238,8 @@ const InventoriesTable = () => {
        
        {selectedTab === 1 && (
         <MaterialReactTable
-        columns={InventoriesColumns}
-        data={inventoriesData}
+        columns={AlamacenesColumns}
+        data={almacenesData}
         state={{
           isLoading: loadingTable,
           rowSelection,
@@ -216,7 +256,9 @@ const InventoriesTable = () => {
           
 
             <Tooltip title="Agregar">
-              <IconButton onClick={() => {}}>
+              <IconButton onClick={() => {
+                setAddAlmacenesShowModal(true);
+              }}>
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
@@ -380,6 +422,13 @@ const InventoriesTable = () => {
 {/* Fin Modales de negocios------------------------------------- */}
 
 
+ {/*tabla de Almacenes ------------------------------------*/}
+ <AddAlmacenesModal
+        showAddModal={addAlmacenesShowModal}
+        setShowAddModal={setAddAlmacenesShowModal}
+        fetchData={fetchData}
+        onClose={() => setAddAlmacenesShowModal(false)}
+      />
 
 
 

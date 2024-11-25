@@ -16,12 +16,6 @@ router.get('/:id', inventoryController.readOne);
 router.put("/:id", inventoryController.updateOne);
 router.delete('/:id',inventoryController.deleteOne);
 
-// Rutas para almacen
-router.post('/:id/almacen', almacenController.createOne);
-router.get('/:id/almacen', almacenController.readAll);
-router.get('/:id/almacen/:idAlmacen', almacenController.readOne);
-router.put('/:id/almacen/:idAlmacen', almacenController.updateOne);
-router.delete('/:id/almacen/:idAlmacen', almacenController.updateOne);
 
 // Rutas para infoAd
 router.post('/:id/almacen/:idAlmacen/infoad', infoadController.createOne);

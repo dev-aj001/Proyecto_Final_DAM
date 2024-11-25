@@ -156,7 +156,7 @@ const AddInventoryModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fe
                         {mensajeErrorAlert && <Alert severity="error"><b>¡ERROR!</b> {mensajeErrorAlert}</Alert>}
                         {mensajeExitoAlert && <Alert severity="success"><b>¡ÉXITO!</b> {mensajeExitoAlert}</Alert>}
                     </Box>
-                    <LoadingButton color="secondary" startIcon={<CloseIcon />} variant="outlined" onClick={() => setShowAddModal(false)}>CERRAR</LoadingButton>
+                    <LoadingButton color="secondary" startIcon={<CloseIcon />} variant="outlined" onClick={() => {formik.resetForm(); setShowAddModal(false)}}>CERRAR</LoadingButton>
                     <LoadingButton color="primary" startIcon={<SaveIcon />} variant="contained" type="submit" loading={Loading}>GUARDAR</LoadingButton>
                 </DialogActions>
             </form>

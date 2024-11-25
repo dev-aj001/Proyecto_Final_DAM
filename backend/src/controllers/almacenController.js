@@ -83,16 +83,74 @@ async function updateOne(req, res) {
   }
 }
 
-async function readOne(req, res) {}
+async function readOne(req, res) {
+try {
+  const id = req.params.id;
+  const inventory = await inventoryModel.findById(id);
+  res.status(200).json({ success: true, data: inventory });
+} catch (error) {
+  if (error.name === 'CastError') {
+    // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+    return res.status(404).json({ success: false, message: "Inventario no encontrado" });
+  }
+  // Cualquier otro error se maneja normalmente
+  return res.status(400).json({ success: false, message: error.message });
 
-async function readAll(req, res) {}
+}}
 
-async function deleteOne(req, res) {}
+async function readAllbyId(req, res) {
+
+  try {
+    const { almacenes} = await inventoryModel.findById(req.params.id);
+    res.status(200).json({ success: true, data: almacenes });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "Inventario no encontrado" });
+    }
+}}
+
+async function readAll(req, res) {
+  try {
+    const inventory = await inventoryModel.find();
+
+    // Extraemos únicamente los IDs en formato de objeto
+    const almacenes = inventory.flatMap((negocio) => 
+      negocio.almacenes.map((almacen) => ({
+         nombre: negocio.nombre,
+         almacen: almacen}))
+    );
+
+    res.status(200).json({ success: true, data: almacenes });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "Inventarios no encontrados" });
+    }
+    // Cualquier otro error se maneja normalmente
+    return res.status(400).json({ success: false, message: error.message });
+  }
+}
+
+async function deleteOne(req, res) {
+  try {
+    const id = req.params.id;
+    const deleteteNegocio = await inventoryModel.findByIdAndDelete(id);
+    res.status(200).json({ success: true, data: deleteteNegocio });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res
+        .status(404)
+        .json({ success: false, message: "Inventario no encontrado" });
+    }
+}}
 
 module.exports = {
   createOne,
   readOne,
-  readAll,
+  readAllbyId,
   updateOne,
   deleteOne,
+  readAll
 };
