@@ -74,8 +74,10 @@ const InventoriesTable = () => {
       "& .MuiTab-root": { color: "#FFFFFF", fontWeight: "bold" }, // Texto blanco
     }}
   >
-    <Tab label="Inventarios" />
-    <Tab label="Nueva Tabla" />s
+    <Tab label="Negocios" />
+    <Tab label="Almacenes" />
+    <Tab label="Series" />
+    
   </Tabs>
       
 
@@ -179,6 +181,20 @@ const InventoriesTable = () => {
         }}
       />
       )}
+      {/* fin Tabla de negocios ---------------------------------------*/}
+
+
+
+
+
+
+
+
+
+
+
+
+      {/* Tabla de almacenes ---------------------------------------*/}
        
        {selectedTab === 1 && (
         <MaterialReactTable
@@ -193,9 +209,11 @@ const InventoriesTable = () => {
         enableRowSelection={true}
 
         renderTopToolbarCustomActions={() => (
+
+
           <Stack direction="row" sx={{ m: 1 }}>
 
-            
+          
 
             <Tooltip title="Agregar">
               <IconButton onClick={() => {}}>
@@ -203,6 +221,69 @@ const InventoriesTable = () => {
               </IconButton>
             </Tooltip>
 
+            <Tooltip title="Editar">
+            <IconButton
+        onClick={() => {}}
+    >
+        <EditIcon />
+    </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Eliminar">
+              <IconButton onClick={() => {  }}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Detalles">
+            <IconButton onClick={() => {}}>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        )}
+        muiTableBodyCellProps={{
+          sx: {
+            color: "#FFFFFF", // Texto en tonalidades moradas para las celdas de datos
+          },
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            color: "#FFFFFF", // Texto blanco para los encabezados
+            fontWeight: "bold", // Resaltar los encabezados
+          },
+        }}
+        muiTableContainerProps={{
+          sx: {
+            backgroundColor: "#1E1B29", // Fondo oscuro para la tabla
+          },
+        }}
+      />
+      )}
+{/* Fin Tabla de almacenes ---------------------------------------*/}
+
+
+
+
+
+
+ {/* Tabla de series ---------------------------------------*/}
+{selectedTab === 2 && (
+        <MaterialReactTable
+        columns={InventoriesColumns}
+        data={inventoriesData}
+        state={{
+          isLoading: loadingTable,
+          rowSelection,
+        }}
+        onRowSelectionChange={setRowSelection}
+        initialState={{ density: "compact", showGlobalFilter: true }}
+        enableRowSelection={true}
+
+        renderTopToolbarCustomActions={() => (
+          <Stack direction="row" sx={{ m: 1 }}>
+
+   
 
             <Tooltip title="Agregar">
               <IconButton onClick={() => {}}>
@@ -250,9 +331,20 @@ const InventoriesTable = () => {
         }}
       />
       )}
+  {/* Fin Tabla de series ---------------------------------------*/}
 
 
-     
+
+
+
+
+
+
+
+
+
+      {/*tabla negocios ------------------------------------*/}
+
       {/* Modales */}
       <AddInventoryModal
         showAddModal={addInventoryShowModal}
@@ -284,6 +376,15 @@ const InventoriesTable = () => {
         selectedInventory={selectedInventory} // Pasa el inventario seleccionado
         onClose={() => setDetailsInventoryShowModal(false)}
       />
+
+{/* Fin Modales de negocios------------------------------------- */}
+
+
+
+
+
+
+
     </Box>
 
   );

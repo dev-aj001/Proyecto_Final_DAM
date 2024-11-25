@@ -80,7 +80,7 @@ function ResponsiveAppBar() {
     //-----------------------------------------------
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" >
         <Toolbar disableGutters>
           <Box
             component="a"
