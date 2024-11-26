@@ -460,6 +460,7 @@ const InventoriesTable = () => {
             </Tooltip>
             <h4 style={{ color: "white" }}>tabla 2</h4>
           </Stack>
+          
         )}
         muiTableBodyCellProps={{
           sx: {
