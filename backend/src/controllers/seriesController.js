@@ -49,7 +49,67 @@ async function createOne(req, res) {
 }
 
 async function updateOne(req, res) {
-  
+  try {
+    const { id, id_almacen, id_serie } = req.params;
+
+    // Validar los datos enviados en el cuerpo de la solicitud
+    const { error, value } = Validator.MovimientoSchemaJoi.validate(req.body, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      throw new Error(
+        `Validación fallida: ${error.details
+          .map((details) => details.message)
+          .join(", ")}`
+      );
+    }
+
+    // Buscar el inventario por ID de negocio
+    const inventory = await inventoryModel.findById(id);
+
+    if (!inventory) {
+      return res.status(404).json({ success: false, message: "Negocio no encontrado" });
+    }
+
+    // Buscar el almacén específico dentro del negocio
+    const almacen = inventory.almacenes.find(
+      (almacen) => almacen._id.toString() === id_almacen
+    );
+
+    if (!almacen) {
+      return res.status(404).json({ success: false, message: "Almacén no encontrado" });
+    }
+
+    // Buscar el movimiento dentro del almacén
+    const movto = almacen.series.find(
+      (movto) => movto._id.toString() === id_serie
+    );
+
+    if (!movto) {
+      return res.status(404).json({ success: false, message: "Movimiento no encontrado" });
+    }
+
+    // Actualizar los datos del movimiento con los valores proporcionados
+    Object.assign(movto, value);
+
+    // Guardar el inventario con el movimiento actualizado
+    await inventory.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Movimiento actualizado exitosamente",
+      data: movto,
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "ID inválido o no encontrado" });
+    }
+
+    // Manejar cualquier otro error
+    return res.status(400).json({ success: false, message: error.message });
+  }
 }
 
 
@@ -113,7 +173,53 @@ async function readAll(req, res) {
 }
 
 async function deleteOne(req, res) {
-    
+  try {
+    const { id, id_almacen, id_serie } = req.params;
+
+    // Buscar el inventario por ID de negocio
+    const inventory = await inventoryModel.findById(id);
+
+    if (!inventory) {
+      return res.status(404).json({ success: false, message: "Negocio no encontrado" });
+    }
+
+    // Buscar el almacén específico dentro del negocio
+    const almacen = inventory.almacenes.find(
+      (almacen) => almacen._id.toString() === id_almacen
+    );
+
+    if (!almacen) {
+      return res.status(404).json({ success: false, message: "Almacén no encontrado" });
+    }
+
+    // Buscar el movimiento dentro del almacén
+    const movtoIndex = almacen.series.findIndex(
+      (movto) => movto._id.toString() === id_serie
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: "Movimiento no encontrado" });
+    }
+
+    // Eliminar el movimiento del arreglo de movimientos del almacén
+    almacen.series.splice(index, 1);
+
+    // Guardar el inventario con el movimiento eliminado
+    await inventory.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Movimiento eliminado exitosamente",
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "ID inválido o no encontrado" });
+    }
+
+    // Manejar cualquier otro error
+    return res.status(400).json({ success: false, message: error.message });
+  }
 }
 
 module.exports = {

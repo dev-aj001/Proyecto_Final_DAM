@@ -11,10 +11,7 @@ const router = express.Router();
 router.post('/:id/almacen/:idAlmacen', seriesController.createOne);
 router.get('/', seriesController.readAll);
 router.get('/:id/almacen/:id_almacen/series/:id_serie', seriesController.readOne);
-router.put('/:id/almacen/:idAlmacen/series/:idSeries', seriesController.updateOne);
-router.delete('/:id/almacen/:idAlmacen/series/idSeries', seriesController.deleteOne);
-
-
-
+router.put('/:id/almacen/:id_almacen/series/:id_serie', seriesController.updateOne);
+router.delete('/:id/almacen/:id_almacen/series/:id_serie', seriesController.deleteOne);
 
 module.exports = router;
