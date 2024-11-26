@@ -326,18 +326,18 @@ const InventoriesTable = () => {
         )}
         muiTableBodyCellProps={{
           sx: {
-            color: "#FFFFFF", // Texto en tonalidades moradas para las celdas de datos
+            color: "#503685", // Texto en tonalidades moradas para las celdas de datos
           },
         }}
         muiTableHeadCellProps={{
           sx: {
-            color: "#FFFFFF", // Texto blanco para los encabezados
+            color: "#6c47b8", // Texto blanco para los encabezados
             fontWeight: "bold", // Resaltar los encabezados
           },
         }}
         muiTableContainerProps={{
           sx: {
-            backgroundColor: "#1E1B29", // Fondo oscuro para la tabla
+            backgroundColor: "#fff", // Fondo oscuro para la tabla
           },
         }}
       />
@@ -397,18 +397,18 @@ const InventoriesTable = () => {
         )}
         muiTableBodyCellProps={{
           sx: {
-            color: "#FFFFFF", // Texto en tonalidades moradas para las celdas de datos
+            color: "#503685", // Texto en tonalidades moradas para las celdas de datos
           },
         }}
         muiTableHeadCellProps={{
           sx: {
-            color: "#FFFFFF", // Texto blanco para los encabezados
+            color: "#6c47b8", // Texto blanco para los encabezados
             fontWeight: "bold", // Resaltar los encabezados
           },
         }}
         muiTableContainerProps={{
           sx: {
-            backgroundColor: "#1E1B29", // Fondo oscuro para la tabla
+            backgroundColor: "#fff", // Fondo oscuro para la tabla
           },
         }}
       />
