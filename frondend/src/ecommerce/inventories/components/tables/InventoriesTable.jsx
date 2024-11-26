@@ -17,6 +17,7 @@ import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
 
 import {Tabs, Tab} from "@mui/material";
 import { getAllAlmacenes  } from "../services/remote/get/GetAllAlmacenes";
+import { getAllseries } from "../services/remote/get/GetAllServis";
 
 
 
@@ -43,6 +44,17 @@ const AlamacenesColumns = [
   { accessorKey: "stockMinimo", header: "stockMinimo", size: 150 },
 ];
 
+
+const SeriesColumns = [
+  { accessorKey: "id_serie", header: "ID", size: 150 },
+  { accessorKey: "nombre_serie", header: "Nombre", size: 150 },
+  { accessorKey: "numero_placa", header: "Placa", size: 150},
+  { accessorKey: "observacion", header: "Observacion", size: 150 },
+  { accessorKey: "negocioId", header: "Negocio", size:150},
+  { accessorKey: "negocioNombre", header: "Negocio nombre", size:150},
+  { accessorKey: "almacen", header: "Almacen", size:150},
+]
+
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
@@ -62,6 +74,8 @@ const InventoriesTable = () => {
   const [rowSelection, setRowSelection] = useState({});
   const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
   const [almacenesData, setAlmacenesData] = useState([]);
+
+  const [seriesData, setSeriesData] = useState([]);
 
 
 
@@ -101,6 +115,23 @@ const InventoriesTable = () => {
       }));
       setAlmacenesData(validatedAlmacenesData);
       setLoadingTable(false);
+    
+
+
+    const allServisData = await getAllseries();
+    const validatedSeriesData = allServisData.map((item) => ({
+      id_serie: item.serieId || "No disponible",
+      nombre_serie: item.numeroSerie || "No disponible",
+      numero_placa: item.numeroPlaca || "No disponible",
+      observacion: item.observacion || "No disponible",
+      negocioId: item.negocioId || "No disponible",
+      negocioNombre: item.negocioNombre || "No disponible",
+      almacen: item.almacen || "No disponible",
+    }));
+    setSeriesData(validatedSeriesData);
+    setLoadingTable(false);
+
+
 
      console.log("Almacenes obtenidos:", validatedAlmacenesData);
 
@@ -344,8 +375,8 @@ const InventoriesTable = () => {
  {/* Tabla de series ---------------------------------------*/}
 {selectedTab === 2 && (
         <MaterialReactTable
-        columns={InventoriesColumns}
-        data={inventoriesData}
+        columns={SeriesColumns}
+        data={seriesData}
         state={{
           isLoading: loadingTable,
           rowSelection,

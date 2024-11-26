@@ -1,9 +1,9 @@
 import axios from 'axios';  // Importar axios
 
-export function getAllInventories() {
+export function getAllseries() {
   return new Promise((resolve, reject) => {
     //const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventories'}`;
-    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventory'}`;
+    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/series/'}`;
 
     console.log("URL de la solicitud:", apiUrl);
 
