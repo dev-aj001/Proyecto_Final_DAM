@@ -11,7 +11,7 @@ export default function AppAllModules() {
             <div id='div-app'>
                 {/* <h1>Main App - All Modules</h1> */}
                 <RouterProvider router={Router} />
-                <div id='div-footer'>
+                <div id='div-footer' style={{ color: '#c9c1d9' }}>
                     <Footer />
                 </div>
             </div>

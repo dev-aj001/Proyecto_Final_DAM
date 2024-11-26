@@ -92,13 +92,22 @@ const DeleteAlmacenesModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
                                         <strong>Nombre:</strong> {almacen.id_almacen}
                                     </Typography>
                                     <Typography variant="body2">
-                                        <strong>Cantidad actual:</strong> {almacen.Direccion}
+                                        <strong>Cantidad actual:</strong> {almacen.cantidadActual}
                                     </Typography>
                                     <Typography variant="body2">
-                                        <strong>Teléfono:</strong> {almacen.Telefono}
+                                        <strong>Cantidad apartada:</strong> {almacen.cantidadApartada}
                                     </Typography>
                                     <Typography variant="body2">
-                                        <strong>Email:</strong> {almacen.Email}
+                                        <strong>Cantidad merma:</strong> {almacen.cantidadMerma}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        <strong>Cantidad apartada:</strong> {almacen.cantidadApartada}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        <strong>Stock maximo:</strong> {almacen.stockMaximo}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        <strong>Stock minimo:</strong> {almacen.stockMinimo}
                                     </Typography>
                                 </Box>
                             ))}

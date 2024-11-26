@@ -1,41 +1,42 @@
 import { Dialog, DialogActions, DialogContent, Typography, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from '@mui/icons-material/Close';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useEffect, useState } from "react";
 import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
 
 const DetailsAlmacenesModal = ({ showDetailsModal, setShowDetailsModal, selectedAlmacenes, onClose }) => {
 
-const [almacenesData, setAlmacenesData] = useState([]);
-const [loading, setLoading] = useState(false);
+    const [almacenesData, setAlmacenesData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-const handleCloseModal = () => {
-    setShowDetailsModal(false);
-    onClose();
-};
+    const handleCloseModal = () => {
+        setShowDetailsModal(false);
+        onClose();
+    };
 
-useEffect(() => {
-    console.log("selectedAlmacenes:", selectedAlmacenes);   
-    if (showDetailsModal && selectedAlmacenes.length > 0) {
-        setLoading(true);
-        const fetchAlmacenesDetails = async () => {
-            try {
-                const details = await Promise.all(
-                    selectedAlmacenes.map(almacenes => getAlmacenesById(almacenes.idNeg , almacenes._id))
-                );
-                setAlmacenesData(details);
-            } catch (error) {
-                console.error("Error al obtener los detalles de los almacenes:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAlmacenesDetails();
-    }
-}, [showDetailsModal, selectedAlmacenes]);
+    useEffect(() => {
+        console.log("selectedAlmacenes:", selectedAlmacenes);
+        if (showDetailsModal && selectedAlmacenes.length > 0) {
+            setLoading(true);
+            const fetchAlmacenesDetails = async () => {
+                try {
+                    const details = await Promise.all(
+                        selectedAlmacenes.map(almacenes => getAlmacenesById(almacenes.idNeg, almacenes._id))
+                    );
+                    setAlmacenesData(details);
+                } catch (error) {
+                    console.error("Error al obtener los detalles de los almacenes:", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchAlmacenesDetails();
+        }
+    }, [showDetailsModal, selectedAlmacenes]);
 
-return (
-<Dialog
+    return (
+        <Dialog
             open={showDetailsModal}
             onClose={handleCloseModal}
             aria-labelledby="details-modal-title"
@@ -56,9 +57,10 @@ return (
                                     <strong><h2>Detalles de los almacenes seleccionados:</h2></strong>
                                 </Typography>
                                 <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
-                                    {almacenesData.map((almacenes, index) => (
+                                    {almacenesData.map((almacen, index) => (
                                         <Box
-                                            key={almacenes._id || index}
+                                        
+                                            key={almacen._id || index}
                                             sx={{
                                                 marginBottom: 1,
                                                 padding: 1,
@@ -66,27 +68,40 @@ return (
                                                 borderRadius: 4,
                                             }}
                                         >
+                                            
                                             <Typography variant="body2">
-                                                <strong>ID de negocio:</strong> {selectedAlmacenes[index].idNeg}
+                                                <strong>ID:</strong> {almacen._id}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Nombre negocio:</strong> {selectedAlmacenes[index].nombre}
+                                                <strong>Detalles del almacen:</strong>
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Nombre almacen:</strong> {almacenes.id_almacen}
+                                                <strong>Nombre de almacen:</strong> {almacen.id_almacen}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Cantidad actual:</strong> {almacenes.cantidadActual}
+                                                <strong>Cantidad actual:</strong> {almacen.cantidadActual}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Cantidad disponible:</strong> {almacenes.cantidadDisponible}
+                                                <strong>Cantidad apartada:</strong> {almacen.cantidadApartada}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Canyidad merma:</strong> {almacenes.cantidadMerma}
+                                                <strong>Cantidad merma:</strong> {almacen.cantidadMerma}
                                             </Typography>
+                                            <Typography variant="body2">
+                                                <strong>Cantidad apartada:</strong> {almacen.cantidadApartada}
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                <strong>Stock maximo:</strong> {almacen.stockMaximo}
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                <strong>Stock minimo:</strong> {almacen.stockMinimo}
+                                            </Typography>
+
                                             {/* Agregar más detalles según lo que se recupere del servicio */}
                                         </Box>
+                                        
                                     ))}
+                                    
                                 </Box>
                             </>
                         ) : (
@@ -100,6 +115,14 @@ return (
 
             {/* Acciones del modal */}
             <DialogActions>
+                {/* <LoadingButton
+                    onClick={()=>{alert("series")}}
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={<ConfirmationNumberIcon />}
+                >
+                    Ver Series
+                </LoadingButton> */}
                 <LoadingButton
                     onClick={handleCloseModal}
                     variant="outlined"
@@ -108,8 +131,10 @@ return (
                 >
                     Cerrar
                 </LoadingButton>
+
             </DialogActions>
         </Dialog>
+
     );
 };
 
