@@ -46,6 +46,8 @@ const DeleteAlmacenesModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
 
     const handleClose = () => {
         setShowDeleteModal(false);
+        setMensajeErrorAlert(null);
+        setMensajeExitoAlert(null);
        
     };
 
@@ -108,7 +110,7 @@ const DeleteAlmacenesModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
                                     </Typography>
                                     <Typography variant="body2">
                                         <strong>Stock minimo:</strong> {almacen.stockMinimo}
-                                    </Typography>
+                                    </Typography> 
                                 </Box>
                             ))}
                         </Box>

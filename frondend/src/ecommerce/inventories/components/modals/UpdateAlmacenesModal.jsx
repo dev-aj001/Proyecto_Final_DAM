@@ -15,34 +15,23 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
   const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
   const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
   const [Loading, setLoading] = useState(false);
-  const [almacenesData, setAlmacenesData] = useState(null);
 
   // Carga los datos del almacén cuando el modal se abre
   useEffect(() => {
-    if (selectedAlmacenes?._id) {
-      const fetchData = async () => {
-        try {
-          const response = await getAlmacenesById(selectedAlmacenes?.idNeg, selectedAlmacenes?._id);
-          setAlmacenesData(response); // Actualiza el estado con los datos del almacén
-        } catch (error) {
-          console.error("Error al obtener los datos del almacén:", error);
-        }
-      };
-      fetchData();
-    }
-  }, [selectedAlmacenes?._id, selectedAlmacenes?.idNeg]);
+    
+  }, []);
 
   // Configuración de Formik
   const formik = useFormik({
     enableReinitialize: true, // Permite actualizar los valores iniciales
     initialValues: {
-      id_almacen: almacenesData?.id_almacen || "",
-      cantidadActual: almacenesData?.cantidadActual || "",
-      cantidadDisponible: almacenesData?.cantidadDisponible || "",
-      cantidadApartada: almacenesData?.cantidadApartada || "",
-      cantidadMerma: almacenesData?.cantidadMerma || "",
-      stockMaximo: almacenesData?.stockMaximo || "",
-      stockMinimo: almacenesData?.stockMinimo || "",
+      id_almacen: selectedAlmacenes?.id_almacen || "",
+      cantidadActual: selectedAlmacenes?.cantidadActual || "",
+      cantidadDisponible: selectedAlmacenes?.cantidadDisponible || "",
+      cantidadApartada: selectedAlmacenes?.cantidadApartada || "",
+      cantidadMerma: selectedAlmacenes?.cantidadMerma || "",
+      stockMaximo: selectedAlmacenes?.stockMaximo || "",
+      stockMinimo: selectedAlmacenes?.stockMinimo || "",
     },
     validationSchema: Yup.object({
       id_almacen: Yup.string().required("El ID del almacén es requerido"),

@@ -72,8 +72,7 @@ async function readAllbyId(req, res) {
       // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
       return res.status(404).json({ success: false, message: "Inventario no encontrado" });
     }
-  }
-}
+}}
 
 async function readAll(req, res) {
   try {

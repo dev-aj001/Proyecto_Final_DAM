@@ -168,16 +168,10 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_almacen && Boolean(formik.errors.id_almacen)}
                         >
-                            {/* {almacen.find(
-                                (almacen) => almacen.id.toString() === negocioSeleccionado
-                            ).map((a)=> (
-                                <MenuItem key={a._id} value={a._id}>
-                                    {a.id_almacen}
-                                </MenuItem>
-                            ))} */}
+                          
                             {almacen.map((almacen) => (
                                 <MenuItem key={almacen._id} value={almacen._id}>
-                                    {almacen._id}
+                                    {almacen.id_almacen}
                                 </MenuItem>
                             ))}
                         </Select>

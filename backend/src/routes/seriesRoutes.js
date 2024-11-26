@@ -14,4 +14,4 @@ router.get('/:id/almacen/:id_almacen/series/:id_serie', seriesController.readOne
 router.put('/:id/almacen/:id_almacen/series/:id_serie', seriesController.updateOne);
 router.delete('/:id/almacen/:id_almacen/series/:id_serie', seriesController.deleteOne);
 
-module.exports = router;
+module.exports = router; 
