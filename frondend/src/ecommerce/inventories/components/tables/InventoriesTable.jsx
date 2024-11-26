@@ -14,10 +14,12 @@ import AddAlmacenesModal from "../modals/AddAlmacenesModal";
 import UpdateAlmacenesModal from "../modals/UpdateAlmacenesModal";
 import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal"; // Importar el modal
 import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
+import AddIServisModal from "../modals/AddIServisModal";
 
 import {Tabs, Tab} from "@mui/material";
 import { getAllAlmacenes  } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
+
 
 
 
@@ -76,6 +78,9 @@ const InventoriesTable = () => {
   const [almacenesData, setAlmacenesData] = useState([]);
 
   const [seriesData, setSeriesData] = useState([]);
+
+  const [addSeriesShowModal, setAddSeriesShowModal] = useState(false);
+  
 
 
 
@@ -391,7 +396,9 @@ const InventoriesTable = () => {
    
 
             <Tooltip title="Agregar">
-              <IconButton onClick={() => {}}>
+            <IconButton onClick={() => {
+                setAddSeriesShowModal(true);
+              }}>
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
@@ -415,7 +422,7 @@ const InventoriesTable = () => {
                 <InfoIcon />
               </IconButton>
             </Tooltip>
-            <h4 style={{ color: "white" }}>tabla 2</h4>
+           
           </Stack>
         )}
         muiTableBodyCellProps={{
@@ -590,6 +597,18 @@ const InventoriesTable = () => {
         onClose={() => setDetailsAlmacenesShowModal(false)}
       />
 
+
+
+
+
+
+
+<AddIServisModal
+showAddModal={addSeriesShowModal}
+setShowAddModal={setAddSeriesShowModal}
+fetchData={fetchData}
+onClose={() => setAddSeriesShowModal(false)}
+/>
 
     </Box>
 
