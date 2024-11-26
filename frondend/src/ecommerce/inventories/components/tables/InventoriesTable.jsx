@@ -17,6 +17,8 @@ import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
 import AddIServisModal from "../modals/AddIServisModal";
 import DeleteSeriesModal from "../modals/DeleteSeriesModal";
 import AddMovimientosModal from "../modals/AddMovimientosModal";
+import DetailsSeriesModal from "../modals/DetailsSeriesModal";
+import UpdateSeriesModal from "../modals/UpdateSeriesModal";
 
 import { Tabs, Tab } from "@mui/material";
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
@@ -58,16 +60,16 @@ const SeriesColumns = [
 ]
 
 const MovimientosColumns = [
-    { accessorKey: "movimientoId", header: "ID", size: 150 },
-    { accessorKey: "almacenNombre", header: "Almacen", size:150},
-    { accessorKey: "negocioNombre", header: "Negocio nombre", size:150},
-    { accessorKey: "tipo", header: "Tipo mov.", size: 150},
-    { accessorKey: "cantidadAnterior", header: "Cant. anterior", size: 150 },
-    { accessorKey: "cantidadMovimiento", header: "Cant. movimiento", size:150},
-    { accessorKey: "cantidadActual", header: "Cant. actual", size:150},
-    { accessorKey: "referencia", header: "Referencia", size:150},
-  ]
-  
+  { accessorKey: "movimientoId", header: "ID", size: 150 },
+  { accessorKey: "almacenNombre", header: "Almacen", size: 150 },
+  { accessorKey: "negocioNombre", header: "Negocio nombre", size: 150 },
+  { accessorKey: "tipo", header: "Tipo mov.", size: 150 },
+  { accessorKey: "cantidadAnterior", header: "Cant. anterior", size: 150 },
+  { accessorKey: "cantidadMovimiento", header: "Cant. movimiento", size: 150 },
+  { accessorKey: "cantidadActual", header: "Cant. actual", size: 150 },
+  { accessorKey: "referencia", header: "Referencia", size: 150 },
+]
+
 
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
@@ -89,18 +91,20 @@ const InventoriesTable = () => {
   const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
   const [almacenesData, setAlmacenesData] = useState([]);
 
-  const [seriesData, setSeriesData] = useState([]);
+
+//series
   const [deleteSeriesShowModal, setDeleteSeriesShowModal] = useState(false);
   const [selectedSeries, setSelectedSeries] = useState(null);
-
-
+  const [seriesData, setSeriesData] = useState([]);
   const [addSeriesShowModal, setAddSeriesShowModal] = useState(false);
+  const [detailsSeriesShowModal, setDetailsSeriesShowModal] = useState(false);
+  const [updateSeriesShowModal, setUpdateSeriesShowModal] = useState(false);
 
 
   //Movimientos
   const [movimientosData, setMovimientosData] = useState([]);
   const [addMovimientosShowModal, setAddMovimientosShowModal] = useState(false);
-  
+
 
 
 
@@ -176,11 +180,11 @@ const InventoriesTable = () => {
       }));
       setMovimientosData(validatedMovimientosData);
       setLoadingTable(false);
-  
+
       console.log("Movimientos Obtenidos: " + allMoviminetosData);
-  
+
       //  console.log("Almacenes obtenidos:", validatedAlmacenesData);
-  
+
 
 
 
@@ -448,7 +452,17 @@ const InventoriesTable = () => {
 
               <Tooltip title="Editar">
                 <IconButton
-                  onClick={() => { }}
+                  onClick={() =>  {
+                    const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+                    if (selectedData.length !== 1) {
+                      alert("Por favor, seleccione una sola fila para editar.");
+                      return;
+                    }
+                    setUpdateSeriesShowModal(true);
+                    setSelectedSeries(selectedData[0]);  // Guardamos el inventario seleccionado
+
+                    console.log("Datos seleccionados:", selectedData);
+                  }}
                 >
                   <EditIcon />
                 </IconButton>
@@ -456,20 +470,28 @@ const InventoriesTable = () => {
 
               <Tooltip title="Eliminar">
                 <IconButton onClick={() => {
-                    const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+                  const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
 
 
 
-                    // Pasa solo el ID del inventario seleccionado al modal de actualización
-                    setDeleteSeriesShowModal(true);
-                    setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
-                 }}>
+                  // Pasa solo el ID del inventario seleccionado al modal de actualización
+                  setDeleteSeriesShowModal(true);
+                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                }}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
 
               <Tooltip title="Detalles">
-                <IconButton onClick={() => { }}>
+                <IconButton onClick={() => { 
+                   const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+
+                   // Pasa solo el ID del inventario seleccionado al modal de actualización\
+                   console.log('selectedData boton',selectedData);
+                   setDetailsSeriesShowModal(true);
+                   setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+ 
+                }}>
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
@@ -507,8 +529,8 @@ const InventoriesTable = () => {
       {/* Tabla de movt ---------------------------------------*/}
       {selectedTab === 3 && (
         <MaterialReactTable
-        columns={MovimientosColumns}
-        data={movimientosData}
+          columns={MovimientosColumns}
+          data={movimientosData}
           state={{
             isLoading: loadingTable,
             rowSelection,
@@ -523,9 +545,9 @@ const InventoriesTable = () => {
 
 
               <Tooltip title="Agregar">
-              <IconButton onClick={() => {
-                setAddMovimientosShowModal(true);
-              }}>
+                <IconButton onClick={() => {
+                  setAddMovimientosShowModal(true);
+                }}>
                   <AddCircleIcon />
                 </IconButton>
               </Tooltip>
@@ -549,7 +571,7 @@ const InventoriesTable = () => {
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
-              <h4 style={{ color: "white" }}>tabla 2</h4>
+
             </Stack>
 
           )}
@@ -664,19 +686,35 @@ const InventoriesTable = () => {
       />
 
       <DeleteSeriesModal
-      showDeleteModal={deleteSeriesShowModal}
-      setShowDeleteModal={setDeleteSeriesShowModal}
-      fetchData={fetchData}
-      selectSeries={selectedSeries}
-      onClose={() => setDeleteSeriesShowModal(false)}
+        showDeleteModal={deleteSeriesShowModal}
+        setShowDeleteModal={setDeleteSeriesShowModal}
+        fetchData={fetchData}
+        selectSeries={selectedSeries}
+        onClose={() => setDeleteSeriesShowModal(false)}
       />
 
-        {/*tabla de Movimientos ------------------------------------*/}
-        <AddMovimientosModal
+      {/*tabla de Movimientos ------------------------------------*/}
+      <AddMovimientosModal
         showAddModal={addMovimientosShowModal}
         setShowAddModal={setAddMovimientosShowModal}
         fetchData={fetchData}
         onClose={() => setAddMovimientosShowModal(false)}
+      />
+
+      <DetailsSeriesModal
+        showDetailsModal={detailsSeriesShowModal}
+        setShowDetailsModal={setDetailsSeriesShowModal}
+        series={seriesData}
+        selectedSeries={selectedSeries} // Pasa el inventario seleccionado
+        onClose={() => setDetailsSeriesShowModal(false)}
+      />
+
+      <UpdateSeriesModal
+        showUpdateModal={updateSeriesShowModal}
+        setShowUpdateModal={setUpdateSeriesShowModal}
+        selectedSeries={selectedSeries} // Pasa el inventario seleccionado
+        fetchData={fetchData}
+        onClose={() => setUpdateSeriesShowModal(false)}
         />
 
 

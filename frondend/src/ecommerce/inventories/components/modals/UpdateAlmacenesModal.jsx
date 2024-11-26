@@ -19,19 +19,44 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
   // Carga los datos del almacén cuando el modal se abre
   useEffect(() => {
     
-  }, []);
+  handleSearchById();
+  fetchData();
+    
+  }, [selectedAlmacenes, showUpdateModal]);
+
+  const handleSearchById = async () => {
+    setMensajeErrorAlert(null);
+    setMensajeExitoAlert(null);
+    setLoading(true);
+    try {
+        const data = await getAlmacenesById(selectedAlmacenes?.idNeg, selectedAlmacenes?._id);
+        formik.setValues({
+          id_almacen: data?.id_almacen || "",
+          cantidadActual: data?.cantidadActual || "",
+          cantidadDisponible: data?.cantidadDisponible || "",
+          cantidadApartada: data?.cantidadApartada || "",
+          cantidadMerma:  data?.cantidadMerma || "",
+          stockMaximo: data?.stockMaximo || "",
+          stockMinimo: data?.stockMinimo || "",
+        });
+        setIsSearchDisabled(true); // Deshabilitar la búsqueda después de buscar
+    } catch (error) {
+    } finally {
+        setLoading(false);
+    }
+};
 
   // Configuración de Formik
   const formik = useFormik({
     enableReinitialize: true, // Permite actualizar los valores iniciales
     initialValues: {
-      id_almacen: selectedAlmacenes?.id_almacen || "",
-      cantidadActual: selectedAlmacenes?.cantidadActual || "",
-      cantidadDisponible: selectedAlmacenes?.cantidadDisponible || "",
-      cantidadApartada: selectedAlmacenes?.cantidadApartada || "",
-      cantidadMerma: selectedAlmacenes?.cantidadMerma || "",
-      stockMaximo: selectedAlmacenes?.stockMaximo || "",
-      stockMinimo: selectedAlmacenes?.stockMinimo || "",
+      id_almacen:  "",
+      cantidadActual:  "",
+      cantidadDisponible:  "",
+      cantidadApartada: "",
+      cantidadMerma:  "",
+      stockMaximo: "",
+      stockMinimo:  "",
     },
     validationSchema: Yup.object({
       id_almacen: Yup.string().required("El ID del almacén es requerido"),

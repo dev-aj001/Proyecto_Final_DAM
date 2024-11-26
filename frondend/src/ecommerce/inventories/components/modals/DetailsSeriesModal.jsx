@@ -2,39 +2,40 @@ import { Dialog, DialogActions, DialogContent, Typography, Box } from "@mui/mate
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
-import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
+import { getseriesById } from "../services/remote/get/GetSeriesById";
 
-const DetailsAlmacenesModal = ({ showDetailsModal, setShowDetailsModal, selectedAlmacenes, onClose }) => {
 
-const [almacenes, setAlmacenes] = useState([]);
-const [loading, setLoading] = useState(false);
+const DetailsSeriesModal = ({ showDetailsModal, setShowDetailsModal, selectedSeries, onClose }) => {
+    const [loading, setLoading] = useState(false);
+    const [seriesData, setSeriesData] = useState([]);
 
-const handleCloseModal = () => {
-    setShowDetailsModal(false);
-    onClose();
-};
-
-useEffect(() => {
-    console.log("selectedAlmacenes:", selectedAlmacenes);
-    const fetchAlmacenesDetails = async () => {
-        try {
-            // Aquí consultamos cada inventario por ID
-            const details = await Promise.all(
-                selectedAlmacenes.map(almacenes => getAlmacenesById(almacenes.idNeg, almacenes._id))
-            );
-            setAlmacenes(details);
-        } catch (error) {
-            console.error("Error al obtener los detalles de los inventarios:", error);
-        } finally {
-            setLoading(false);
-        }
+    const handleCloseModal = () => {
+        setShowDetailsModal(false);
+        onClose();
     };
-    fetchAlmacenesDetails();
 
-}, [selectedAlmacenes, showDetailsModal]);
+    useEffect(() => {
+        console.log("selectedSeries",selectedSeries);
+        const fetchSeriesData = async () => {
+            setLoading(true);
+            try {
+                const details = await Promise.all(
+                    selectedSeries.map(series => getseriesById(series.negocioId, series.id_almacen, series.id_serie))
+                );
+                console.log("details",details);
+                setSeriesData(details);
 
-return (
-<Dialog
+            } catch (error) {
+                console.error("Error al obtener los detalles de la serie:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSeriesData();
+    }, [selectedSeries, showDetailsModal]);
+
+    return (
+        <Dialog
             open={showDetailsModal}
             onClose={handleCloseModal}
             aria-labelledby="details-modal-title"
@@ -49,15 +50,15 @@ return (
                     </Typography>
                 ) : (
                     <>
-                         {almacenes.length > 0 ? (
+                        {seriesData.length > 0 ? (
                             <>
                                 <Typography variant="body2" sx={{ marginBottom: 2 }}>
-                                    <strong><h2>Detalles de los almacenes seleccionados:</h2></strong>
+                                    <strong><h2>Detalles de los inventarios seleccionados:</h2></strong>
                                 </Typography>
                                 <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
-                                    {almacenes.map((almacenes, index) => (
+                                    {seriesData.map((series, index) => (
                                         <Box
-                                            key={almacenes._id || index}
+                                            key={series._id || index}
                                             sx={{
                                                 marginBottom: 1,
                                                 padding: 1,
@@ -65,19 +66,19 @@ return (
                                                 borderRadius: 4,
                                             }}
                                         >
-                                         
                                             <Typography variant="body2">
-                                                <strong>Nombre almacen:</strong> {almacenes.id_almacen}
+                                                <strong>ID:</strong> {series.id_serie}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Cantidad actual:</strong> {almacenes.cantidadActual}
+                                                <strong>numero_serie:</strong> {series.numero_serie}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Cantidad disponible:</strong> {almacenes.cantidadDisponible}
+                                                <strong>numero_placa:</strong> {series.numero_placa}
                                             </Typography>
                                             <Typography variant="body2">
-                                                <strong>Cantidad merma:</strong> {almacenes.cantidadMerma}
+                                                <strong>observacion:</strong> {series.observacion}
                                             </Typography>
+                                            
                                             {/* Agregar más detalles según lo que se recupere del servicio */}
                                         </Box>
                                     ))}
@@ -105,6 +106,7 @@ return (
             </DialogActions>
         </Dialog>
     );
-};
+        }
 
-export default DetailsAlmacenesModal;
+export default DetailsSeriesModal
+

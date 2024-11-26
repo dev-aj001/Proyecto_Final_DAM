@@ -1,9 +1,9 @@
 import axios from 'axios';  // Importar axios
 
-export function getAlmacenesById(idNeg) {
+export function getAlmacenesById(idNeg, idAlmac) {
   return new Promise((resolve, reject) => {
     // Constuir la URL con el ID
-    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/almacenes/' + idNeg + '/almacen/'}`;
+    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/almacenes/' + idNeg + '/almacen/'+ idAlmac}`;
 
     console.log("URL de la solicitud:", apiUrl);
 
