@@ -130,6 +130,7 @@ const InventoriesTable = () => {
     <Tab label="Negocios" />
     <Tab label="Almacenes" />
     <Tab label="Series" />
+    <Tab label="Movimientos" />
     
   </Tabs>
       
@@ -150,17 +151,6 @@ const InventoriesTable = () => {
         renderTopToolbarCustomActions={() => (
           <Stack direction="row" sx={{ m: 1 }}>
 
-       {/*      <Tooltip title="Agregar">
-              <IconButton onClick={() => {
-
-                const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
-                console.log("Datos seleccionados:", selectedData); // Mostrar datos seleccionados en consola
-
-              }}>
-                <AddCircleIcon />
-              </IconButton>
-            </Tooltip>
- */}
 
             <Tooltip title="Agregar">
               <IconButton onClick={() => setAddInventoryShowModal(true)}>
@@ -349,6 +339,8 @@ const InventoriesTable = () => {
 
 
 
+
+
  {/* Tabla de series ---------------------------------------*/}
 {selectedTab === 2 && (
         <MaterialReactTable
@@ -415,6 +407,79 @@ const InventoriesTable = () => {
       )}
   {/* Fin Tabla de series ---------------------------------------*/}
 
+
+
+
+
+
+
+
+
+ {/* Tabla de movt ---------------------------------------*/}
+ {selectedTab === 3 && (
+        <MaterialReactTable
+        columns={InventoriesColumns}
+        data={inventoriesData}
+        state={{
+          isLoading: loadingTable,
+          rowSelection,
+        }}
+        onRowSelectionChange={setRowSelection}
+        initialState={{ density: "compact", showGlobalFilter: true }}
+        enableRowSelection={true}
+
+        renderTopToolbarCustomActions={() => (
+          <Stack direction="row" sx={{ m: 1 }}>
+
+   
+
+            <Tooltip title="Agregar">
+              <IconButton onClick={() => {}}>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Editar">
+            <IconButton
+        onClick={() => {}}
+    >
+        <EditIcon />
+    </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Eliminar">
+              <IconButton onClick={() => {  }}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Detalles">
+            <IconButton onClick={() => {}}>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
+            <h4 style={{ color: "white" }}>tabla 2</h4>
+          </Stack>
+        )}
+        muiTableBodyCellProps={{
+          sx: {
+            color: "#503685", // Texto en tonalidades moradas para las celdas de datos
+          },
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            color: "#6c47b8", // Texto blanco para los encabezados
+            fontWeight: "bold", // Resaltar los encabezados
+          },
+        }}
+        muiTableContainerProps={{
+          sx: {
+            backgroundColor: "#fff", // Fondo oscuro para la tabla
+          },
+        }}
+      />
+      )}
+  {/* Fin Tabla de movt ---------------------------------------*/}
 
 
 
