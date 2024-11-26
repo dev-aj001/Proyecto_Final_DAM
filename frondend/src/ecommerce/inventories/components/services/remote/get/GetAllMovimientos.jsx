@@ -1,22 +1,18 @@
 import axios from 'axios';  // Importar axios
 
-export function getAllInventories() {
+export function getAllMovimientos() {
   return new Promise((resolve, reject) => {
     //const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventories'}`;
-    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventory'}`;
-
-    console.log("URL de la solicitud:", apiUrl);
-
+    const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/movimientos'}`;
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        console.log('All movimientos: ', response.data);
 
         if (!data.success) {
           console.error("Error en la petición <<getAllInventories - Services>>", data);
           reject(data);
         } else {
-          console.log("Inventarios obtenidos:", data.data);
           resolve(data.data); // Devolver el array de inventarios
         }
       })

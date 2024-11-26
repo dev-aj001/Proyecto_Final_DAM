@@ -147,7 +147,7 @@ async function readAll(req, res) {
           negocioId: negocio._id,
           negocioNombre: negocio.nombre,
           almacenId: almacen._id,
-          almacenNombre: almacen.nombre || null, // Si el almacén tiene un nombre
+          almacenNombre: almacen.id_almacen || null, // Si el almacén tiene un nombre
           movimientoId: movimiento._id,
           tipo: movimiento.tipo,
           cantidadAnterior: movimiento.cantidadAnterior,

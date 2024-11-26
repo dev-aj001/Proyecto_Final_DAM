@@ -16,13 +16,12 @@ import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal"; // Importar e
 import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
 import AddIServisModal from "../modals/AddIServisModal";
 import DeleteSeriesModal from "../modals/DeleteSeriesModal";
+import AddMovimientosModal from "../modals/AddMovimientosModal";
 
 import { Tabs, Tab } from "@mui/material";
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
-
-
-
+import { getAllMovimientos } from "../services/remote/get/GetAllMovimientos";
 
 
 
@@ -58,6 +57,18 @@ const SeriesColumns = [
   { accessorKey: "almacen", header: "Almacen", size: 150 },
 ]
 
+const MovimientosColumns = [
+    { accessorKey: "movimientoId", header: "ID", size: 150 },
+    { accessorKey: "almacenNombre", header: "Almacen", size:150},
+    { accessorKey: "negocioNombre", header: "Negocio nombre", size:150},
+    { accessorKey: "tipo", header: "Tipo mov.", size: 150},
+    { accessorKey: "cantidadAnterior", header: "Cant. anterior", size: 150 },
+    { accessorKey: "cantidadMovimiento", header: "Cant. movimiento", size:150},
+    { accessorKey: "cantidadActual", header: "Cant. actual", size:150},
+    { accessorKey: "referencia", header: "Referencia", size:150},
+  ]
+  
+
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [inventoriesData, setInventoriesData] = useState([]);
@@ -86,6 +97,10 @@ const InventoriesTable = () => {
   const [addSeriesShowModal, setAddSeriesShowModal] = useState(false);
 
 
+  //Movimientos
+  const [movimientosData, setMovimientosData] = useState([]);
+  const [addMovimientosShowModal, setAddMovimientosShowModal] = useState(false);
+  
 
 
 
@@ -145,6 +160,27 @@ const InventoriesTable = () => {
 
       console.log("Almacenes obtenidos:", validatedAlmacenesData);
       console.log(" series obtenidos:", validatedSeriesData);
+
+      const allMoviminetosData = await getAllMovimientos();
+      const validatedMovimientosData = allMoviminetosData.map((item) => ({
+        negocioId: item.negocioId || "No disponible",
+        negocioNombre: item.negocioNombre || "No disponible",
+        id_almacen: item.id_almacen || "No disponible",
+        almacenNombre: item.almacenNombre || "No disponible",
+        movimientoId: item.movimientoId || "No disponible",
+        tipo: item.tipo || "No disponible",
+        cantidadAnterior: item.cantidadAnterior || "No disponible",
+        cantidadMovimiento: item.cantidadMovimiento || "No disponible",
+        cantidadActual: item.cantidadActual || "No disponible",
+        referencia: item.referencia || "No disponible",
+      }));
+      setMovimientosData(validatedMovimientosData);
+      setLoadingTable(false);
+  
+      console.log("Movimientos Obtenidos: " + allMoviminetosData);
+  
+      //  console.log("Almacenes obtenidos:", validatedAlmacenesData);
+  
 
 
 
@@ -471,8 +507,8 @@ const InventoriesTable = () => {
       {/* Tabla de movt ---------------------------------------*/}
       {selectedTab === 3 && (
         <MaterialReactTable
-          columns={InventoriesColumns}
-          data={inventoriesData}
+        columns={MovimientosColumns}
+        data={movimientosData}
           state={{
             isLoading: loadingTable,
             rowSelection,
@@ -487,7 +523,9 @@ const InventoriesTable = () => {
 
 
               <Tooltip title="Agregar">
-                <IconButton onClick={() => { }}>
+              <IconButton onClick={() => {
+                setAddMovimientosShowModal(true);
+              }}>
                   <AddCircleIcon />
                 </IconButton>
               </Tooltip>
@@ -633,6 +671,14 @@ const InventoriesTable = () => {
       onClose={() => setDeleteSeriesShowModal(false)}
       />
 
+        {/*tabla de Movimientos ------------------------------------*/}
+        <AddMovimientosModal
+        showAddModal={addMovimientosShowModal}
+        setShowAddModal={setAddMovimientosShowModal}
+        fetchData={fetchData}
+        onClose={() => setAddMovimientosShowModal(false)}
+        />
+
 
     </Box>
 
@@ -642,6 +688,3 @@ const InventoriesTable = () => {
 };
 
 export default InventoriesTable;
-
-
-
