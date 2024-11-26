@@ -122,7 +122,53 @@ async function readAll(req, res) {
 }
 
 async function deleteOne(req, res) {
-    
+  try {
+    const { id, id_almacen, id_serie } = req.params;
+
+    // Buscar el inventario por ID de negocio
+    const inventory = await inventoryModel.findById(id);
+
+    if (!inventory) {
+      return res.status(404).json({ success: false, message: "Negocio no encontrado" });
+    }
+
+    // Buscar el almacén específico dentro del negocio
+    const almacen = inventory.almacenes.find(
+      (almacen) => almacen._id.toString() === id_almacen
+    );
+
+    if (!almacen) {
+      return res.status(404).json({ success: false, message: "Almacén no encontrado" });
+    }
+
+    // Buscar el movimiento dentro del almacén
+    const index = almacen.series.findIndex(
+      (serie) => serie._id.toString() === id_serie
+    );
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, message: "Serie no encontrada" });
+    }
+
+    // Eliminar el movimiento del arreglo de movimientos del almacén
+    almacen.series.splice(index, 1);
+
+    // Guardar el inventario con el movimiento eliminado
+    await inventory.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Serie eliminada exitosamente",
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "ID inválido o no encontrado" });
+    }
+
+    // Manejar cualquier otro error
+    return res.status(400).json({ success: false, message: error.message });
+  }
 }
 
 module.exports = {

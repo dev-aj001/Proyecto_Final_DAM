@@ -11,6 +11,7 @@ import * as Yup from "yup";
 // Services
 import { AddOneService } from "../services/remote/post/AddOneServis";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
+import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
 
 const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
@@ -18,6 +19,17 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     const [loading, setLoading] = useState(false);
     const [negocios, setNegocios] = useState([]); // Para almacenar los negocios
     const [almacen, setAlmacen] = useState([]); // Para almacenar los inventories
+    const [negocioSeleccionado, setNegocioSeleccionado] = useState(""); // Para almacenar los inventories
+
+    const fetchAlmacenes = async (id) => {
+        try {
+            const allInventoriesData = await getAlmacenesById(id);
+            setAlmacen(allInventoriesData); // Asignar los datos al estado de inventories
+            console.log("Almacenes obtenidos:", allInventoriesData);
+        } catch (error) {
+            console.error("Error fetching inventories:", error);
+        }
+    };
 
     useEffect(() => {
         const fetchNegocios = async () => {
@@ -37,16 +49,8 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
         };
         fetchNegocios();
 
-        const fetchInventories = async () => {
-            try {
-                const allInventoriesData = await getAllAlmacenes();
-                setAlmacen(allInventoriesData); // Asignar los datos al estado de inventories
-                console.log("Almacenes obtenidos:", allInventoriesData);
-            } catch (error) {
-                console.error("Error fetching inventories:", error);
-            }
-        };
-      fetchInventories();
+        
+        // fetchAlmacenes();
     }, []);
 
     const formik = useFormik({
@@ -125,7 +129,12 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                             id="id_negocio"
                             name="id_negocio"
                             value={formik.values.id_negocio}
-                            onChange={formik.handleChange}
+                            onChange={(e)=>{
+                                formik.handleChange(e);
+                                // setNegocioSeleccionado(e.target.value);
+                                fetchAlmacenes(e.target.value);
+                                console.log("Seleccion: " + e.target.value);
+                            }}
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_negocio && Boolean(formik.errors.id_negocio)}
                         >
@@ -159,6 +168,13 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_almacen && Boolean(formik.errors.id_almacen)}
                         >
+                            {/* {almacen.find(
+                                (almacen) => almacen.id.toString() === negocioSeleccionado
+                            ).map((a)=> (
+                                <MenuItem key={a._id} value={a._id}>
+                                    {a.id_almacen}
+                                </MenuItem>
+                            ))} */}
                             {almacen.map((almacen) => (
                                 <MenuItem key={almacen._id} value={almacen._id}>
                                     {almacen._id}
