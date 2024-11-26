@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog, DialogContent, DialogTitle, Typography, TextField,
-    DialogActions, Alert, Box, FormControlLabel, Checkbox
+    DialogActions, Alert, Box, FormControlLabel, Checkbox, FormGroup, FormControl, InputLabel, Select, MenuItem
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,23 +10,56 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 // Services
 import { AddOneService } from "../services/remote/post/AddOneServis";
-import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
+import { getAllInventories } from "../services/remote/get/GetAllInventories";
 
-const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetchData }) => {
+const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
     const [loading, setLoading] = useState(false);
+    const [negocios, setNegocios] = useState([]); // Para almacenar los negocios
+    const [almacen, setAlmacen] = useState([]); // Para almacenar los inventories
+
+    useEffect(() => {
+        const fetchNegocios = async () => {
+            try {
+                const allInventoriesData = await getAllInventories();
+                const validatedData = allInventoriesData.map((item) => ({
+                    _id: item._id || "No disponible",
+                    Nombre: item.nombre || "No disponible",
+                    Telefono: item.contacto?.telefono || "No disponible",
+                    Email: item.contacto?.email || "No disponible",
+                    Direccion: "C.P.:" + item.direccion?.codigo_postal + ", Colonia: " + item.direccion?.colonia || "No disponible",
+                }));
+                setNegocios(validatedData); // Asignar los datos al estado de inventories
+            } catch (error) {
+                console.error("Error fetching inventories:", error);
+            }
+        };
+        fetchNegocios();
+
+        const fetchInventories = async () => {
+            try {
+                const allInventoriesData = await getAllAlmacenes();
+                setAlmacen(allInventoriesData); // Asignar los datos al estado de inventories
+                console.log("Almacenes obtenidos:", allInventoriesData);
+            } catch (error) {
+                console.error("Error fetching inventories:", error);
+            }
+        };
+      fetchInventories();
+    }, []);
 
     const formik = useFormik({
-            id_negocio: "",
+        initialValues: {
+            id_negocio: "", // Aquí permitimos múltiples selecciones
             id_almacen: "",
             id_serie: "",
             numero_serie: "",
             numero_placa: "",
             observacion: "",
         },
-        validationSchema: Yup.object({ 
-            id_negocio: Yup.string().required("Requerido"),
+        validationSchema: Yup.object({
+            id_negocio: Yup.string().required("El campo es requerido"),
             id_almacen: Yup.string().required("Requerido"),
             id_serie: Yup.string().required("Requerido"),
             numero_serie: Yup.string().required("Requerido"),
@@ -40,10 +73,11 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
             try {
                 console.log("Valores del formulario:", values);
                 const data = {
-                    id_serie: values.id_serie,    
+                    id_serie: values.id_serie,
                     numero_serie: values.numero_serie,
                     numero_placa: values.numero_placa,
-                    observacion: values.observacion,}
+                    observacion: values.observacion,
+                };
                 const response = await AddOneService(values.id_negocio, values.id_almacen, data);
                 if (response.status !== 200) {
                     throw new Error(response.data?.message || "Error al crear inventario");
@@ -57,7 +91,7 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
             } catch (e) {
                 setMensajeErrorAlert(e.message || "Error al crear inventario");
             } finally {
-                setLoading(false);          
+                setLoading(false);
             }
         },
     });
@@ -83,31 +117,63 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                 {mensajeErrorAlert && <Alert severity="error">{mensajeErrorAlert}</Alert>}
 
                 <Box display="flex" flexDirection="column" gap={2}>
-                    {/* ID Negocio */}
-                    <TextField
-                        label="ID Negocio"
-                        name="id_negocio"
-                        value={formik.values.id_negocio}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
-                    />
-                    {formik.touched.id_negocio && formik.errors.id_negocio && (
-                        <Typography color="error">{formik.errors.id_negocio}</Typography>
-                    )}
 
-                    {/* ID Almacen */}
-                    <TextField
-                        label="ID Almacén"
-                        name="id_almacen"
-                        value={formik.values.id_almacen}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
-                    />
-                    {formik.touched.id_almacen && formik.errors.id_almacen && (
-                        <Typography color="error">{formik.errors.id_almacen}</Typography>
-                    )}
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel id="id_negocio-label">Negocio</InputLabel>
+                        <Select
+                            labelId="id_negocio-label"
+                            id="id_negocio"
+                            name="id_negocio"
+                            value={formik.values.id_negocio}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.id_negocio && Boolean(formik.errors.id_negocio)}
+                        >
+                            {negocios.map((negocios) => (
+                                <MenuItem key={negocios._id} value={negocios._id}>
+                                    {negocios.Nombre}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {formik.touched.id_negocio && formik.errors.id_negocio && (
+                            <Typography variant="caption" color="error">
+                                {formik.errors.id_negocio}
+                            </Typography>
+                        )}
+                        {/* ID Almacen */}
+
+
+                       
+
+
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel id="id_almacen-label">Almacen</InputLabel>
+                        <Select
+                            labelId="id_almacen-label"
+                            id="id_almacen"
+                            name="id_almacen"
+                            value={formik.values.id_almacen}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.id_almacen && Boolean(formik.errors.id_almacen)}
+                        >
+                            {almacen.map((almacen) => (
+                                <MenuItem key={almacen._id} value={almacen._id}>
+                                    {almacen._id}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {formik.touched.id_almacen && formik.errors.id_almacen && (
+                            <Typography variant="caption" color="error">
+                                {formik.errors.id_almacen}
+                            </Typography>
+                        )}
+                    </FormControl>
+
+
+
 
                     {/* ID Serie */}
                     <TextField
@@ -116,7 +182,8 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                         value={formik.values.id_serie}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
+                        fullWidth
+                        margin="dense"
                     />
                     {formik.touched.id_serie && formik.errors.id_serie && (
                         <Typography color="error">{formik.errors.id_serie}</Typography>
@@ -129,7 +196,8 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                         value={formik.values.numero_serie}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
+                        fullWidth
+                        margin="dense"
                     />
                     {formik.touched.numero_serie && formik.errors.numero_serie && (
                         <Typography color="error">{formik.errors.numero_serie}</Typography>
@@ -142,7 +210,8 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                         value={formik.values.numero_placa}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
+                        fullWidth
+                        margin="dense"
                     />
                     {formik.touched.numero_placa && formik.errors.numero_placa && (
                         <Typography color="error">{formik.errors.numero_placa}</Typography>
@@ -155,7 +224,8 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                         value={formik.values.observacion}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        {...commonTextFieldProps}
+                        fullWidth
+                        margin="dense"
                     />
                     {formik.touched.observacion && formik.errors.observacion && (
                         <Typography color="error">{formik.errors.observacion}</Typography>
@@ -178,7 +248,7 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, onInventoryAdded, fetc
                     color="secondary"
                     startIcon={<CloseIcon />}
                 >
-                     Cerrar
+                    Cerrar
                 </LoadingButton>
             </DialogActions>
         </Dialog>
