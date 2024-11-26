@@ -49,40 +49,33 @@ async function createOne(req, res) {
 }
 
 async function updateOne(req, res) {
-    try {
-      const id = req.params.id;
-      const { error, value } = Validator.AlmacenUpdateSchemaJoi.validate( req.body, {
-        abortEarly: false,
-      });
   
-      if (error) {
-        throw new Error(
-          `Validacion fallida: ${error.details
-            .map((details) => details.message)
-            .join(", ")}`
-        );
-      }
-  
-      const inventory = await inventoryModel.findByIdAndUpdate(id, 
-        { $push: { almacenes: value } },  // $push agrega el valor sin sobrescribir
-        { new: true } // Retorna el documento actualizado
-      );
-  
-      return res.status(200).json({ success: true, message: inventory});
-  
-    } catch (error) {
-      if (error.name === 'CastError') {
-        // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
-        return res.status(404).json({ success: false, message: "Inventario no encontrado" });
-      }
-      // Cualquier otro error se maneja normalmente
-      return res.status(400).json({ success: false, message: error.message });
-    }
 }
 
+
 async function readOne(req, res) {
-    
-}
+  try {
+    const id = req.params.id;
+    const id_almacen = req.params.id_almacen;
+    const id_serie = req.params.id_serie;
+  
+    console.log(id_almacen);
+  
+    const { almacenes } = await inventoryModel.findById(id);
+  
+    const almacen = almacenes.find((e)=> e._id == id_almacen );
+    const serie = almacen.series.find((e)=> e._id == id_serie);
+  
+    res.status(200).json({ success: true, data: serie });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "Inventario no encontrado" });
+    }
+    // Cualquier otro error se maneja normalmente
+    return res.status(400).json({ success: false, message: error.message });
+  
+  }}
 
 async function readAll(req, res) {
   try {
