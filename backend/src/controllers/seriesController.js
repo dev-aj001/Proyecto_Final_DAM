@@ -82,24 +82,24 @@ async function updateOne(req, res) {
     }
 
     // Buscar el movimiento dentro del almacén
-    const movto = almacen.series.find(
-      (movto) => movto._id.toString() === id_serie
+    const serie = almacen.series.find(
+      (serie) => serie._id.toString() === id_serie
     );
 
-    if (!movto) {
-      return res.status(404).json({ success: false, message: "Movimiento no encontrado" });
+    if (!serie) {
+      return res.status(404).json({ success: false, message: "Serie no encontrado" });
     }
 
     // Actualizar los datos del movimiento con los valores proporcionados
-    Object.assign(movto, value);
+    Object.assign(serie, value);
 
     // Guardar el inventario con el movimiento actualizado
     await inventory.save();
 
     return res.status(200).json({
       success: true,
-      message: "Movimiento actualizado exitosamente",
-      data: movto,
+      message: "Serie actualizado exitosamente",
+      data: serie,
     });
   } catch (error) {
     if (error.name === "CastError") {
@@ -193,12 +193,12 @@ async function deleteOne(req, res) {
     }
 
     // Buscar el movimiento dentro del almacén
-    const movtoIndex = almacen.series.findIndex(
-      (movto) => movto._id.toString() === id_serie
+    const index = almacen.series.findIndex(
+      (serie) => serie._id.toString() === id_serie
     );
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: "Movimiento no encontrado" });
+      return res.status(404).json({ success: false, message: "Serie no encontrada" });
     }
 
     // Eliminar el movimiento del arreglo de movimientos del almacén
@@ -209,7 +209,7 @@ async function deleteOne(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Movimiento eliminado exitosamente",
+      message: "Serie eliminada exitosamente",
     });
   } catch (error) {
     if (error.name === "CastError") {
