@@ -43,7 +43,7 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
     }
   };
 
-
+ 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -65,16 +65,15 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
         setMensajeExitoAlert(null);
         setLoading(true);
         try {
-          console.log(selectedSeries);
+          console.log(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie);
          console.log(values);
-         const response = await UpdateOneSeries(selectedSeries?.negocioId, selectedSeries?.id_almacen, selectedSeries?.id_serie, values);
-         if (!response || ![200, 201].includes(response.status)) {
-          throw new Error(response.data?.message || "Error al actualizar los datos.");
-        }
+         await UpdateOneSeries(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie, values);
+         
          
          setMensajeExitoAlert("Datos actualizados exitosamente.");
         } catch (error) {
           setMensajeErrorAlert("Error al actualizar los datos.");
+          console.log(error);
         } finally {
           setLoading(false);
         }
@@ -101,10 +100,12 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
           {mensajeExitoAlert && <Alert severity="success">{mensajeExitoAlert}</Alert>}
 
           {/* Campos del formulario */}
+          
+             
           <TextField
-            label="Número de Serie"
+            label="Nombre de serie"
             fullWidth
-            name="id_Nserie"
+            name="id_serie"
             type="text"
             value={formik.values.id_serie}
             onChange={formik.handleChange}
@@ -117,11 +118,23 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
             label="numero de placa"
             fullWidth
             name="numero_placa"
-            type="number"
+            type="text"
             value={formik.values.numero_placa}
             onChange={formik.handleChange}
             error={formik.touched.numero_placa && Boolean(formik.errors.numero_placa)}
             helperText={formik.touched.numero_placa && formik.errors.numero_placa}
+            sx={{ marginBottom: 2 }}
+          />
+          
+          <TextField
+            label="numero de serie"
+            fullWidth
+            name="numero_serie"
+            type="text"
+            value={formik.values.numero_serie}
+            onChange={formik.handleChange}
+            error={formik.touched.numero_serie && Boolean(formik.errors.numero_serie)}
+            helperText={formik.touched.numero_serie && formik.errors.numero_serie}
             sx={{ marginBottom: 2 }}
           />
           <TextField

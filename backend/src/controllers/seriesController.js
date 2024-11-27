@@ -53,7 +53,7 @@ async function updateOne(req, res) {
     const { id, id_almacen, id_serie } = req.params;
 
     // Validar los datos enviados en el cuerpo de la solicitud
-    const { error, value } = Validator.MovimientoSchemaJoi.validate(req.body, {
+    const { error, value } = Validator.SerieSchemaJoi.validate(req.body, {
       abortEarly: false,
     });
 
