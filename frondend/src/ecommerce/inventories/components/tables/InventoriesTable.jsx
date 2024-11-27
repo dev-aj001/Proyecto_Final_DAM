@@ -50,11 +50,11 @@ import DetailsInfoadModal from "../modals/DetailsInfoadModal";
 import UpdateInfoadModal from "../modals/UpdateInfoadModal";
 
 // Ubicaciones
-// import { getAllUbicaciones } from "../services/remote/get/GetAllUbicaciones";
-// import AddUbicacionesModal from "../modals/AddUbicacionesModal";
-// import UpdateUbicacionesModal from "../modals/UpdateUbicacionesModal";
-// import DeleteUbicacionesModal from "../modals/DeleteUbicacionesModal";
-// import DetailsUbicacionesModal from "../modals/DetailsUbicacionesModal";
+ import { getAllUbicaciones } from "../services/remote/get/GetAllUbicaciones";
+import AddUbicacionModal from "../modals/AddIUbicacionesModal";
+import UpdateUbicacionesModal from "../modals/UpdateUbicacionesModal";
+import DeleteUbicacionesModal from "../modals/DeleteUbicacionesModal";
+import DetailsUbicacionesModal from "../modals/DetailsUbicacionesModal";
 
 
 const InventoriesColumns = [
@@ -129,6 +129,7 @@ const InventoriesTable = () => {
   const [rowSelectionSeries, setRowSelectionSeries] = useState({});
   const [rowSelectionMovimientos, setRowSelectionMovimientos] = useState({});
   const [rowSelectionInfoad, setRowSelectionInfoad] = useState({});
+  const [rowSelectionUbicaciones, setRowSelectionUbicaciones] = useState({});
 
 
 
@@ -182,6 +183,14 @@ const InventoriesTable = () => {
   const [updateInfoadShowModal, setUpdateInfoadShowModal] = useState(false);
 
 
+  // Ubicaciones
+  const [ubicacionesData, setUbicacionesData] = useState([]);
+  const [selectedUbicaciones, setSelectedUbicaciones] = useState(null);
+  const [addUbicacionesShowModal, setAddUbicacionesShowModal] = useState(false);
+  const [updateUbicacionesShowModal, setUpdateUbicacionesShowModal] = useState(false);
+  const [deleteUbicacionesShowModal, setDeleteUbicacionesShowModal] = useState(false);
+  const [detailsUbicacionesShowModal, setDetailsUbicacionesShowModal] = useState(false);
+
 
 
 
@@ -204,7 +213,6 @@ const InventoriesTable = () => {
 
       /* esto es de almacenes */
       const allAlmacenesData = await getAllAlmacenes();
-      console.log(allAlmacenesData);
       const validatedAlmacenesData = allAlmacenesData.map((item) => ({
         idNeg: item.id,
         id_almacen: item.almacen?.id_almacen || "No disponible",
@@ -275,21 +283,21 @@ const InventoriesTable = () => {
       }));
       setInfoadData(validatedInfoadData);
 
-      // const allUbicacionData = await getAllUbicacion();
-      // const validatedUbicacionData = allUbicacionData.map((item) => ({
-      //   _id: item._id || "No disponible",
-      //   negocioId: item.negocioId || "No disponible",
-      //   negocioNombre: item.nombre || "No disponible",
-      //   almacenId: item.almacenId || "No disponible",
-      //   almacen: item.id_almacen || "No disponible",
-      //   serieId: item.serieId || "No disponible",
-      //   serie: item.id_serie || "No disponible",
-      //   idTipoStatusOK: item.idTipoStatusOK || "No disponible",
-      //   ubicacion: item.ubicacion || "No disponible",
-      //   actual: item.actual || "No disponible",
+      const allUbicacionData = await getAllUbicaciones();
+      const validatedUbicacionData = allUbicacionData.map((item) => ({
+        _id: item._id || "No disponible",
+        negocioId: item.negocioId || "No disponible",
+        negocioNombre: item.nombre || "No disponible",
+        almacen: item.almacen || "No disponible",
+        almacenId: item.almacenId || "No disponible",
+        serie: item.serie || "No disponible",
+        idTipoStatusOK: item.idTipoStatusOK || "No disponible",
+        ubicacion: item.ubicacion || "No disponible",
+        actual: item.actual  || "No",
+        serieId: item.serieId || "No disponible",
     
-      // }));
-      // setInfoadData(validatedInfoadData);
+      }));
+      setUbicacionesData(validatedUbicacionData);
 
 
       setLoadingTable(false);
@@ -328,6 +336,7 @@ const InventoriesTable = () => {
         <Tab label="Series" />
         <Tab label="Movimientos" />
         <Tab label="Info Adicional" />
+        <Tab label="Ubicaciones" />
 
       </Tabs>
 
@@ -840,6 +849,99 @@ const InventoriesTable = () => {
 
 
 
+      {/* Tabla de Ubicaciones ---------------------------------------*/}
+      {selectedTab === 5 && (
+        <MaterialReactTable
+          columns={UbicaionesColumns}
+          data={ubicacionesData}
+          state={{
+            isLoading: loadingTable,
+            rowSelection: rowSelectionUbicaciones,
+          }}
+          onRowSelectionChange={setRowSelectionUbicaciones}
+          initialState={{ density: "compact", showGlobalFilter: true }}
+          enableRowSelection={true}
+
+          renderTopToolbarCustomActions={() => (
+            <Stack direction="row" sx={{ m: 1 }}>
+
+              <Tooltip title="Agregar">
+                <IconButton onClick={() => {
+                  setAddUbicacionesShowModal(true);
+                }}>
+                  <AddCircleIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Editar">
+                <IconButton
+                  onClick={() => {
+                    const selectedData = Object.keys(rowSelectionUbicaciones).map((key) => ubicacionesData[key]);
+                    if (selectedData.length !== 1) {
+                      alert("Por favor, seleccione una sola fila para editar.");
+                      return;
+                    }
+                    console.log("Datos seleccionados ubicaciones:", selectedData);
+
+                    setUpdateUbicacionesShowModal(true);
+                    setSelectedUbicaciones(selectedData[0]);  // Guardamos el serie seleccionado
+
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Eliminar">
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionUbicaciones).map((key) => ubicacionesData[key]);
+                  // Pasa solo el ID del inventario seleccionado al modal de 
+                  console.log('infoad Ubicaciones', selectedData);
+                  setDeleteUbicacionesShowModal(true);
+                  setSelectedUbicaciones(selectedData);  // Guardamos el inventario seleccionado
+                }}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Detalles">
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionUbicaciones).map((key) => ubicacionesData[key]);
+                  // Pasa solo el ID del inventario seleccionado al modal de 
+                  console.log('infoadqweq3 Ubicaciones', selectedData);
+                  setDetailsUbicacionesShowModal(true);
+                  setSelectedUbicaciones(selectedData);  // Guardamos el inventario seleccionado
+                }}>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+
+            </Stack>
+
+          )}
+          muiTableBodyCellProps={{
+            sx: {
+              color: "#503685", // Texto en tonalidades moradas para las celdas de datos
+            },
+          }}
+          muiTableHeadCellProps={{
+            sx: {
+              color: "#6c47b8", // Texto blanco para los encabezados
+              fontWeight: "bold", // Resaltar los encabezados
+            },
+          }}
+          muiTableContainerProps={{
+            sx: {
+              backgroundColor: "#fff", // Fondo oscuro para la tabla
+            },
+          }}
+        />
+      )}
+      {/* Fin Tabla de Ubicaciones ---------------------------------------*/}
+
+
+
+
 
 
 
@@ -1024,6 +1126,37 @@ const InventoriesTable = () => {
         selectedInfoad={selectedInfoad} // Pasa el inventario seleccionado
         fetchData={fetchData}
         onClose={() => setUpdateInfoadShowModal(false)}
+      />
+
+      {/*Modales de Ubicaciones ------------------------------------*/}
+      <DeleteUbicacionesModal
+        showDeleteModal={deleteUbicacionesShowModal}
+        setShowDeleteModal={setDeleteUbicacionesShowModal}
+        fetchData={fetchData}
+        selectUbicaciones={selectedUbicaciones}
+        onClose={() => setDeleteUbicacionesShowModal(false)}
+      />
+
+      <DetailsUbicacionesModal
+        showDetailsModal={detailsUbicacionesShowModal}
+        setShowDetailsModal={setDetailsUbicacionesShowModal}
+        ubicaciones={ubicacionesData}
+        selecteUbicaciones={selectedUbicaciones} // Pasa el inventario seleccionado
+        onClose={() => setDetailsUbicacionesShowModal(false)}
+      />
+      
+      <UpdateUbicacionesModal
+        showUpdateModal={updateUbicacionesShowModal}
+        setShowUpdateModal={setUpdateUbicacionesShowModal}
+        selectedUbicaciones={selectedUbicaciones} // Pasa el inventario seleccionado
+        fetchData={fetchData}
+        onClose={() => setUpdateUbicacionesShowModal(false)}
+      />
+      <AddUbicacionModal
+        showAddModal={addUbicacionesShowModal}
+        setShowAddModal={setAddUbicacionesShowModal}
+        fetchData={fetchData}
+        onClose={() => setAddUbicacionesShowModal(false)}
       />
 
 
