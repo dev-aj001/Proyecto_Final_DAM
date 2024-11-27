@@ -103,7 +103,7 @@ async function readAll(req, res) {
 async function updateOne(req, res) {
   try {
     const id = req.params.id;
-    const idAlmacen = req.params.id_almacen;
+    const id_almacen = req.params.id_almacen;
     const { error, value } = Validator.AlmacenUpdateSchemaJoi.validate(
       req.body,
       {
@@ -119,22 +119,46 @@ async function updateOne(req, res) {
       );
     }
 
-     value._id = idAlmacen;
+    // Buscar el inventario por ID de negocio
+    const inventory = await inventoryModel.findById(id);
 
-    console.log("ID del inventario:", id, idAlmacen);
+    if (!inventory) {
+      return res.status(404).json({ success: false, message: "Negocio no encontrado" });
+    }
 
-    const almacen = await inventoryModel.findOneAndUpdate(
-      { _id: id, "almacenes._id": idAlmacen }, // Encuentra el documento y el elemento específico
-      {
-        $set: {
-          "almacenes.$": value, // Actualiza solo el elemento coincidente
-        },
-      }
+    // Buscar el almacén específico dentro del negocio
+    const almacen = inventory.almacenes.find(
+      (almacen) => almacen._id.toString() === id_almacen
     );
 
-    console.log(almacen);
+    if (!almacen) {
+      return res.status(404).json({ success: false, message: "Almacén no encontrado" });
+    }
 
-    return res.status(200).json({ success: true, message: almacen });
+    value._id = almacen._id;
+    value._series = almacen.series;
+    value.movtos = almacen.movtos;
+    value.info_ad = almacen.info_ad;
+
+    Object.assign(almacen, value);
+
+    await inventory.save();
+
+
+    //  value._id = idAlmacen;
+
+    // const almacen = await inventoryModel.findOneAndUpdate(
+    //   { _id: id, "almacenes._id": idAlmacen }, // Encuentra el documento y el elemento específico
+    //   {
+    //     $set: {
+    //       "almacenes.$": value, // Actualiza solo el elemento coincidente
+    //     },
+    //   }
+    // );
+
+    console.log(almacen, value);
+
+    return res.status(200).json({ success: true, message: value });
   } catch (error) {
     if (error.name === "CastError") {
       // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
