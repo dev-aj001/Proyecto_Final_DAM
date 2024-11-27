@@ -5,6 +5,7 @@ const almacenesRoutes = require('./routes/almacenesRoutes');
 const seriesRoutes = require('./routes/seriesRoutes');
 const movtosRoutes = require('./routes/movtosRoutes');
 const infoadRoutes = require('./routes/infoadRoutes');
+const ubicacionRoutes = require('./routes/ubicacionesRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -15,6 +16,7 @@ app.use('/api/v1/almacenes', almacenesRoutes);
 app.use('/api/v1/series', seriesRoutes);
 app.use('/api/v1/movimientos', movtosRoutes);
 app.use('/api/v1/infoad', infoadRoutes);
+app.use('/api/v1/ubicaciones', ubicacionRoutes);
 
 app.get('/', (req, res, next) => {
     res.send(
