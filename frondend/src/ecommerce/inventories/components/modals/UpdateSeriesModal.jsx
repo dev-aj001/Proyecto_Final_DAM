@@ -29,7 +29,13 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
     setLoading(true);
     try {
       const data = await getseriesById(selectedSeries?.negocioId, selectedSeries?.id_almacen, selectedSeries?.id_serie);
-     setSeriesData(data);
+      formik.setValues({
+        id_serie: data?.id_serie || "",
+        numero_serie: data?.numero_serie || "",
+        numero_placa: data?.numero_placa || "",
+        observacion: data?.observacion || "",
+      });
+
       setIsSearchDisabled(true); // Deshabilitar la búsqueda luego de buscar
     } catch (error) {
     } finally {
@@ -59,8 +65,14 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
         setMensajeExitoAlert(null);
         setLoading(true);
         try {
-          await UpdateOneSeries(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie, values);
-          setMensajeExitoAlert("Datos actualizados exitosamente.");
+          console.log(selectedSeries);
+         console.log(values);
+         const response = await UpdateOneSeries(selectedSeries?.negocioId, selectedSeries?.id_almacen, selectedSeries?.id_serie, values);
+         if (!response || ![200, 201].includes(response.status)) {
+          throw new Error(response.data?.message || "Error al actualizar los datos.");
+        }
+         
+         setMensajeExitoAlert("Datos actualizados exitosamente.");
         } catch (error) {
           setMensajeErrorAlert("Error al actualizar los datos.");
         } finally {
@@ -93,6 +105,7 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
             label="Número de Serie"
             fullWidth
             name="id_Nserie"
+            type="text"
             value={formik.values.id_serie}
             onChange={formik.handleChange}
             error={formik.touched.id_serie && Boolean(formik.errors.id_serie)}
@@ -116,7 +129,7 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
             fullWidth
             name="observacion"
             type="text"
-            value={seriesData.observacion}
+            value={formik.values.observacion}
             onChange={formik.handleChange}
             error={formik.touched.observacion && Boolean(formik.errors.observacion)}
             helperText={formik.touched.observacion && formik.errors.observacion}

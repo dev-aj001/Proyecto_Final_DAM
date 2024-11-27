@@ -108,7 +108,7 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     };
 
     return (
-        <Dialog open={showAddModal} onClose={() => setShowAddModal(false)}>
+        <Dialog open={showAddModal} onClose={() => setShowAddModal(false)} fullWidth>
             <DialogTitle>
                 <Typography variant="h6">Agregar Series</Typography>
                 <CloseIcon
@@ -134,6 +134,7 @@ const AddIServisModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                                 // setNegocioSeleccionado(e.target.value);
                                 fetchAlmacenes(e.target.value);
                                 console.log("Seleccion: " + e.target.value);
+                                
                             }}
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_negocio && Boolean(formik.errors.id_negocio)}

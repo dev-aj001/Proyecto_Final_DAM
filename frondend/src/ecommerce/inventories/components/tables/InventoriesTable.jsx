@@ -50,8 +50,7 @@ const AlamacenesColumns = [
 
 
 const SeriesColumns = [
-  { accessorKey: "id_serie", header: "ID", size: 150 },
-  { accessorKey: "nombre_serie", header: "Nombre", size: 150 },
+  { accessorKey: "id_serie", header: "Nombre", size: 150 },
   { accessorKey: "numero_placa", header: "Placa", size: 150 },
   { accessorKey: "observacion", header: "Observacion", size: 150 },
   { accessorKey: "negocioId", header: "Negocio", size: 150 },
@@ -73,26 +72,39 @@ const MovimientosColumns = [
 
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
+  const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
+
+  const [rowSelectionInventories, setRowSelectionInventories] = useState({});
+  const [rowSelectionAlmacenes, setRowSelectionAlmacenes] = useState({});
+  const [rowSelectionSeries, setRowSelectionSeries] = useState({});
+  const [rowSelectionMovimientos, setRowSelectionMovimientos] = useState({});
+
+
+
+  //Negocios
   const [inventoriesData, setInventoriesData] = useState([]);
   const [addInventoryShowModal, setAddInventoryShowModal] = useState(false);
   const [updateInventoryShowModal, setUpdateInventoryShowModal] = useState(false);
   const [deleteInventoryShowModal, setDeleteInventoryShowModal] = useState(false); // Estado para el modal de eliminación
-  const [addAlmacenesShowModal, setAddAlmacenesShowModal] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
+  const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
 
 
+
+
+
+  //Almacenes
+  const [addAlmacenesShowModal, setAddAlmacenesShowModal] = useState(false);
   const [selectedAlmacenes, setSelectedAlmacenes] = useState(null);
   const [updateAlmacenesShowModal, setUpdateAlmacenesShowModal] = useState(false);
   const [deleteAlmacenesShowModal, setDeleteAlmacenesShowModal] = useState(false);
   const [detailsAlmacenesShowModal, setDetailsAlmacenesShowModal] = useState(false);
-
-  const [detailsInventoryShowModal, setDetailsInventoryShowModal] = useState(false);
-  const [rowSelection, setRowSelection] = useState({});
-  const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
   const [almacenesData, setAlmacenesData] = useState([]);
 
 
-//series
+
+
+  //series
   const [deleteSeriesShowModal, setDeleteSeriesShowModal] = useState(false);
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [seriesData, setSeriesData] = useState([]);
@@ -149,7 +161,6 @@ const InventoriesTable = () => {
       const allServisData = await getAllseries();
       const validatedSeriesData = allServisData.map((item) => ({
         id_serie: item.serieId || "No disponible",
-        nombre_serie: item.numeroSerie || "No disponible",
         numero_placa: item.numeroPlaca || "No disponible",
         observacion: item.observacion || "No disponible",
         negocioId: item.negocioId || "No disponible",
@@ -218,16 +229,16 @@ const InventoriesTable = () => {
       </Tabs>
 
 
-      {/* Contenido según la pestaña seleccionada */}
+      {/* Negocios------------------------------------------------------- */}
       {selectedTab === 0 && (
         <MaterialReactTable
           columns={InventoriesColumns}
           data={inventoriesData}
           state={{
             isLoading: loadingTable,
-            rowSelection,
+            rowSelection: rowSelectionInventories
           }}
-          onRowSelectionChange={setRowSelection}
+          onRowSelectionChange={setRowSelectionInventories}
           initialState={{ density: "compact", showGlobalFilter: true }}
           enableRowSelection={true}
 
@@ -244,7 +255,7 @@ const InventoriesTable = () => {
               <Tooltip title="Editar">
                 <IconButton
                   onClick={() => {
-                    const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+                    const selectedData = Object.keys(rowSelectionInventories).map((key) => inventoriesData[key]);
 
                     if (selectedData.length !== 1) {
                       alert("Por favor, seleccione una sola fila para editar.");
@@ -262,7 +273,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Eliminar">
                 <IconButton onClick={() => {
-                  const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+                  const selectedData = Object.keys(rowSelectionInventories).map((key) => inventoriesData[key]);
 
 
 
@@ -276,7 +287,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Detalles">
                 <IconButton onClick={() => {
-                  const selectedData = Object.keys(rowSelection).map((key) => inventoriesData[key]);
+                  const selectedData = Object.keys(rowSelectionInventories).map((key) => inventoriesData[key]);
 
 
 
@@ -328,9 +339,9 @@ const InventoriesTable = () => {
           data={almacenesData}
           state={{
             isLoading: loadingTable,
-            rowSelection,
+            rowSelection: rowSelectionAlmacenes,
           }}
-          onRowSelectionChange={setRowSelection}
+          onRowSelectionChange={setRowSelectionAlmacenes}
           initialState={{ density: "compact", showGlobalFilter: true }}
           enableRowSelection={true}
 
@@ -352,7 +363,7 @@ const InventoriesTable = () => {
               <Tooltip title="Editar">
                 <IconButton
                   onClick={() => {
-                    const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+                    const selectedData = Object.keys(rowSelectionAlmacenes).map((key) => almacenesData[key]);
                     if (selectedData.length !== 1) {
                       alert("Por favor, seleccione una sola fila para editar.");
                       return;
@@ -369,7 +380,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Eliminar">
                 <IconButton onClick={() => {
-                  const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+                  const selectedData = Object.keys(rowSelectionAlmacenes).map((key) => almacenesData[key]);
 
 
 
@@ -383,7 +394,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Detalles">
                 <IconButton onClick={() => {
-                  const selectedData = Object.keys(rowSelection).map((key) => almacenesData[key]);
+                  const selectedData = Object.keys(rowSelectionAlmacenes).map((key) => almacenesData[key]);
 
 
 
@@ -431,9 +442,9 @@ const InventoriesTable = () => {
           data={seriesData}
           state={{
             isLoading: loadingTable,
-            rowSelection,
+            rowSelection: rowSelectionSeries,
           }}
-          onRowSelectionChange={setRowSelection}
+          onRowSelectionChange={setRowSelectionSeries}
           initialState={{ density: "compact", showGlobalFilter: true }}
           enableRowSelection={true}
 
@@ -452,8 +463,8 @@ const InventoriesTable = () => {
 
               <Tooltip title="Editar">
                 <IconButton
-                  onClick={() =>  {
-                    const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+                  onClick={() => {
+                    const selectedData = Object.keys(rowSelectionSeries).map((key) => seriesData[key]);
                     if (selectedData.length !== 1) {
                       alert("Por favor, seleccione una sola fila para editar.");
                       return;
@@ -470,7 +481,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Eliminar">
                 <IconButton onClick={() => {
-                  const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+                  const selectedData = Object.keys(rowSelectionSeries).map((key) => seriesData[key]);
 
 
 
@@ -483,14 +494,14 @@ const InventoriesTable = () => {
               </Tooltip>
 
               <Tooltip title="Detalles">
-                <IconButton onClick={() => { 
-                   const selectedData = Object.keys(rowSelection).map((key) => seriesData[key]);
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionSeries).map((key) => seriesData[key]);
 
-                   // Pasa solo el ID del inventario seleccionado al modal de actualización\
-                   console.log('selectedData boton',selectedData);
-                   setDetailsSeriesShowModal(true);
-                   setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
- 
+                  // Pasa solo el ID del inventario seleccionado al modal de actualización\
+                  console.log('selectedData boton', selectedData);
+                  setDetailsSeriesShowModal(true);
+                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+
                 }}>
                   <InfoIcon />
                 </IconButton>
@@ -533,9 +544,9 @@ const InventoriesTable = () => {
           data={movimientosData}
           state={{
             isLoading: loadingTable,
-            rowSelection,
+            rowSelection: rowSelectionMovimientos,
           }}
-          onRowSelectionChange={setRowSelection}
+          onRowSelectionChange={setRowSelectionMovimientos}
           initialState={{ density: "compact", showGlobalFilter: true }}
           enableRowSelection={true}
 
@@ -678,6 +689,8 @@ const InventoriesTable = () => {
 
 
 
+
+      {/*tabla de series ------------------------------------*/}
       <AddIServisModal
         showAddModal={addSeriesShowModal}
         setShowAddModal={setAddSeriesShowModal}
@@ -693,13 +706,6 @@ const InventoriesTable = () => {
         onClose={() => setDeleteSeriesShowModal(false)}
       />
 
-      {/*tabla de Movimientos ------------------------------------*/}
-      <AddMovimientosModal
-        showAddModal={addMovimientosShowModal}
-        setShowAddModal={setAddMovimientosShowModal}
-        fetchData={fetchData}
-        onClose={() => setAddMovimientosShowModal(false)}
-      />
 
       <DetailsSeriesModal
         showDetailsModal={detailsSeriesShowModal}
@@ -715,7 +721,22 @@ const InventoriesTable = () => {
         selectedSeries={selectedSeries} // Pasa el inventario seleccionado
         fetchData={fetchData}
         onClose={() => setUpdateSeriesShowModal(false)}
-        />
+      />
+
+
+
+
+
+
+
+
+      {/*tabla de Movimientos ------------------------------------*/}
+      <AddMovimientosModal
+        showAddModal={addMovimientosShowModal}
+        setShowAddModal={setAddMovimientosShowModal}
+        fetchData={fetchData}
+        onClose={() => setAddMovimientosShowModal(false)}
+      />
 
 
     </Box>
