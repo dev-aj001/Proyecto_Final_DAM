@@ -30,7 +30,7 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
     setLoading(true);
     try {
         formik.setValues({
-          id_almacen: selectedAlmacenes?._id || "",
+          id_almacen: selectedAlmacenes?.id_almacen || "",
           cantidadActual: selectedAlmacenes?.cantidadActual || "",
           cantidadDisponible: selectedAlmacenes?.cantidadDisponible || "",
           cantidadApartada: selectedAlmacenes?.cantidadApartada || "",
@@ -38,7 +38,7 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
           stockMaximo: selectedAlmacenes?.stockMaximo || "",
           stockMinimo: selectedAlmacenes?.stockMinimo || "",
         });
-        setIsSearchDisabled(true); // Deshabilitar la búsqueda después de buscar
+       
     } catch (error) {
     } finally {
         setLoading(false);

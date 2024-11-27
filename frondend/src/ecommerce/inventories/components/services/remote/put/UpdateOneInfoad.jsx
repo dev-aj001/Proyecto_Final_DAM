@@ -3,7 +3,7 @@ const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inf
 export const UpdateOneInfoad = async (idNeg, idAlm, idInfoad, data) => {
     
     try {
-        const response = await axios.put(`${apiUrl}${idNeg}/almacen/${idAlm}/serieSs/${idInfoad}`, data);
+        const response = await axios.put(`${apiUrl}${idNeg}/almacen/${idAlm}/series/${idInfoad}`, data);
         return response;
     } catch (error) {
         console.error("Error en UpdateOneInfoad :", error.response?.data || error.message);
