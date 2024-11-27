@@ -7,7 +7,7 @@ import AppAllModules from './AppAllModules';
 
 //FIC: For Redux
 import { Provider } from "react-redux";
-import store from '../src/security/redux/store/store';
+import store from '../src/ecommerce/redux2/store';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({

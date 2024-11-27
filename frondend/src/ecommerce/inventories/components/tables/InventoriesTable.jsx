@@ -204,6 +204,7 @@ const InventoriesTable = () => {
 
       /* esto es de almacenes */
       const allAlmacenesData = await getAllAlmacenes();
+      console.log(allAlmacenesData);
       const validatedAlmacenesData = allAlmacenesData.map((item) => ({
         idNeg: item.id,
         id_almacen: item.almacen?.id_almacen || "No disponible",
@@ -274,21 +275,21 @@ const InventoriesTable = () => {
       }));
       setInfoadData(validatedInfoadData);
 
-      const allUbicacionData = await getAllUbicacion();
-      const validatedUbicacionData = allUbicacionData.map((item) => ({
-        _id: item._id || "No disponible",
-        negocioId: item.negocioId || "No disponible",
-        negocioNombre: item.nombre || "No disponible",
-        almacenId: item.almacenId || "No disponible",
-        almacen: item.id_almacen || "No disponible",
-        serieId: item.serieId || "No disponible",
-        serie: item.id_serie || "No disponible",
-        idTipoStatusOK: item.idTipoStatusOK || "No disponible",
-        ubicacion: item.ubicacion || "No disponible",
-        actual: item.actual || "No disponible",
+      // const allUbicacionData = await getAllUbicacion();
+      // const validatedUbicacionData = allUbicacionData.map((item) => ({
+      //   _id: item._id || "No disponible",
+      //   negocioId: item.negocioId || "No disponible",
+      //   negocioNombre: item.nombre || "No disponible",
+      //   almacenId: item.almacenId || "No disponible",
+      //   almacen: item.id_almacen || "No disponible",
+      //   serieId: item.serieId || "No disponible",
+      //   serie: item.id_serie || "No disponible",
+      //   idTipoStatusOK: item.idTipoStatusOK || "No disponible",
+      //   ubicacion: item.ubicacion || "No disponible",
+      //   actual: item.actual || "No disponible",
     
-      }));
-      setInfoadData(validatedInfoadData);
+      // }));
+      // setInfoadData(validatedInfoadData);
 
 
       setLoadingTable(false);
