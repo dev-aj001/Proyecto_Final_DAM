@@ -119,8 +119,6 @@ async function readOne(req, res) {
     const id_almacen = req.params.id_almacen;
     const id_serie = req.params.id_serie;
   
-    console.log(id_almacen);
-  
     const { almacenes } = await inventoryModel.findById(id);
   
     const almacen = almacenes.find((e)=> e._id == id_almacen );

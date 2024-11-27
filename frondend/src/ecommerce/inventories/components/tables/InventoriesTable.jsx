@@ -49,6 +49,13 @@ import DeleteInfoadModal from "../modals/DeleteInfoadModal";
 import DetailsInfoadModal from "../modals/DetailsInfoadModal";
 import UpdateInfoadModal from "../modals/UpdateInfoadModal";
 
+// Ubicaciones
+// import { getAllUbicaciones } from "../services/remote/get/GetAllUbicaciones";
+// import AddUbicacionesModal from "../modals/AddUbicacionesModal";
+// import UpdateUbicacionesModal from "../modals/UpdateUbicacionesModal";
+// import DeleteUbicacionesModal from "../modals/DeleteUbicacionesModal";
+// import DetailsUbicacionesModal from "../modals/DetailsUbicacionesModal";
+
 
 const InventoriesColumns = [
   { accessorKey: "_id", header: "ID", size: 150 },
@@ -102,6 +109,15 @@ const InfoadColumns = [
   { accessorKey: "idTipoSeleccionOK", header: "Tipo", size: 150 },
   { accessorKey: "secuencia", header: "Secuencia", size: 150 },
 ]
+
+const UbicaionesColumns = [
+  { accessorKey: "almacen", header: "Almacen", size: 150 },
+  { accessorKey: "serie", header: "Serie", size: 150 },
+  { accessorKey: "idTipoStatusOK", header: "Id Tipo Status", size: 150 },
+  { accessorKey: "ubicacion", header: "Ubicación", size: 150 },
+  { accessorKey: "actual", header: "Actual", size: 150 },
+]
+
 
 
 const InventoriesTable = () => {
@@ -257,6 +273,23 @@ const InventoriesTable = () => {
         
       }));
       setInfoadData(validatedInfoadData);
+
+      const allUbicacionData = await getAllUbicacion();
+      const validatedUbicacionData = allUbicacionData.map((item) => ({
+        _id: item._id || "No disponible",
+        negocioId: item.negocioId || "No disponible",
+        negocioNombre: item.nombre || "No disponible",
+        almacenId: item.almacenId || "No disponible",
+        almacen: item.id_almacen || "No disponible",
+        serieId: item.serieId || "No disponible",
+        serie: item.id_serie || "No disponible",
+        idTipoStatusOK: item.idTipoStatusOK || "No disponible",
+        ubicacion: item.ubicacion || "No disponible",
+        actual: item.actual || "No disponible",
+    
+      }));
+      setInfoadData(validatedInfoadData);
+
 
       setLoadingTable(false);
 

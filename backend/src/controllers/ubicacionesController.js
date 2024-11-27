@@ -91,10 +91,11 @@ async function readAll(req, res) {
             almacenId: almacen._id,
             almacen: almacen.id_almacen,
             serieId: serie._id,
-            nombre: serie.id_serie,
+            serie: serie.id_serie,
             idTipoStatusOK: ubicacion.idTipoStatusOK,
             ubicacion: ubicacion.ubicacion,
             actual: ubicacion.actual,
+            _id: ubicacion._id,
         }))
       ))
     );
