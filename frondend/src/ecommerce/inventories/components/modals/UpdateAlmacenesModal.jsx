@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Dialog, DialogContent, DialogTitle, Typography, TextField,
-  DialogActions, Alert, Button
+  DialogActions, Alert, Box, FormControlLabel, Checkbox, Button
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SaveIcon from "@mui/icons-material/Save";
@@ -29,15 +29,16 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
     setMensajeExitoAlert(null);
     setLoading(true);
     try {
-        const data = await getAlmacenesById(selectedAlmacenes?.idNeg, selectedAlmacenes?._id);
+     
         formik.setValues({
-          id_almacen: data?.id_almacen || "",
-          cantidadActual: data?.cantidadActual || "",
-          cantidadDisponible: data?.cantidadDisponible || "",
-          cantidadApartada: data?.cantidadApartada || "",
-          cantidadMerma:  data?.cantidadMerma || "",
-          stockMaximo: data?.stockMaximo || "",
-          stockMinimo: data?.stockMinimo || "",
+          id_almacen: selectedAlmacenes.id_almacen || "",
+          cantidadActual: selectedAlmacenes.cantidadActual || "",
+          cantidadDisponible: selectedAlmacenes.cantidadDisponible || "",
+          cantidadApartada: selectedAlmacenes.cantidadApartada || "",
+          cantidadMerma: selectedAlmacenes.cantidadMerma || "",
+          stockMaximo: selectedAlmacenes.stockMaximo || "",
+          stockMinimo: selectedAlmacenes.stockMinimo || "",
+          principal: false,
         });
         setIsSearchDisabled(true); // Deshabilitar la búsqueda después de buscar
     } catch (error) {
@@ -57,6 +58,8 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
       cantidadMerma:  "",
       stockMaximo: "",
       stockMinimo:  "",
+      principal: false
+
     },
     validationSchema: Yup.object({
       id_almacen: Yup.string().required("El ID del almacén es requerido"),
@@ -66,6 +69,7 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
       cantidadMerma: Yup.number().required("La cantidad de merma es requerida"),
       stockMaximo: Yup.number().required("El stock máximo es requerido"),
       stockMinimo: Yup.number().required("El stock mínimo es requerido"),
+      principal: Yup.boolean().required("El campo principal es requerido"),
     }),
     onSubmit: async (values) => {
       setMensajeErrorAlert(null);
@@ -116,7 +120,7 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
 
           {/* Campos del formulario */}
           <TextField
-            label="ID del Almacén"
+            label="Nombre del Almacén"
             fullWidth
             name="id_almacen"
             value={formik.values.id_almacen}
@@ -125,6 +129,20 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
             helperText={formik.touched.id_almacen && formik.errors.id_almacen}
             sx={{ marginBottom: 2 }}
           />
+
+<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="principal"
+                  checked={formik.values.principal}
+                  onChange={formik.handleChange}
+                />
+              }
+              label="Principal"
+            />
+           </Box> 
+
           <TextField
             label="Cantidad Actual"
             fullWidth

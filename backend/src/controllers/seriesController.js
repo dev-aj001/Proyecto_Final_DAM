@@ -150,6 +150,7 @@ async function readAll(req, res) {
           almacenId: almacen._id,
           almacen: almacen.id_almacen,
           serieId: serie._id,
+          nombre: serie.id_serie,
           numeroSerie: serie.numero_serie,
           numeroPlaca: serie.numero_placa,
           observacion: serie.observacion,

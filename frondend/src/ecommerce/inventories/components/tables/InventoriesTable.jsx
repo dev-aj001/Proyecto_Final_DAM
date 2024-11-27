@@ -14,13 +14,19 @@ import AddAlmacenesModal from "../modals/AddAlmacenesModal";
 import UpdateAlmacenesModal from "../modals/UpdateAlmacenesModal";
 import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal"; // Importar el modal
 import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
+
+
+
 import AddIServisModal from "../modals/AddIServisModal";
 import DeleteSeriesModal from "../modals/DeleteSeriesModal";
 import AddMovimientosModal from "../modals/AddMovimientosModal";
 import DetailsSeriesModal from "../modals/DetailsSeriesModal";
 import UpdateSeriesModal from "../modals/UpdateSeriesModal";
 
+
 import { Tabs, Tab } from "@mui/material";
+
+
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
 import { getAllMovimientos } from "../services/remote/get/GetAllMovimientos";
@@ -50,7 +56,8 @@ const AlamacenesColumns = [
 
 
 const SeriesColumns = [
-  { accessorKey: "id_serie", header: "Nombre", size: 150 },
+  { accessorKey: "id_serie", header: "ID", size: 150 },
+  { accessorKey: "nombre", header: "Nombre", size: 150 },
   { accessorKey: "numero_placa", header: "Placa", size: 150 },
   { accessorKey: "observacion", header: "Observacion", size: 150 },
   { accessorKey: "negocioId", header: "Negocio", size: 150 },
@@ -152,6 +159,7 @@ const InventoriesTable = () => {
         cantidadMerma: item.almacen?.cantidadMerma || "Sin merma",
         stockMaximo: item.almacen?.stockMaximo || "Sin stock",
         stockMinimo: item.almacen?.stockMinimo || "Sin stock",
+        principal: item.almacen?.principal || "No disponible",
       }));
       setAlmacenesData(validatedAlmacenesData);
       setLoadingTable(false);
@@ -160,7 +168,8 @@ const InventoriesTable = () => {
 
       const allServisData = await getAllseries();
       const validatedSeriesData = allServisData.map((item) => ({
-        id_serie: item.serieId || "No disponible",
+        id_serie: item.serieId|| "No disponible",
+        nombre: item.nombre || "No disponible",
         numero_placa: item.numeroPlaca || "No disponible",
         observacion: item.observacion || "No disponible",
         negocioId: item.negocioId || "No disponible",
@@ -395,7 +404,10 @@ const InventoriesTable = () => {
               <Tooltip title="Detalles">
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionAlmacenes).map((key) => almacenesData[key]);
-
+                  if (selectedData.length == 0) {
+                    alert("Por favor, seleccione al menos una fila.");
+                    return;
+                  }
 
 
                   // Pasa solo el ID del inventario seleccionado al modal de actualización

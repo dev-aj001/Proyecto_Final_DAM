@@ -2,7 +2,7 @@ import { Dialog, DialogActions, DialogContent, Typography, Box } from "@mui/mate
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
-import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
+import { getAlmacenesByIdOne } from "../services/remote/get/GetAlmacenesByIdOne";
 
 const DetailsAlmacenesModal = ({ showDetailsModal, setShowDetailsModal, selectedAlmacenes, onClose }) => {
 
@@ -20,7 +20,7 @@ useEffect(() => {
         try {
             // Aquí consultamos cada inventario por ID
             const details = await Promise.all(
-                selectedAlmacenes.map(almacenes => getAlmacenesById(almacenes.idNeg, almacenes._id))
+                selectedAlmacenes.map(almacenes => getAlmacenesByIdOne(almacenes.idNeg, almacenes._id))
             );
             setAlmacenes(details);
         } catch (error) {
