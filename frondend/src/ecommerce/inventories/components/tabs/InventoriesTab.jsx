@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import InventoriesTable from "../tables/InventoriesTable";
 
-const InventoriesTab = ({ inventories, loading }) => {
+const InventoriesTab = () => {
     return (
         <Box>
-            <InventoriesTable inventories={inventories} loading={loading} />
+            <InventoriesTable/>
         </Box>
     );
 };

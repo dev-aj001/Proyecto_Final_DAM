@@ -20,8 +20,8 @@ async function createOne(req, res){
       almacenes: [],
       detail_row: {}
   });
+
   try {
-      console.log(nuevoNegocio);
       await nuevoNegocio.save();
       res.status(201).json({ success: false, message: nuevoNegocio});
   } catch (error) {
@@ -63,11 +63,9 @@ async function readOne(req, res) {
 }
 async function deleteOne(req, res) {
   const IdNegocio = req.params.id;
- console.log(IdNegocio);
 
   try {
     const deleteteNegocio = await inventoryModel.findByIdAndDelete(IdNegocio);
-    console.log(deleteteNegocio);
 
     if (!deleteteNegocio) {
       return res.status(404).json({success: false, message: "Negocio no encontrada o no autorizada para eliminar" });
@@ -111,7 +109,7 @@ async function updateOne(req, res) {
     const updatedInventory = await inventoryModel.findOneAndUpdate(filter, update, { new: true });
 
     if (!updatedInventory) {
-      return res.status(404).json({ success: false, message: "Instituto no encontrado o no autorizado para actualizar" });
+      return res.status(404).json({ success: false, message: "Negocio no encontrado o no autorizado para actualizar" });
     }
 
     res.status(200).json({ success: true, data: updatedInventory });
@@ -119,7 +117,6 @@ async function updateOne(req, res) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
-
 
 module.exports = {
   createOne,

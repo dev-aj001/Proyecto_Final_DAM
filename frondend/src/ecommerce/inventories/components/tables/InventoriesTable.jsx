@@ -35,13 +35,16 @@ import DeleteMoviminetosModal from "../modals/DeleteMoviminetosModal";
 import UpdateMovimientosModal from "../modals/UpdateMovimientosModal";
 
 
-
+// Series
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
 import { getAllMovimientos } from "../services/remote/get/GetAllMovimientos";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
 
 
+// Infoad
+import { getAllInfoad } from "../services/remote/get/GetAllInfoad";
+import AddInfoadModal from "../modals/AddInfoadModal";
 
 
 const InventoriesColumns = [
@@ -86,6 +89,17 @@ const MovimientosColumns = [
   { accessorKey: "referencia", header: "Referencia", size: 150 },
 ]
 
+const InfoadColumns = [
+  { accessorKey: "idEtiquetaOK", header: "Id Etiqueta OK", size: 150 },
+  { accessorKey: "almacenNombre", header: "Almacen", size: 150 },
+  { accessorKey: "negocioNombre", header: "Negocio", size: 150 },
+  { accessorKey: "idEtiqueta", header: "Id Etiqueta", size: 150 },
+  { accessorKey: "etiqueta", header: "Etiqueta", size: 150 },
+  { accessorKey: "valor", header: "Valor", size: 150 },
+  { accessorKey: "idTipoSeleccionOK", header: "Tipo", size: 150 },
+  { accessorKey: "secuencia", header: "Secuencia", size: 150 },
+]
+
 
 const InventoriesTable = () => {
   const [loadingTable, setLoadingTable] = useState(true);
@@ -95,6 +109,7 @@ const InventoriesTable = () => {
   const [rowSelectionAlmacenes, setRowSelectionAlmacenes] = useState({});
   const [rowSelectionSeries, setRowSelectionSeries] = useState({});
   const [rowSelectionMovimientos, setRowSelectionMovimientos] = useState({});
+  const [rowSelectionInfoad, setRowSelectionInfoad] = useState({});
 
 
 
@@ -137,7 +152,14 @@ const InventoriesTable = () => {
   const [updateMovimientosShowModal, setUpdateMovimientosShowModal] = useState(false);
   const [deleteMovimientosShowModal, setDeleteMovimientosShowModal] = useState(false);
   const [detailsMovimientosShowModal, setDetailsMovimientosShowModal] = useState(false);
-  
+
+  //infoad
+  const [deleteInfoadShowModal, setDeleteInfoadShowModal] = useState(false);
+  const [selectedInfoad, setSelectedInfoad] = useState(null);
+  const [InfoadData, setInfoadData] = useState([]);
+  const [addInfoadShowModal, setAddInfoadShowModal] = useState(false);
+  const [detailsInfoadShowModal, setDetailsInfoadShowModal] = useState(false);
+  const [updateInfoadShowModal, setUpdateInfoadShowModal] = useState(false);
 
 
 
@@ -182,7 +204,7 @@ const InventoriesTable = () => {
 
       const allServisData = await getAllseries();
       const validatedSeriesData = allServisData.map((item) => ({
-        id_serie: item.serieId|| "No disponible",
+        id_serie: item.serieId || "No disponible",
         nombre: item.nombre || "No disponible",
         numero_placa: item.numeroPlaca || "No disponible",
         observacion: item.observacion || "No disponible",
@@ -203,7 +225,7 @@ const InventoriesTable = () => {
       const validatedMovimientosData = allMoviminetosData.map((item) => ({
         negocioId: item.negocioId || "No disponible",
         negocioNombre: item.negocioNombre || "No disponible",
-        id_almacen: item.almacenId|| "No disponible",
+        id_almacen: item.almacenId || "No disponible",
         almacenNombre: item.almacenNombre || "No disponible",
         movimientoId: item.movimientoId || "No disponible",
         tipo: item.tipo || "No disponible",
@@ -213,6 +235,21 @@ const InventoriesTable = () => {
         referencia: item.referencia || "No disponible",
       }));
       setMovimientosData(validatedMovimientosData);
+
+
+      const allInfoadData = await getAllInfoad();
+      const validatedInfoadData = allInfoadData.map((item) => ({
+        idEtiquetaOK: item.idEtiquetaOK || "No disponible",
+        almacenNombre: item.almacenNombre || "No disponible",
+        negocioNombre: item.negocioNombre || "No disponible",
+        idEtiqueta: item.idEtiqueta || "No disponible",
+        etiqueta: item.etiqueta || "No disponible",
+        valor: item.valor || "No disponible",
+        idTipoSeleccionOK: item.idTipoSeleccionOK || "No disponible",
+        secuencia: item.secuencia || "No disponible",
+      }));
+      setInfoadData(validatedInfoadData);
+
       setLoadingTable(false);
 
       console.log("Movimientos Obtenidos: " + allMoviminetosData);
@@ -248,6 +285,7 @@ const InventoriesTable = () => {
         <Tab label="Almacenes" />
         <Tab label="Series" />
         <Tab label="Movimientos" />
+        <Tab label="Info Adicional" />
 
       </Tabs>
 
@@ -591,7 +629,7 @@ const InventoriesTable = () => {
 
               <Tooltip title="Editar">
                 <IconButton
-                  onClick={() => { 
+                  onClick={() => {
                     const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
                     if (selectedData.length !== 1) {
                       alert("Por favor, seleccione una sola fila para editar.");
@@ -608,14 +646,14 @@ const InventoriesTable = () => {
               </Tooltip>
 
               <Tooltip title="Eliminar">
-                <IconButton onClick={() => { 
-                   const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
 
-                   // Pasa solo el ID del serie seleccionado al modal de actualización\
-                   console.log('movimientos delete', selectedData);
-                   setDeleteMovimientosShowModal(true);
-                   setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
- 
+                  // Pasa solo el ID del serie seleccionado al modal de actualización\
+                  console.log('movimientos delete', selectedData);
+                  setDeleteMovimientosShowModal(true);
+                  setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
+
                 }}>
                   <DeleteIcon />
                 </IconButton>
@@ -623,14 +661,14 @@ const InventoriesTable = () => {
 
               <Tooltip title="Detalles">
                 <IconButton onClick={() => {
-                    const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
+                  const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
 
-                   
-                    setDetailsMovimientosShowModal(true);
-                    setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
-  
 
-                 }}>
+                  setDetailsMovimientosShowModal(true);
+                  setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
+
+
+                }}>
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
@@ -657,6 +695,95 @@ const InventoriesTable = () => {
         />
       )}
       {/* Fin Tabla de movt ---------------------------------------*/}
+
+      {/* Tabla de infoAd ---------------------------------------*/}
+      {selectedTab === 4 && (
+        <MaterialReactTable
+          columns={InfoadColumns}
+          data={InfoadData}
+          state={{
+            isLoading: loadingTable,
+            rowSelection: rowSelectionInfoad,
+          }}
+          onRowSelectionChange={setRowSelectionInfoad}
+          initialState={{ density: "compact", showGlobalFilter: true }}
+          enableRowSelection={true}
+
+          renderTopToolbarCustomActions={() => (
+            <Stack direction="row" sx={{ m: 1 }}>
+
+              <Tooltip title="Agregar">
+                <IconButton onClick={() => {
+                  setAddInfoadShowModal(true);
+                }}>
+                  <AddCircleIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Editar">
+                <IconButton
+                  onClick={() => {
+                    const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
+                    if (selectedData.length !== 1) {
+                      alert("Por favor, seleccione una sola fila para editar.");
+                      return;
+                    }
+                    setUpdateSeriesShowModal(true);
+                    setSelectedSeries(selectedData[0]);  // Guardamos el inventario seleccionado
+
+                    console.log("Datos seleccionados:", selectedData);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Eliminar">
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
+                  // Pasa solo el ID del inventario seleccionado al modal de actualización
+                  setDeleteSeriesShowModal(true);
+                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                }}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Detalles">
+                <IconButton onClick={() => {
+                  const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
+                  // Pasa solo el ID del inventario seleccionado al modal de actualización\
+                  console.log('selectedData boton', selectedData);
+                  setDetailsSeriesShowModal(true);
+                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+
+                }}>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+
+            </Stack>
+
+          )}
+          muiTableBodyCellProps={{
+            sx: {
+              color: "#503685", // Texto en tonalidades moradas para las celdas de datos
+            },
+          }}
+          muiTableHeadCellProps={{
+            sx: {
+              color: "#6c47b8", // Texto blanco para los encabezados
+              fontWeight: "bold", // Resaltar los encabezados
+            },
+          }}
+          muiTableContainerProps={{
+            sx: {
+              backgroundColor: "#fff", // Fondo oscuro para la tabla
+            },
+          }}
+        />
+      )}
+      {/* Fin Tabla de infoad ---------------------------------------*/}
 
 
 
@@ -811,6 +938,14 @@ const InventoriesTable = () => {
         selectedMovimientos={selectedMovimientos} // Pasa el inventario seleccionado
         fetchData={fetchData}
         onClose={() => setUpdateMovimientosShowModal(false)}
+      />
+
+      {/*Modales de Infoadd ------------------------------------*/}
+      <AddInfoadModal
+        showAddModal={addInfoadShowModal}
+        setShowAddModal={setAddInfoadShowModal}
+        fetchData={fetchData}
+        onClose={() => setAddInfoadShowModal(false)}
       />
 
 

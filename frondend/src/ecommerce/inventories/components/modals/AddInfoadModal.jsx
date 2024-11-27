@@ -8,24 +8,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
 // Services
-import { AddOneMoviminetos } from "../services/remote/post/AddOneMoviminetos";
+import { AddOneInfoad } from "../services/remote/post/AddOneInfoad";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
 import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
 
-const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
+const AddInfoadModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
     const [loading, setLoading] = useState(false);
     const [negocios, setNegocios] = useState([]); // Para almacenar los negocios
     const [almacen, setAlmacen] = useState([]); // Para almacenar los inventories
-    const [negocioSeleccionado, setNegocioSeleccionado] = useState(""); // Para almacenar los inventories
 
     const fetchAlmacenes = async (id) => {
         try {
             const allInventoriesData = await getAlmacenesById(id);
             setAlmacen(allInventoriesData); // Asignar los datos al estado de inventories
-            console.log("Almacenes obtenidos:", allInventoriesData);
         } catch (error) {
             console.error("Error fetching inventories:", error);
         }
@@ -57,21 +56,22 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
         initialValues: {
             id_negocio: "", // Aquí permitimos múltiples selecciones
             id_almacen: "",
-            id_movimiento: "",
-            tipo: "",
-            cantidadAnterior: "",
-            cantidadMovimiento: "",
-            cantidadActual: "",
-            referencia: "",
+            idEtiquetaOK: "",
+            idEtiqueta: "",
+            etiqueta: "",
+            valor: "",
+            idTipoSeleccionOK: "",
+            secuencia: "",
         },
         validationSchema: Yup.object({
             id_negocio: Yup.string().required("El campo es requerido"),
             id_almacen: Yup.string().required("Requerido"),
-            id_movimiento: Yup.string().required("Requerido"),
-            tipo: Yup.string().required("Requerido"),
-            cantidadAnterior: Yup.number().required("Requerido"),
-            cantidadActual: Yup.number().required("Requerido"),
-            referencia: Yup.string().required("Requerido"),
+            idEtiquetaOK: Yup.string().required("Requerido"),
+            idEtiqueta: Yup.string().required("Requerido"),
+            etiqueta: Yup.string().required("Requerido"),
+            valor: Yup.number().required("Requerido"),
+            idTipoSeleccionOK: Yup.string().required("Requerido"),
+            secuencia: Yup.string().required("Requerido"),
         }),
         onSubmit: async (values) => {
             setMensajeErrorAlert(null);
@@ -80,25 +80,25 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
             try {
                 console.log("Valores del formulario:", values);
                 const data = {
-                    id_movimiento: values.id_movimiento,
-                    tipo: values.tipo,
-                    cantidadAnterior: values.cantidadAnterior,
-                    cantidadMovimiento: values.cantidadMovimiento,
-                    cantidadActual: values.cantidadActual,
-                    referencia: values.referencia,
+                    idEtiquetaOK: values.idEtiquetaOK,
+                    idEtiqueta: values.idEtiqueta,
+                    etiqueta: values.etiqueta,
+                    valor: values.valor,
+                    idTipoSeleccionOK: values.idTipoSeleccionOK,
+                    secuencia: values.secuencia,
                 };
-                const response = await AddOneMoviminetos(values.id_negocio, values.id_almacen, data);
+                const response = await AddOneInfoad(values.id_negocio, values.id_almacen, data);
                 if (response.status !== 200) {
-                    throw new Error(response.data?.message || "Error al crear inventario");
+                    throw new Error(response.data?.message || "Error al crear Info ad");
                 }
-                setMensajeExitoAlert("Inventario creado correctamente");
+                setMensajeExitoAlert("Info Ad creado correctamente");
                 fetchData();
                 formik.resetForm();
                 setTimeout(() => {
                     setMensajeExitoAlert(null);
                 }, 3000);
             } catch (e) {
-                setMensajeErrorAlert(e.message || "Error al crear inventario");
+                setMensajeErrorAlert(e.message || "Error al crear Info ad");
             } finally {
                 setLoading(false);
             }
@@ -115,7 +115,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     return (
         <Dialog open={showAddModal} onClose={() => setShowAddModal(false)} fullWidth>
             <DialogTitle>
-                <Typography variant="h6">Agregar Series</Typography>
+                <Typography variant="h6">Agregar Info Adicional</Typography>
                 <CloseIcon
                     onClick={() => setShowAddModal(false)}
                     style={{ cursor: "pointer", position: "absolute", right: 10, top: 10 }}
@@ -139,6 +139,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                                 // setNegocioSeleccionado(e.target.value);
                                 fetchAlmacenes(e.target.value);
                                 console.log("Seleccion: " + e.target.value);
+                                
                             }}
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_negocio && Boolean(formik.errors.id_negocio)}
@@ -173,6 +174,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_almacen && Boolean(formik.errors.id_almacen)}
                         >
+                          
                             {almacen.map((almacen) => (
                                 <MenuItem key={almacen._id} value={almacen._id}>
                                     {almacen.id_almacen}
@@ -191,86 +193,86 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
 
                     {/* ID Serie */}
                     <TextField
-                        label="ID Movimiento"
-                        name="id_movimiento"
-                        value={formik.values.id_movimiento}
+                        label="ID Etiqueta OK"
+                        name="idEtiquetaOK"
+                        value={formik.values.idEtiquetaOK}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         fullWidth
                         margin="dense"
                     />
-                    {formik.touched.id_movimiento && formik.errors.id_movimiento && (
-                        <Typography color="error">{formik.errors.id_movimiento}</Typography>
+                    {formik.touched.idEtiquetaOK && formik.errors.idEtiquetaOK && (
+                        <Typography color="error">{formik.errors.idEtiquetaOK}</Typography>
                     )}
 
                     {/* Número de Serie */}
                     <TextField
-                        label="Tipo"
-                        name="tipo"
-                        value={formik.values.tipo}
+                        label="ID Etiqueta"
+                        name="idEtiqueta"
+                        value={formik.values.idEtiqueta}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         fullWidth
                         margin="dense"
                     />
-                    {formik.touched.tipo && formik.errors.tipo && (
-                        <Typography color="error">{formik.errors.tipo}</Typography>
+                    {formik.touched.idEtiqueta && formik.errors.idEtiqueta && (
+                        <Typography color="error">{formik.errors.idEtiqueta}</Typography>
                     )}
 
                     {/* Número de Placa */}
                     <TextField
-                        label="Cant. Anterior"
-                        name="cantidadAnterior"
-                        value={formik.values.cantidadAnterior}
+                        label="Etiqueta"
+                        name="etiqueta"
+                        value={formik.values.etiqueta}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         fullWidth
                         margin="dense"
                     />
-                    {formik.touched.cantidadAnterior && formik.errors.cantidadAnterior && (
-                        <Typography color="error">{formik.errors.cantidadAnterior}</Typography>
+                    {formik.touched.etiqueta && formik.errors.etiqueta && (
+                        <Typography color="error">{formik.errors.etiqueta}</Typography>
                     )}
 
                     {/* Observación */}
                     <TextField
-                        label="Cant. Movimiento"
-                        name="cantidadMovimiento"
-                        value={formik.values.cantidadMovimiento}
+                        label="Valor"
+                        name="valor"
+                        value={formik.values.valor}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         fullWidth
                         margin="dense"
                     />
-                    {formik.touched.cantidadMovimiento && formik.errors.cantidadMovimiento && (
-                        <Typography color="error">{formik.errors.cantidadMovimiento}</Typography>
+                    {formik.touched.valor && formik.errors.valor && (
+                        <Typography color="error">{formik.errors.valor}</Typography>
+                    )}
+
+                    {/* Tipo */}
+                    <TextField
+                        label="Tipo"
+                        name="idTipoSeleccionOK"
+                        value={formik.values.idTipoSeleccionOK}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        fullWidth
+                        margin="dense"
+                    />
+                    {formik.touched.idTipoSeleccionOK && formik.errors.idTipoSeleccionOK && (
+                        <Typography color="error">{formik.errors.idTipoSeleccionOK}</Typography>
                     )}
 
                     {/* Observación */}
                     <TextField
-                        label="Cant. Actual"
-                        name="cantidadActual"
-                        value={formik.values.cantidadActual}
+                        label="Secuencia"
+                        name="secuencia"
+                        value={formik.values.secuencia}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         fullWidth
                         margin="dense"
                     />
-                    {formik.touched.cantidadActual && formik.errors.cantidadActual && (
-                        <Typography color="error">{formik.errors.cantidadActual}</Typography>
-                    )}
-
-                    {/* Observación */}
-                    <TextField
-                        label="Referencia"
-                        name="referencia"
-                        value={formik.values.referencia}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        fullWidth
-                        margin="dense"
-                    />
-                    {formik.touched.referencia && formik.errors.referencia && (
-                        <Typography color="error">{formik.errors.referencia}</Typography>
+                    {formik.touched.secuencia && formik.errors.secuencia && (
+                        <Typography color="error">{formik.errors.secuencia}</Typography>
                     )}
                 </Box>
             </DialogContent>
@@ -297,4 +299,4 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
     );
 };
 
-export default AddMovimientosModal;
+export default AddInfoadModal;

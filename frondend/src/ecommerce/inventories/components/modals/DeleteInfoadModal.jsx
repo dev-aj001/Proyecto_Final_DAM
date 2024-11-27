@@ -10,18 +10,18 @@ import {
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DeleteOneSeries } from "../services/remote/delete/DeleteOneSeries";
+import { DeleteOneInfoad } from "../services/remote/delete/DeleteOneInfoad";
 
-const DeleteSeriesModal = ({ showDeleteModal, setShowDeleteModal, fetchData, selectSeries  }) => { 
+const DeleteInfoadModal = ({ showDeleteModal, setShowDeleteModal, fetchData, selectInfo  }) => { 
     const [loading, setLoading] = useState(false);
     const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
 
     useEffect(() => {
-        console.log("Series seleccionadas:", selectSeries);
+        console.log("Info seleccionadas:", selectInfo);
 
         // Aquí no se realiza ógica adicional porque los almacenes ya se reciben como prop
-    }, [selectSeries]);
+    }, [selectInfo]);
 
     const handleDeleteSeries = async () => {
         setMensajeErrorAlert(null);
@@ -29,39 +29,34 @@ const DeleteSeriesModal = ({ showDeleteModal, setShowDeleteModal, fetchData, sel
         setLoading(true); 
 
         try {
-            if (Array.isArray(selectSeries) && selectSeries.length > 0) {
-                for (const series of selectSeries) {
-                    await DeleteOneSeries(series.negocioId, series.id_almacen, series.id_serie);
+            if (Array.isArray(selectInfo) && selectInfo.length > 0) {
+                for (const info of selectInfo) {
+                    await DeleteOneInfoad(info.negocioId, info.id_almacen, info._id);
                 }
-                setMensajeExitoAlert("Series eliminados correctamente.");
+                setMensajeExitoAlert("Info eliminados correctamente.");
                 fetchData();
                 
             } else {
-                setMensajeErrorAlert("No se seleccionaron series para eliminar.");
+                setMensajeErrorAlert("No se seleccionaron Info para eliminar.");
             }
         } catch (error) {
-            setMensajeErrorAlert("Error al eliminar series.");
+            setMensajeErrorAlert("Error al eliminar Info.");
         } finally {
             setLoading(false);  
         }
 };
 const handleClose = () => {
-    
     setShowDeleteModal(false);
     setMensajeErrorAlert(null);
     setMensajeExitoAlert(null);
-    
-   
 };
-
- 
 
 return (
     <Dialog open={showDeleteModal} onClose={handleClose} fullWidth>
         {/* Título del modal */}
         <DialogTitle>
             <Typography variant="h6" component="div">
-                <strong>Eliminar Series</strong>
+                <strong>Eliminar Info Adicional</strong>
             </Typography>
         </DialogTitle>
 
@@ -76,13 +71,13 @@ return (
                     {mensajeExitoAlert}
                 </Typography>
             )}
-            {Array.isArray(selectSeries) && selectSeries.length > 0 ? (
+            {Array.isArray(selectInfo) && selectInfo.length > 0 ? (
                 <>
                     <Typography variant="body2" sx={{ marginBottom: 2 }}>
-                        <strong>Los siguientes Series serán eliminados:</strong>
+                        <strong>Los siguientes Infoad serán eliminados:</strong>
                     </Typography>
                     <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
-                        {selectSeries.map((series, index) => (
+                        {selectInfo.map((series, index) => (
                             <Box
                                 key={series._id || index}
                                 sx={{
@@ -145,4 +140,4 @@ return (
 );
 };
 
-export default DeleteSeriesModal;
+export default DeleteInfoadModal;
