@@ -46,6 +46,7 @@ import { getAllInventories } from "../services/remote/get/GetAllInventories";
 import { getAllInfoad } from "../services/remote/get/GetAllInfoad";
 import AddInfoadModal from "../modals/AddInfoadModal";
 import DeleteInfoadModal from "../modals/DeleteInfoadModal";
+import DetailsInfoadModal from "../modals/DetailsInfoadModal";
 
 
 const InventoriesColumns = [
@@ -153,6 +154,7 @@ const InventoriesTable = () => {
   const [updateMovimientosShowModal, setUpdateMovimientosShowModal] = useState(false);
   const [deleteMovimientosShowModal, setDeleteMovimientosShowModal] = useState(false);
   const [detailsMovimientosShowModal, setDetailsMovimientosShowModal] = useState(false);
+
 
   //infoad
   const [deleteInfoadShowModal, setDeleteInfoadShowModal] = useState(false);
@@ -769,8 +771,8 @@ const InventoriesTable = () => {
                   const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
                   // Pasa solo el ID del inventario seleccionado al modal de actualización\
                   console.log('selectedData boton', selectedData);
-                  setDetailsSeriesShowModal(true);
-                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                  setDetailsInfoadShowModal(true);
+                  setSelectedInfoad(selectedData);  // Guardamos el inventario seleccionado
 
                 }}>
                   <InfoIcon />
@@ -955,6 +957,9 @@ const InventoriesTable = () => {
         onClose={() => setUpdateMovimientosShowModal(false)}
       />
 
+
+
+
       {/*Modales de Infoadd ------------------------------------*/}
       <AddInfoadModal
         showAddModal={addInfoadShowModal}
@@ -969,6 +974,14 @@ const InventoriesTable = () => {
         fetchData={fetchData}
         selectInfo={selectedInfoad}
         onClose={() => setDeleteInfoadShowModal(false)}
+      />
+
+      <DetailsInfoadModal
+        showDetailsModal={detailsInfoadShowModal}
+        setShowDetailsModal={setDetailsInfoadShowModal}       
+        selectInfo={selectedInfoad} // Pasa el inventario seleccionado
+        infoad={InfoadData}
+        onClose={() => setDetailsInfoadShowModal(false)}
       />
 
 
