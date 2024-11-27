@@ -5,31 +5,41 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getAllInventories } from "../services/remote/get/GetAllInventories";
+import { Tabs, Tab } from "@mui/material";
+
+
+// Inventarios
 import AddInventoryModal from "../modals/AddInventoriesModal";
 import UpdateInventoryModal from "../modals/UpdateInventoriesModal";
 import DeleteInventoryModal from "../modals/DeleteInventoriesModal"; // Importar el modal de eliminación
 import DetailsInventoryModal from "../modals/DetailsInventoryModal";
+
+// Almacenes
 import AddAlmacenesModal from "../modals/AddAlmacenesModal";
 import UpdateAlmacenesModal from "../modals/UpdateAlmacenesModal";
 import DeleteAlmacenesModal from "../modals/DeleteAlmacenesModal"; // Importar el modal
 import DetailsAlmacenesModal from "../modals/DetailsAlmacenesModal";
 
 
-
+// IServis
 import AddIServisModal from "../modals/AddIServisModal";
 import DeleteSeriesModal from "../modals/DeleteSeriesModal";
-import AddMovimientosModal from "../modals/AddMovimientosModal";
 import DetailsSeriesModal from "../modals/DetailsSeriesModal";
 import UpdateSeriesModal from "../modals/UpdateSeriesModal";
 
 
-import { Tabs, Tab } from "@mui/material";
+// Movimientos
+import AddMovimientosModal from "../modals/AddMovimientosModal";
+import DetailsMovimientosModal from "../modals/DetailsMovimientosModal";
+import DeleteMoviminetosModal from "../modals/DeleteMoviminetosModal";
+import UpdateMovimientosModal from "../modals/UpdateMovimientosModal";
+
 
 
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
 import { getAllMovimientos } from "../services/remote/get/GetAllMovimientos";
+import { getAllInventories } from "../services/remote/get/GetAllInventories";
 
 
 
@@ -122,8 +132,12 @@ const InventoriesTable = () => {
 
   //Movimientos
   const [movimientosData, setMovimientosData] = useState([]);
+  const [selectedMovimientos, setSelectedMovimientos] = useState(null);
   const [addMovimientosShowModal, setAddMovimientosShowModal] = useState(false);
-
+  const [updateMovimientosShowModal, setUpdateMovimientosShowModal] = useState(false);
+  const [deleteMovimientosShowModal, setDeleteMovimientosShowModal] = useState(false);
+  const [detailsMovimientosShowModal, setDetailsMovimientosShowModal] = useState(false);
+  
 
 
 
@@ -189,7 +203,7 @@ const InventoriesTable = () => {
       const validatedMovimientosData = allMoviminetosData.map((item) => ({
         negocioId: item.negocioId || "No disponible",
         negocioNombre: item.negocioNombre || "No disponible",
-        id_almacen: item.id_almacen || "No disponible",
+        id_almacen: item.almacenId|| "No disponible",
         almacenNombre: item.almacenNombre || "No disponible",
         movimientoId: item.movimientoId || "No disponible",
         tipo: item.tipo || "No disponible",
@@ -482,7 +496,7 @@ const InventoriesTable = () => {
                       return;
                     }
                     setUpdateSeriesShowModal(true);
-                    setSelectedSeries(selectedData[0]);  // Guardamos el inventario seleccionado
+                    setSelectedSeries(selectedData[0]);  // Guardamos el serie seleccionado
 
                     console.log("Datos seleccionados:", selectedData);
                   }}
@@ -497,9 +511,9 @@ const InventoriesTable = () => {
 
 
 
-                  // Pasa solo el ID del inventario seleccionado al modal de actualización
+                  // Pasa solo el ID del serie seleccionado al modal de actualización
                   setDeleteSeriesShowModal(true);
-                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                  setSelectedSeries(selectedData);  // Guardamos el serie seleccionado
                 }}>
                   <DeleteIcon />
                 </IconButton>
@@ -509,10 +523,10 @@ const InventoriesTable = () => {
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionSeries).map((key) => seriesData[key]);
 
-                  // Pasa solo el ID del inventario seleccionado al modal de actualización\
+                  // Pasa solo el ID del serie seleccionado al modal de actualización\
                   console.log('selectedData boton', selectedData);
                   setDetailsSeriesShowModal(true);
-                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                  setSelectedSeries(selectedData);  // Guardamos el serie seleccionado
 
                 }}>
                   <InfoIcon />
@@ -577,20 +591,46 @@ const InventoriesTable = () => {
 
               <Tooltip title="Editar">
                 <IconButton
-                  onClick={() => { }}
+                  onClick={() => { 
+                    const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
+                    if (selectedData.length !== 1) {
+                      alert("Por favor, seleccione una sola fila para editar.");
+                      return;
+                    }
+                    setUpdateMovimientosShowModal(true);
+                    setSelectedMovimientos(selectedData[0]);  // Guardamos el serie seleccionado
+
+                    console.log("Datos seleccionados movimientos:", selectedData);
+                  }}
                 >
                   <EditIcon />
                 </IconButton>
               </Tooltip>
 
               <Tooltip title="Eliminar">
-                <IconButton onClick={() => { }}>
+                <IconButton onClick={() => { 
+                   const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
+
+                   // Pasa solo el ID del serie seleccionado al modal de actualización\
+                   console.log('movimientos delete', selectedData);
+                   setDeleteMovimientosShowModal(true);
+                   setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
+ 
+                }}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
 
               <Tooltip title="Detalles">
-                <IconButton onClick={() => { }}>
+                <IconButton onClick={() => {
+                    const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
+
+                   
+                    setDetailsMovimientosShowModal(true);
+                    setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
+  
+
+                 }}>
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
@@ -748,6 +788,29 @@ const InventoriesTable = () => {
         setShowAddModal={setAddMovimientosShowModal}
         fetchData={fetchData}
         onClose={() => setAddMovimientosShowModal(false)}
+      />
+      <DetailsMovimientosModal
+        showDetailsModal={detailsMovimientosShowModal}
+        setShowDetailsModal={setDetailsMovimientosShowModal}
+        movimientos={movimientosData}
+        selectedMovimientos={selectedMovimientos} // Pasa el inventario seleccionado
+        onClose={() => setDetailsMovimientosShowModal(false)}
+      />
+
+      <DeleteMoviminetosModal
+        showDeleteModal={deleteMovimientosShowModal}
+        setShowDeleteModal={setDeleteMovimientosShowModal}
+        fetchData={fetchData}
+        selectedMoviminetos={selectedMovimientos} // Pasa el inventario seleccionado
+        onClose={() => setDeleteMovimientosShowModal(false)}
+      />
+
+      <UpdateMovimientosModal
+        showUpdateModal={updateMovimientosShowModal}
+        setShowUpdateModal={setUpdateMovimientosShowModal}
+        selectedMovimientos={selectedMovimientos} // Pasa el inventario seleccionado
+        fetchData={fetchData}
+        onClose={() => setUpdateMovimientosShowModal(false)}
       />
 
 
