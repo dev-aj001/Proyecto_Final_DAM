@@ -115,7 +115,7 @@ async function updateOne(req, res) {
 async function readOne(req, res) {
   try {
     const id = req.params.id;
-    const id_almacen = req.params.id_almacen;
+    const id_almacen = req.params.idAlmacen;
     const id_infoAd = req.params.id_infoAd;
   
     const { almacenes } = await inventoryModel.findById(id);

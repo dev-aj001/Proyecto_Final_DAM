@@ -31,7 +31,7 @@ const DeleteInfoadModal = ({ showDeleteModal, setShowDeleteModal, fetchData, sel
         try {
             if (Array.isArray(selectInfo) && selectInfo.length > 0) {
                 for (const info of selectInfo) {
-                    await DeleteOneInfoad(info.negocioId, info.id_almacen, info._id);
+                    await DeleteOneInfoad(info.negocioId, info.almacenId, info.infoAdId);
                 }
                 setMensajeExitoAlert("Info eliminados correctamente.");
                 fetchData();
@@ -77,9 +77,9 @@ return (
                         <strong>Los siguientes Infoad serán eliminados:</strong>
                     </Typography>
                     <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
-                        {selectInfo.map((series, index) => (
+                        {selectInfo.map((info, index) => (
                             <Box
-                                key={series._id || index}
+                                key={info._id || index}
                                 sx={{
                                     marginBottom: 1,
                                     padding: 1,
@@ -88,22 +88,22 @@ return (
                                 }}
                             >
                                 <Typography variant="body2">
-                                    <strong>ID:</strong> {series.id_serie}
+                                    <strong>ID:</strong> {info.infoAdId}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>Nombre:</strong> {series.nombre_serie}
+                                    <strong>Nombre:</strong> {info.idEtiquetaOK}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>numero de placa:</strong> {series.numero_placa}
+                                    <strong>idTipoSeleccionOK:</strong> {info.idTipoSeleccionOK}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>observacion:</strong> {series.observacion}
+                                    <strong>negocioId:</strong> {info.negocioId}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>almacen:</strong> {series.almacen}
+                                    <strong>negocioNombre:</strong> {info.negocioNombre}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>negocio del Nombre:</strong> {series.negocioNombre}
+                                    <strong>negocio del Nombre:</strong> {info.negocioNombre}
                                 </Typography>
                             </Box>
                         ))}

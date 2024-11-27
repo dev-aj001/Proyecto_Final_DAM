@@ -45,6 +45,7 @@ import { getAllInventories } from "../services/remote/get/GetAllInventories";
 // Infoad
 import { getAllInfoad } from "../services/remote/get/GetAllInfoad";
 import AddInfoadModal from "../modals/AddInfoadModal";
+import DeleteInfoadModal from "../modals/DeleteInfoadModal";
 
 
 const InventoriesColumns = [
@@ -247,6 +248,10 @@ const InventoriesTable = () => {
         valor: item.valor || "No disponible",
         idTipoSeleccionOK: item.idTipoSeleccionOK || "No disponible",
         secuencia: item.secuencia || "No disponible",
+        negocioId: item.negocioId || "No disponible",
+        almacenId : item.almacenId || "No disponible",
+        infoAdId: item.infoAdId || "No disponible",
+        
       }));
       setInfoadData(validatedInfoadData);
 
@@ -696,6 +701,15 @@ const InventoriesTable = () => {
       )}
       {/* Fin Tabla de movt ---------------------------------------*/}
 
+
+
+
+
+
+
+
+
+
       {/* Tabla de infoAd ---------------------------------------*/}
       {selectedTab === 4 && (
         <MaterialReactTable
@@ -741,9 +755,10 @@ const InventoriesTable = () => {
               <Tooltip title="Eliminar">
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
-                  // Pasa solo el ID del inventario seleccionado al modal de actualización
-                  setDeleteSeriesShowModal(true);
-                  setSelectedSeries(selectedData);  // Guardamos el inventario seleccionado
+                  // Pasa solo el ID del inventario seleccionado al modal de 
+                  console.log('infoad delete', selectedData);
+                  setDeleteInfoadShowModal(true);
+                  setSelectedInfoad(selectedData);  // Guardamos el inventario seleccionado
                 }}>
                   <DeleteIcon />
                 </IconButton>
@@ -946,6 +961,14 @@ const InventoriesTable = () => {
         setShowAddModal={setAddInfoadShowModal}
         fetchData={fetchData}
         onClose={() => setAddInfoadShowModal(false)}
+      />
+
+      <DeleteInfoadModal
+        showDeleteModal={deleteInfoadShowModal}
+        setShowDeleteModal={setDeleteInfoadShowModal}
+        fetchData={fetchData}
+        selectInfo={selectedInfoad}
+        onClose={() => setDeleteInfoadShowModal(false)}
       />
 
 

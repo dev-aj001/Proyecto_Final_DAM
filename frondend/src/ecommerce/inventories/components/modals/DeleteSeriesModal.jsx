@@ -96,7 +96,7 @@ return (
                                     <strong>ID:</strong> {series.id_serie}
                                 </Typography>
                                 <Typography variant="body2">
-                                    <strong>Nombre:</strong> {series.nombre_serie}
+                                    <strong>Nombre:</strong> {series.nombre}
                                 </Typography>
                                 <Typography variant="body2">
                                     <strong>numero de placa:</strong> {series.numero_placa}
