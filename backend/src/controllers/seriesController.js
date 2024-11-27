@@ -221,9 +221,27 @@ async function deleteOne(req, res) {
   }
 }
 
+async function readAllbyId(req, res) {
+  try {
+    const { almacenes } = await inventoryModel.findById(req.params.id);
+    const id_almacen = req.params.id_almacen;
+
+    const almacen = almacenes.find((e) => e._id == id_almacen);
+
+    const series = almacen.series;
+
+    res.status(200).json({ success: true, data: series });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      // Si el error es de tipo CastError, significa que el ID no es válido o no se encontró
+      return res.status(404).json({ success: false, message: "Inventario no encontrado" });
+    }
+}}
+
 module.exports = {
     createOne,
     readOne,
+    readAllbyId,
     readAll,
     updateOne,
     deleteOne,
