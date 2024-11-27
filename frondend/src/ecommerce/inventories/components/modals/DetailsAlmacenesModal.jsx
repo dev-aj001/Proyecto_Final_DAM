@@ -2,7 +2,6 @@ import { Dialog, DialogActions, DialogContent, Typography, Box } from "@mui/mate
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
-import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
 
 const DetailsAlmacenesModal = ({ showDetailsModal, setShowDetailsModal, selectedAlmacenes, onClose }) => {
 
@@ -13,25 +12,11 @@ const handleCloseModal = () => {
     setShowDetailsModal(false);
     onClose();
 };
-
+ 
 useEffect(() => {
-    console.log("selectedAlmacenes:", selectedAlmacenes);
-    const fetchAlmacenesDetails = async () => {
-        try {
-            // Aquí consultamos cada inventario por ID
-            const details = await Promise.all(
-                selectedAlmacenes.map(almacenes => getAlmacenesById(almacenes.idNeg, almacenes._id))
-            );
-            setAlmacenes(details);
-        } catch (error) {
-            console.error("Error al obtener los detalles de los inventarios:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-    fetchAlmacenesDetails();
+ 
 
-}, [selectedAlmacenes, showDetailsModal]);
+}, [selectedAlmacenes]);
 
 return (
 <Dialog
@@ -49,13 +34,13 @@ return (
                     </Typography>
                 ) : (
                     <>
-                         {almacenes.length > 0 ? (
+                        {Array.isArray(selectedAlmacenes) && selectedAlmacenes.length > 0 ? (
                             <>
                                 <Typography variant="body2" sx={{ marginBottom: 2 }}>
                                     <strong><h2>Detalles de los almacenes seleccionados:</h2></strong>
                                 </Typography>
                                 <Box sx={{ maxHeight: 400, overflowY: "auto" }}>
-                                    {almacenes.map((almacenes, index) => (
+                                    {selectedAlmacenes.map((almacenes, index) => (
                                         <Box
                                             key={almacenes._id || index}
                                             sx={{

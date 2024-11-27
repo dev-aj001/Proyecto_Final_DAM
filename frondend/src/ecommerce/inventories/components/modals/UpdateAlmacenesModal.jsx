@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 // Services
 import { UpdateOneAlmacen } from "../services/remote/put/UpdateOneAlmacenes";
-import { getAlmacenesById } from "../services/remote/get/GetAlmacenesById";
+
 
 const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlmacenes, fetchData }) => {
   const [mensajeErrorAlert, setMensajeErrorAlert] = useState("");
@@ -29,15 +29,14 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
     setMensajeExitoAlert(null);
     setLoading(true);
     try {
-        const data = await getAlmacenesById(selectedAlmacenes?.idNeg, selectedAlmacenes?._id);
         formik.setValues({
-          id_almacen: data?.id_almacen || "",
-          cantidadActual: data?.cantidadActual || "",
-          cantidadDisponible: data?.cantidadDisponible || "",
-          cantidadApartada: data?.cantidadApartada || "",
-          cantidadMerma:  data?.cantidadMerma || "",
-          stockMaximo: data?.stockMaximo || "",
-          stockMinimo: data?.stockMinimo || "",
+          id_almacen: selectedAlmacenes?._id || "",
+          cantidadActual: selectedAlmacenes?.cantidadActual || "",
+          cantidadDisponible: selectedAlmacenes?.cantidadDisponible || "",
+          cantidadApartada: selectedAlmacenes?.cantidadApartada || "",
+          cantidadMerma:  selectedAlmacenes?.cantidadMerma || "",
+          stockMaximo: selectedAlmacenes?.stockMaximo || "",
+          stockMinimo: selectedAlmacenes?.stockMinimo || "",
         });
         setIsSearchDisabled(true); // Deshabilitar la búsqueda después de buscar
     } catch (error) {

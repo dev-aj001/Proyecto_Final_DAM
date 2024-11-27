@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/:id/almacen/:idAlmacen', infoadController.createOne);
 router.get('/', infoadController.readAll);
 router.get('/:id/almacen/:idAlmacen/series/:id_infoAd', infoadController.readOne);
-router.put('/:id/almacen/:idAlmacen/series/:id_infoAd', infoadController.updateOne);
+router.put('/:id/almacen/:id_almacen/series/:id_infoAd', infoadController.updateOne);
 router.delete('/:id/almacen/:id_almacen/series/:id_infoAd', infoadController.deleteOne);
 
 

@@ -99,7 +99,7 @@ async function updateOne(req, res) {
     return res.status(200).json({
       success: true,
       message: "Serie actualizado exitosamente",
-      data: serie,
+      data: infoAd,
     });
   } catch (error) {
     if (error.name === "CastError") {

@@ -35,18 +35,19 @@ import DeleteMoviminetosModal from "../modals/DeleteMoviminetosModal";
 import UpdateMovimientosModal from "../modals/UpdateMovimientosModal";
 
 
-// Series
+// GETS
 import { getAllAlmacenes } from "../services/remote/get/GetAllAlmacenes";
 import { getAllseries } from "../services/remote/get/GetAllServis";
 import { getAllMovimientos } from "../services/remote/get/GetAllMovimientos";
 import { getAllInventories } from "../services/remote/get/GetAllInventories";
+import { getAllInfoad } from "../services/remote/get/GetAllInfoad";
 
 
 // Infoad
-import { getAllInfoad } from "../services/remote/get/GetAllInfoad";
 import AddInfoadModal from "../modals/AddInfoadModal";
 import DeleteInfoadModal from "../modals/DeleteInfoadModal";
 import DetailsInfoadModal from "../modals/DetailsInfoadModal";
+import UpdateInfoadModal from "../modals/UpdateInfoadModal";
 
 
 const InventoriesColumns = [
@@ -738,16 +739,15 @@ const InventoriesTable = () => {
 
               <Tooltip title="Editar">
                 <IconButton
-                  onClick={() => {
-                    const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
+                  onClick={() => {const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
                     if (selectedData.length !== 1) {
                       alert("Por favor, seleccione una sola fila para editar.");
                       return;
                     }
-                    setUpdateSeriesShowModal(true);
-                    setSelectedSeries(selectedData[0]);  // Guardamos el inventario seleccionado
+                    setUpdateInfoadShowModal(true);
+                    setSelectedInfoad(selectedData[0]);  // Guardamos el serie seleccionado
 
-                    console.log("Datos seleccionados:", selectedData);
+                    console.log("Datos seleccionados movimientos:", selectedData);
                   }}
                 >
                   <EditIcon />
@@ -982,6 +982,14 @@ const InventoriesTable = () => {
         selectInfo={selectedInfoad} // Pasa el inventario seleccionado
         infoad={InfoadData}
         onClose={() => setDetailsInfoadShowModal(false)}
+      />
+
+      <UpdateInfoadModal
+        showUpdateModal={updateInfoadShowModal}
+        setShowUpdateModal={setUpdateInfoadShowModal}
+        selectedInfoad={selectedInfoad} // Pasa el inventario seleccionado
+        fetchData={fetchData}
+        onClose={() => setUpdateInfoadShowModal(false)}
       />
 
 
