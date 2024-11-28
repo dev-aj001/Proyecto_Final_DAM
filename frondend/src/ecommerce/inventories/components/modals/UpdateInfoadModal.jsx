@@ -71,15 +71,15 @@ const UpdateInfoadModal = ({ showUpdateModal, setShowUpdateModal, selectedInfoad
       setMensajeExitoAlert(null);
       setLoading(true);
       try {
-        console.log(selectedInfoad.negocioId, selectedInfoad.almacenId, selectedInfoad.infoAdId);
-        console.log(values);
+        // console.log(selectedInfoad.negocioId, selectedInfoad.almacenId, selectedInfoad.infoAdId);
+        // console.log(values);
         await UpdateOneInfoad(selectedInfoad.negocioId, selectedInfoad.almacenId, selectedInfoad.infoAdId, values);
 
 
         setMensajeExitoAlert("Datos actualizados exitosamente.");
       } catch (error) {
         setMensajeErrorAlert("Error al actualizar los datos.");
-        console.log(error);
+        // console.log(error);
       } finally {
         setLoading(false);
       }

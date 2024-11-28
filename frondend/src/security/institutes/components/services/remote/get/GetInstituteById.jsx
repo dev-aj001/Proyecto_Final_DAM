@@ -4,7 +4,7 @@ export function getInstituteById(id) {
   return new Promise((resolve, reject) => {
     const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'buscar/' + id}`;
 
-    console.log("URL de la solicitud:", apiUrl);  // Verificar la URL generada
+    // console.log("URL de la solicitud:", apiUrl);  // Verificar la URL generada
 
     axios.get(apiUrl)
       .then((response) => {
@@ -15,7 +15,7 @@ export function getInstituteById(id) {
           console.error("No se pudo realizar correctamente la petición <<getInstituteById - Services>>", data);
           reject(data); // Enviar el objeto de error como rechazo
         } else {
-          console.log("Instituto obtenido:", data.data);
+          // console.log("Instituto obtenido:", data.data);
           resolve(data.data);  // Solo devolver los datos necesarios del instituto
         }
       })

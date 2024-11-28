@@ -34,6 +34,7 @@ const DeleteInventoryModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
                 // Iterar sobre todos los inventarios seleccionados y eliminarlos
                 for (const inventory of selectInventory) {
                     await DeleteOneInventory(inventory._id); // Llamar al servicio para eliminar cada inventario
+                    console.log("se elimino un inventario")
                 }
                 setMensajeExitoAlert("Inventarios eliminados correctamente."); // Mostrar mensaje de éxito
                 fetchData(); // Actualizar la lista de inventarios
@@ -62,6 +63,16 @@ const DeleteInventoryModal = ({ showDeleteModal, setShowDeleteModal, fetchData, 
             </DialogTitle>
 
             <DialogContent>
+            {mensajeErrorAlert && (
+                    <Typography color="error" sx={{ marginBottom: 2 }}>
+                        {mensajeErrorAlert}
+                    </Typography>
+                )}
+                {mensajeExitoAlert && (
+                    <Typography color="success" sx={{ marginBottom: 2 }}>
+                        {mensajeExitoAlert}
+                    </Typography>
+                )}
                 {Array.isArray(selectInventory) && selectInventory.length > 0 ? (
                     <>
                         <Typography variant="body2" sx={{ marginBottom: 2 }}>

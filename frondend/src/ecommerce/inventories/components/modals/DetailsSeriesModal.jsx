@@ -15,14 +15,14 @@ const DetailsSeriesModal = ({ showDetailsModal, setShowDetailsModal, selectedSer
     };
 
     useEffect(() => {
-        console.log("selectedSeries",selectedSeries);
+        // console.log("selectedSeries",selectedSeries);
         const fetchSeriesData = async () => {
             setLoading(true);
             try {
                 const details = await Promise.all(
                     selectedSeries.map(series => getseriesById(series.negocioId, series.id_almacen, series.id_serie))
                 );
-                console.log("details",details);
+                // console.log("details",details);
                 setSeriesData(details);
 
             } catch (error) {

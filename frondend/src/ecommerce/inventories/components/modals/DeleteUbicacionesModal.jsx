@@ -18,7 +18,7 @@ const DeleteUbicacionesModal = ({ showDeleteModal, setShowDeleteModal, fetchData
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
 
     useEffect(() => {
-        console.log("Series seleccionadas:", selectUbicaciones);
+        // console.log("Series seleccionadas:", selectUbicaciones);
 
         // Aquí no se realiza ógica adicional porque los almacenes ya se reciben como prop
     }, [selectUbicaciones]);

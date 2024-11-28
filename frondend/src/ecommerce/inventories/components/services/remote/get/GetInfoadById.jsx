@@ -6,18 +6,18 @@ export function getInfoadById(idNeg, idAlmac,idInfoad) {
     const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/infoad/' 
       + idNeg + '/almacen/' + idAlmac + '/series/' + idInfoad}`;
 
-    console.log("URL de la solicitud:", apiUrl);
+    // console.log("URL de la solicitud:", apiUrl);
 
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (!data.success) {
           console.error("Error en la petición <<getIInfoadById - Services>>", data);
           reject(data);
         } else {
-          console.log("Infoad obtenido:", data.data);
+          // console.log("Infoad obtenido:", data.data);
           resolve(data.data); // Devolver los datos del inventario
         }
       })

@@ -17,26 +17,26 @@ const AddAlmacenesModal = ({ showAddModal, setShowAddModal, fetchData }) => {
   const [loading, setLoading] = useState(false);
   const [inventories, setInventories] = useState([]); // Estado para almacenar los inventarios
 
+  const fetchInventories = async () => {
+    try {
+      const allInventoriesData = await getAllInventories();
+      const validatedData = allInventoriesData.map((item) => ({
+        _id: item._id || "No disponible",
+        Nombre: item.nombre || "No disponible",
+        Telefono: item.contacto?.telefono || "No disponible",
+        Email: item.contacto?.email || "No disponible",
+        Direccion: "C.P.:" + item.direccion?.codigo_postal + ", Colonia: " + item.direccion?.colonia || "No disponible",
+      }));
+      setInventories(validatedData); // Asignar los datos al estado de inventories
+    } catch (error) {
+      console.error("Error fetching inventories:", error);
+    }
+  };
+  
   // Cargar los inventarios al iniciar el componente
   useEffect(() => {
-    const fetchInventories = async () => {
-      try {
-        const allInventoriesData = await getAllInventories();
-        const validatedData = allInventoriesData.map((item) => ({
-          _id: item._id || "No disponible",
-          Nombre: item.nombre || "No disponible",
-          Telefono: item.contacto?.telefono || "No disponible",
-          Email: item.contacto?.email || "No disponible",
-          Direccion: "C.P.:" + item.direccion?.codigo_postal + ", Colonia: " + item.direccion?.colonia || "No disponible",
-        }));
-        setInventories(validatedData); // Asignar los datos al estado de inventories
-      } catch (error) {
-        console.error("Error fetching inventories:", error);
-      }
-    };
-
     fetchInventories();
-  }, []);
+  }, [showAddModal]);
 
   const formik = useFormik({
     initialValues: {
@@ -216,7 +216,7 @@ const AddAlmacenesModal = ({ showAddModal, setShowAddModal, fetchData }) => {
           </LoadingButton>
           <LoadingButton
             onClick={() => {
-              console.log(formik.values);
+              // console.log(formik.values);
             }}
             color="primary"
             startIcon={<SaveIcon />}

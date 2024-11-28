@@ -6,18 +6,18 @@ export function getAllseriesById(idNeg, idAlmac) {
     const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/series/' 
       + idNeg + '/almacen/' + idAlmac }`;
 
-    console.log("URL de la solicitud:", apiUrl);
+    // console.log("URL de la solicitud:", apiUrl);
 
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (!data.success) {
           console.error("Error en la petición <<getseriesById - Services>>", data);
           reject(data);
         } else {
-          console.log("Series obtenido:", data.data);
+          // console.log("Series obtenido:", data.data);
           resolve(data.data); // Devolver los datos del inventario
         }
       })

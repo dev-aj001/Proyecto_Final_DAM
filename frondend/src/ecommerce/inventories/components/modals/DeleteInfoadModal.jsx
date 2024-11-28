@@ -18,7 +18,7 @@ const DeleteInfoadModal = ({ showDeleteModal, setShowDeleteModal, fetchData, sel
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
 
     useEffect(() => {
-        console.log("Info seleccionadas:", selectInfo);
+        // console.log("Info seleccionadas:", selectInfo);
 
         // Aquí no se realiza ógica adicional porque los almacenes ya se reciben como prop
     }, [selectInfo]);

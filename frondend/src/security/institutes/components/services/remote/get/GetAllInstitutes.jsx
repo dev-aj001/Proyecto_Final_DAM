@@ -6,7 +6,7 @@ export function getAllInstitutes() {
       import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + "institutos"
     }`;
 
-    console.log("URL de la solicitud:", apiUrl); // Verificar la URL generada
+    // console.log("URL de la solicitud:", apiUrl); // Verificar la URL generada
 
     axios
       .get(apiUrl)
@@ -21,7 +21,7 @@ export function getAllInstitutes() {
           );
           reject(data); // Enviar el objeto de error como rechazo
         } else {
-          console.log("Institutos obtenidos:", data.data);
+          // console.log("Institutos obtenidos:", data.data);
           resolve(data.data); // Solo devolver el array necesario de los institutos
         }
       })

@@ -17,7 +17,7 @@ const DetailsMovimientosModal = ({ showDetailsModal, setShowDetailsModal, fetchD
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
 
     useEffect(() => {
-        console.log("Info seleccionadasmn, jn :", selectInfo);
+        // console.log("Info seleccionadasmn, jn :", selectInfo);
 
         // Aquí no se realiza ógica adicional porque los almacenes ya se reciben como prop
     }, [selectInfo]);

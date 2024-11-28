@@ -22,7 +22,7 @@ const UpdateInventoryModal = ({ showUpdateModal, setShowUpdateModal, selectedInv
     const fetchData = async () => {
       try {
         const response = await getInventoryById(selectedInventory._id);
-        console.log('Datos del inventario:', response); // Verifica la respuesta
+        // console.log('Datos del inventario:', response); // Verifica la respuesta
         setInventoryData(response.data); // Actualiza el estado
       } catch (error) {
         console.error('Error al obtener los datos del inventario:', error);

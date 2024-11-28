@@ -5,18 +5,18 @@ export function getAllUbicaciones() {
     //const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/inventories'}`;
     const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/ubicaciones/'}`;
 
-    console.log("URL de la solicitud:", apiUrl);
+    // console.log("URL de la solicitud:", apiUrl);
 
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (!data.success) {
           console.error("Error en la petición <<getAllUbicaciones - Services>>", data);
           reject(data);
         } else {
-          console.log("Inventarios obtenidos:", data.data);
+          // console.log("Inventarios obtenidos:", data.data);
           resolve(data.data); // Devolver el array de inventarios
         }
       })

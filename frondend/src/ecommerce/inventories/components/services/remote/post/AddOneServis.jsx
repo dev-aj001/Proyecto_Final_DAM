@@ -1,7 +1,7 @@
 import axios from "axios";
 const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/series/'}`;
 export const AddOneService = async (idNeg,idAlma,servis) => {
-    console.log("servis",servis);
+    // console.log("servis",servis);
     try {
         
         const response = await axios.post(apiUrl+idNeg+"/almacen/"+idAlma, servis);

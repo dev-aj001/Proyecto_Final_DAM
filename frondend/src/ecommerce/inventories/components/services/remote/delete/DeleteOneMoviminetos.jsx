@@ -7,7 +7,7 @@ export const DeleteOneMoviminetos = async (idNeg,idAlmac, id)  => {
         try {
             
             const response = await axios.delete(apiUrl);
-            console.log(response);
+            // console.log(response);
             return response;
         } catch (error) {
             console.error("Error en DeleteOneSeries:", error.response?.data || error.message);

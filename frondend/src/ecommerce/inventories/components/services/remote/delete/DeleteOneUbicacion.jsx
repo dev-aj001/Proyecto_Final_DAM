@@ -6,7 +6,7 @@ export const DeleteOneUbicacion = async (idNeg,idAlm,idSer,idUbi) => {
     try {
         
         const response = await axios.delete(apiUrl + idNeg + '/almacen/' + idAlm+'/series/'+idSer+'/ubicaciones/'+idUbi);
-        console.log(response);
+        // console.log(response);
         return response;
     } catch (error) {
         console.error("Error en DeleteOneUbicacion:", error.response?.data || error.message);

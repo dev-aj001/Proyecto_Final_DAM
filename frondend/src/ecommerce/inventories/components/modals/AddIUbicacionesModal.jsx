@@ -65,7 +65,7 @@ const AddUbicacionModal = ({ showAddModal, setShowAddModal, fetchData }) => {
 
         
         // fetchAlmacenes();
-    }, []);
+    }, [showAddModal]);
 
     const formik = useFormik({
         initialValues: {
@@ -89,7 +89,7 @@ const AddUbicacionModal = ({ showAddModal, setShowAddModal, fetchData }) => {
             setMensajeExitoAlert(null);
             setLoading(true);
             try {
-                console.log("Valores del formulario:", values);
+                // console.log("Valores del formulario:", values);
                 const data = {
                     idTipoStatusOK: values.idTipoStatusOK,
                     ubicacion: values.ubicacion,
@@ -105,7 +105,7 @@ const AddUbicacionModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                 }, 3000);
             } catch (e) {
                 setMensajeErrorAlert(e.message || "Error al crear Info ad");
-                console.log(e);
+                // console.log(e);
             } finally {
                 setLoading(false);
             }
@@ -145,7 +145,7 @@ const AddUbicacionModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                                 formik.handleChange(e);
                                 // setNegocioSeleccionado(e.target.value);
                                 fetchAlmacenes(e.target.value);
-                                console.log("Seleccion: " + e.target.value);
+                                // console.log("Seleccion: " + e.target.value);
                                 
                             }}
                             onBlur={formik.handleBlur}
@@ -181,7 +181,7 @@ const AddUbicacionModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                                 formik.handleChange(e);
                                 // setNegocioSeleccionado(e.target.value);
                                 fetchSeries(formik.values.id_negocio,e.target.value);
-                                console.log("Seleccion: " + e.target.value);
+                                // console.log("Seleccion: " + e.target.value);
                                 
                             }}
                             onBlur={formik.handleBlur}

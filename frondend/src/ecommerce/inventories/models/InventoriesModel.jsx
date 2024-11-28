@@ -20,7 +20,7 @@ export function InventoriesModel() {
 
     };
 
-    console.log(Inventories);
+    // console.log(Inventories);
 
     return Inventories;
 };

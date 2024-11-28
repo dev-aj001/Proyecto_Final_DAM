@@ -6,7 +6,7 @@ export const DeleteOneInfoad = async (idNeg,idAlm,idInfo) => {
     try {
         
         const response = await axios.delete(apiUrl + idNeg + '/almacen/' + idAlm+'/series/'+idInfo);
-        console.log(response);
+        // console.log(response);
         return response;
     } catch (error) {
         console.error("Error en DeleteOneInfoad:", error.response?.data || error.message);

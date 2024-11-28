@@ -7,7 +7,7 @@ const InstitutesNavTab = ({ currentRowInInstitutesTab, setCurrentTabInPrincipalT
     const [currenTabIndex, setCurrentTabIndex] = useState(0);
 
     const handleChange = (e) => {
-        console.log("Entro al handleChange", e.target.innerText.toUpperCase());
+        // console.log("Entro al handleChange", e.target.innerText.toUpperCase());
 
         // Actualizar el nombre de la pestaña seleccionada usando la función correcta
         setCurrentTabInPrincipalTab(e.target.innerText.toUpperCase());

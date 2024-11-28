@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function UpdateOneInstitute(instituteData) {
-    console.log("<<EJECUTA>> API <<UpdateOneInstitute>> Requiere:", instituteData);
+    // console.log("<<EJECUTA>> API <<UpdateOneInstitute>> Requiere:", instituteData);
 
     return new Promise((resolve, reject) => {
         // Enviar la solicitud PUT al endpoint correcto, utilizando `IdInstitutoOK` como parámetro de ruta
@@ -11,7 +11,7 @@ export function UpdateOneInstitute(instituteData) {
         )
         .then((response) => {
             const data = response.data;
-            console.log("<<RESPONSE>> UpdateOneInstitute", data);
+            // console.log("<<RESPONSE>> UpdateOneInstitute", data);
 
             if (!data.success) {
                 console.error("<<ERROR>> <<NO>> se ejecutó la API <<UpdateOneInstitute>> de forma correcta", data);

@@ -12,7 +12,7 @@ const institutesSlice = createSlice({
 	initialState,
 	reducers: {
 		SET_DATA_INSTITUTES: (state, action) => { 			
-                        console.log('<<REDUX-REDUCER>>:<<SET_DATA_INSTITUTES>>', action.payload);
+                        // console.log('<<REDUX-REDUCER>>:<<SET_DATA_INSTITUTES>>', action.payload);
 			//state.institutesDataArr = action.payload.institutesDataArr;
 			state.institutesDataArr = action.payload
 		}

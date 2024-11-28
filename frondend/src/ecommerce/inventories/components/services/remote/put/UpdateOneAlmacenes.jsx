@@ -4,7 +4,7 @@ export const UpdateOneAlmacen = async (negocioId, almacenId, almacen) => {
     try {
         
         const response = await axios.put(`${apiUrl}${negocioId}/almacen/${almacenId}`, almacen);    
-       console.log(`${apiUrl}${negocioId}/almacen/${almacenId}`);
+       // console.log(`${apiUrl}${negocioId}/almacen/${almacenId}`);
         return response;
     } catch (error) {
         console.error("Error en UpdateOneInventory:", error.response?.data || error.message);

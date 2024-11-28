@@ -3,7 +3,7 @@ const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/mov
 export const AddOneMoviminetos = async (idNeg, idAlmac, data) => {
     try {
         const response = await axios.post(`${apiUrl}${idNeg}/almacen/${idAlmac}`, data);
-        console.log(response, `${idNeg}/almacen/${idAlmac}`, data);
+        // console.log(response, `${idNeg}/almacen/${idAlmac}`, data);
         return response;
     } catch (error) {
         console.error("Error en AddOneInventory:", error.response?.data || error.message);

@@ -7,7 +7,7 @@ export const fetchNegocios = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAllInventories();
-      //console.log('Almacenes obtenidos:', response);
+      //// console.log('Almacenes obtenidos:', response);
       return response;  // Retorna los datos de almacenes
     } catch (error) {
       return rejectWithValue(error.message);  // Maneja el error
@@ -28,15 +28,15 @@ const negociosSlice = createSlice({
       .addCase(fetchNegocios.pending, (state) => {
         state.loading = true;
         state.error = null;
-        //console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.pending>>', state);
+        //// console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.pending>>', state);
       })
       .addCase(fetchNegocios.fulfilled, (state, action) => {
-        //console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.fulfilled>>', action.payload);
+        //// console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.fulfilled>>', action.payload);
         state.loading = false;
         state.data = action.payload;  // Almacena los datos de almacenes
       })
       .addCase(fetchNegocios.rejected, (state, action) => {
-        //console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.rejected>>', action.payload);
+        //// console.log('<<REDUX-REDUCER>>:<<fetchAlmacenes.rejected>>', action.payload);
         state.loading = false;
         state.error = action.payload;  // Almacena el error
       });

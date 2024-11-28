@@ -18,7 +18,7 @@ const DeleteMoviminetosModal = ({ showDeleteModal, setShowDeleteModal, fetchData
     const [mensajeExitoAlert, setMensajeExitoAlert] = useState("");
     
     useEffect(() => {
-        console.log("selectedMovihgcnbhgminetos:", selectedMoviminetos);
+        // console.log("selectedMovihgcnbhgminetos:", selectedMoviminetos);
 
         
     }, [selectedMoviminetos]);

@@ -7,7 +7,7 @@ export function getAllMovimientos() {
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log('All movimientos: ', response.data);
+        // console.log('All movimientos: ', response.data);
 
         if (!data.success) {
           console.error("Error en la petición <<getAllInventories - Services>>", data);

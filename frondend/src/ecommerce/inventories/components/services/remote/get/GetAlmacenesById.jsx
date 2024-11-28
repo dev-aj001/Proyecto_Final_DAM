@@ -5,18 +5,18 @@ export function getAlmacenesById(idNeg) {
     // Constuir la URL con el ID
     const apiUrl = `${import.meta.env.VITE_REST_API_SECURITY_ECOMMERCE + 'api/v1/almacenes/' + idNeg + '/almacen/'}`;
 
-    console.log("URL de la solicitud:", apiUrl);
+    // console.log("URL de la solicitud:", apiUrl);
 
     axios.get(apiUrl)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (!data.success) {
           console.error("Error en la peticiÃ³n <<getAlmacenesById - Services>>", data);
           reject(data);
         } else {
-          console.log("Almacen obtenido:", data.data);
+          // console.log("Almacen obtenido:", data.data);
           resolve(data.data); // Devolver los datos del inventario
         }
       })

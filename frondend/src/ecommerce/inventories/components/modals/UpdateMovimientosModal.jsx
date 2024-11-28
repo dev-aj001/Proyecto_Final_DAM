@@ -28,7 +28,7 @@ const UpdateMovimientosModal = ({ showUpdateModal, setShowUpdateModal, selectedM
     setLoading(true);
     try {
       const data = await getMovimientosById(selectedMovimientos?.negocioId, selectedMovimientos?.id_almacen, selectedMovimientos?.movimientoId);
-      console.log("Valores del formulario:", data);
+      // console.log("Valores del formulario:", data);
       formik.setValues({
         id_movimiento: data?.id_movimiento || "",
         tipo: data?.tipo || "",

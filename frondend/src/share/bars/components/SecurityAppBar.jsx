@@ -30,7 +30,7 @@ function ResponsiveAppBar() {
   //FIC: le agregamos el objeto e que se
   //envia al hacer click en opcion del menu.  
   const handleCloseNavMenu = (e) => {
-    console.log(e.target.innerText);
+    // console.log(e.target.innerText);
     //FIC: llamar funcion enviando e
     handleClickNavMenu(e);
     setAnchorElNav(null);
@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
     //FIC: Actualizar el estado del useState de Paginas.
     //cambiamos la opcion clickeada a mayusculas.
     function handleClickNavMenu(e){
-        //console.log(e.target.innerText.toUpperCase());
+        //// console.log(e.target.innerText.toUpperCase());
         setMyPages(e.target.innerText.toUpperCase());
     }
   
@@ -55,7 +55,7 @@ function ResponsiveAppBar() {
         switch (myPages) {
             case "":
                 navigate("/");
-                //console.log("entro a home");
+                //// console.log("entro a home");
                 break;
             case "ETIQUETAS":
                 navigate("/labels");

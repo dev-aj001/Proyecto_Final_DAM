@@ -61,15 +61,15 @@ const UpdateUbicacionesModal = ({ showUpdateModal, setShowUpdateModal, selectedU
         setMensajeExitoAlert(null);
         setLoading(true);
         try {
-          console.log(selectedUbicaciones.negocioId, selectedUbicaciones.almacenId, selectedUbicaciones.serieId,selectedUbicaciones._id);
-         console.log(values);
+          // console.log(selectedUbicaciones.negocioId, selectedUbicaciones.almacenId, selectedUbicaciones.serieId,selectedUbicaciones._id);
+         // console.log(values);
          await UpdateOneUbicacion(selectedUbicaciones.negocioId, selectedUbicaciones.almacenId, selectedUbicaciones.serieId,selectedUbicaciones._id, values);
          
          
          setMensajeExitoAlert("Datos actualizados exitosamente.");
         } catch (error) {
           setMensajeErrorAlert("Error al actualizar los datos.");
-          console.log(error);
+          // console.log(error);
         } finally {
           setLoading(false);
         }

@@ -65,15 +65,15 @@ const UpdateSeriesModal = ({ showUpdateModal, setShowUpdateModal, selectedSeries
         setMensajeExitoAlert(null);
         setLoading(true);
         try {
-          console.log(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie);
-         console.log(values);
+          // console.log(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie);
+         // console.log(values);
          await UpdateOneSeries(selectedSeries.negocioId, selectedSeries.id_almacen, selectedSeries.id_serie, values);
          
          
          setMensajeExitoAlert("Datos actualizados exitosamente.");
         } catch (error) {
           setMensajeErrorAlert("Error al actualizar los datos.");
-          console.log(error);
+          // console.log(error);
         } finally {
           setLoading(false);
         }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function DeleteOneInstitute(instituteId) {
-    console.log("<<EJECUTA>> API <<DeleteOneInstitute>> Requiere:", instituteId);
+    // console.log("<<EJECUTA>> API <<DeleteOneInstitute>> Requiere:", instituteId);
 
     return new Promise((resolve, reject) => {
         // Enviar la solicitud DELETE al endpoint correcto utilizando `instituteId` como parámetro de ruta
@@ -10,7 +10,7 @@ export function DeleteOneInstitute(instituteId) {
         )
         .then((response) => {
             const data = response.data;
-            console.log("<<RESPONSE>> DeleteOneInstitute", data);
+            // console.log("<<RESPONSE>> DeleteOneInstitute", data);
 
             if (!data.success) {
                 console.error("<<ERROR>> <<NO>> se ejecutó la API <<DeleteOneInstitute>> de forma correcta", data);

@@ -72,7 +72,7 @@ const UpdateAlmacenesModal = ({ showUpdateModal, setShowUpdateModal, selectedAlm
       setLoading(true);
       try {
 
-        console.log("Valores del formulario:", values);
+        // console.log("Valores del formulario:", values);
         const response = await UpdateOneAlmacen(selectedAlmacenes.idNeg, selectedAlmacenes._id, values);
         if (!response || ![200, 201].includes(response.status)) {
           throw new Error(response.data?.message || "Error al actualizar almacén");

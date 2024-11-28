@@ -6,7 +6,7 @@ export const DeleteOneSeries = async (idNeg,idAlm,idSer) => {
     try {
         
         const response = await axios.delete(apiUrl + idNeg + '/almacen/' + idAlm+'/series/'+idSer);
-        console.log(response);
+        // console.log(response);
         return response;
     } catch (error) {
         console.error("Error en DeleteOneSeries:", error.response?.data || error.message);

@@ -25,7 +25,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
         try {
             const allInventoriesData = await getAlmacenesById(id);
             setAlmacen(allInventoriesData); // Asignar los datos al estado de inventories
-            console.log("Almacenes obtenidos:", allInventoriesData);
+            // console.log("Almacenes obtenidos:", allInventoriesData);
         } catch (error) {
             console.error("Error fetching inventories:", error);
         }
@@ -51,7 +51,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
 
         
         // fetchAlmacenes();
-    }, []);
+    }, [showAddModal]);
 
     const formik = useFormik({
         initialValues: {
@@ -78,7 +78,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
             setMensajeExitoAlert(null);
             setLoading(true);
             try {
-                console.log("Valores del formulario:", values);
+                // console.log("Valores del formulario:", values);
                 const data = {
                     id_movimiento: values.id_movimiento,
                     tipo: values.tipo,
@@ -138,7 +138,7 @@ const AddMovimientosModal = ({ showAddModal, setShowAddModal, fetchData }) => {
                                 formik.handleChange(e);
                                 // setNegocioSeleccionado(e.target.value);
                                 fetchAlmacenes(e.target.value);
-                                console.log("Seleccion: " + e.target.value);
+                                // console.log("Seleccion: " + e.target.value);
                             }}
                             onBlur={formik.handleBlur}
                             error={formik.touched.id_negocio && Boolean(formik.errors.id_negocio)}

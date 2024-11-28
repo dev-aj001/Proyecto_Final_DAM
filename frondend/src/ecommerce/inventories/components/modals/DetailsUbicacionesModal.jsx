@@ -14,7 +14,7 @@ const DetailsUbicacionesModal = ({ showDetailsModal, setShowDetailsModal, select
 
     useEffect(() => {
 
-        console.log("selecteUbicaciones", selecteUbicaciones);
+        // console.log("selecteUbicaciones", selecteUbicaciones);
        
     }, [selecteUbicaciones]);
 

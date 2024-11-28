@@ -1,11 +1,28 @@
+import React, { useEffect } from 'react';
 import { RouterProvider } from "react-router-dom";
-import Footer from "./share/footer/components/Footer";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAlmacenes } from './ecommerce/redux2/slices/almacenesSlice';
+import { fetchNegocios } from './ecommerce/redux2/slices/negociosSlice';
+import { fetchSeries } from './ecommerce/redux2/slices/seriesSlice';
+import { fetchMovimiento } from './ecommerce/redux2/slices/movimientosSlice';
+import { fetchInfoad } from './ecommerce/redux2/slices/infoadSlice';
 
-//import  Router from "./navigation/NaviRoutesSecurity.jsx";
-//import  Router from "./navigation/NaviRoutesEducation";
-import  Router from "./navigation/NaviRoutesCommerce";
+import Footer from "./share/footer/components/Footer";
+import Router from "./navigation/NaviRoutesCommerce";
 
 export default function AppAllModules() {
+
+    const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Despacha la acción para obtener los almacenes cuando el componente se monta
+    dispatch(fetchAlmacenes());
+    dispatch(fetchNegocios());
+    dispatch(fetchSeries());
+    dispatch(fetchMovimiento());
+    dispatch(fetchInfoad());
+  }, [dispatch]);
+
     return (
         <>
             <div id='div-app'>
@@ -15,6 +32,6 @@ export default function AppAllModules() {
                     <Footer />
                 </div>
             </div>
-        </> 
+        </>
     );
 }

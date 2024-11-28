@@ -14,14 +14,14 @@ const DetailsMovimientosModal = ({ showDetailsModal, setShowDetailsModal,  selec
     };
 
     useEffect(() => {
-        console.log(selectedMovimientos);
+        // console.log(selectedMovimientos);
         const fetchMovimientos = async () => {
             setLoading(true);
             try {
                 const details = await Promise.all(
                     selectedMovimientos.map(series => getMovimientosById(series.negocioId, series.id_almacen, series.movimientoId))
                 );
-                console.log("details",details);
+                // console.log("details",details);
                 setMovimientos(details);
 
             } catch (error) {

@@ -121,6 +121,25 @@ const UbicaionesColumns = [
 
 
 const InventoriesTable = () => {
+
+
+  const fetchInventories = async () => {
+    try {
+      const allInventoriesData = await getAllInventories();
+      const validatedData = allInventoriesData.map((item) => ({
+        _id: item._id || "No disponible",
+        Nombre: item.nombre || "No disponible",
+        Telefono: item.contacto?.telefono || "No disponible",
+        Email: item.contacto?.email || "No disponible",
+        Direccion: "C.P.:" + item.direccion?.codigo_postal + ", Colonia: " + item.direccion?.colonia || "No disponible",
+      }));
+      setInventories(validatedData); // Asignar los datos al estado de inventories
+    } catch (error) {
+      console.error("Error fetching inventories:", error);
+    }
+  };
+
+
   const [loadingTable, setLoadingTable] = useState(true);
   const [selectedTab, setSelectedTab] = useState(0); // 0 será la primera pestaña
 
@@ -247,8 +266,8 @@ const InventoriesTable = () => {
 
 
 
-      console.log("Almacenes obtenidos:", validatedAlmacenesData);
-      console.log(" series obtenidos:", validatedSeriesData);
+      // console.log("Almacenes obtenidos:", validatedAlmacenesData);
+      // console.log(" series obtenidos:", validatedSeriesData);
 
       const allMoviminetosData = await getAllMovimientos();
       const validatedMovimientosData = allMoviminetosData.map((item) => ({
@@ -302,9 +321,9 @@ const InventoriesTable = () => {
 
       setLoadingTable(false);
 
-      console.log("Movimientos Obtenidos: " + allMoviminetosData);
+      // console.log("Movimientos Obtenidos: " + allMoviminetosData);
 
-      //  console.log("Almacenes obtenidos:", validatedAlmacenesData);
+      //  // console.log("Almacenes obtenidos:", validatedAlmacenesData);
 
 
 
@@ -483,7 +502,7 @@ const InventoriesTable = () => {
                     setUpdateAlmacenesShowModal(true);
                     setSelectedAlmacenes(selectedData[0]);  // Guardamos el inventario seleccionado
 
-                    console.log("Datos seleccionados:", selectedData);
+                    // console.log("Datos seleccionados:", selectedData);
                   }}
                 >
                   <EditIcon />
@@ -587,7 +606,7 @@ const InventoriesTable = () => {
                     setUpdateSeriesShowModal(true);
                     setSelectedSeries(selectedData[0]);  // Guardamos el serie seleccionado
 
-                    console.log("Datos seleccionados:", selectedData);
+                    // console.log("Datos seleccionados:", selectedData);
                   }}
                 >
                   <EditIcon />
@@ -613,7 +632,7 @@ const InventoriesTable = () => {
                   const selectedData = Object.keys(rowSelectionSeries).map((key) => seriesData[key]);
 
                   // Pasa solo el ID del serie seleccionado al modal de actualización\
-                  console.log('selectedData boton', selectedData);
+                  // console.log('selectedData boton', selectedData);
                   setDetailsSeriesShowModal(true);
                   setSelectedSeries(selectedData);  // Guardamos el serie seleccionado
 
@@ -689,7 +708,7 @@ const InventoriesTable = () => {
                     setUpdateMovimientosShowModal(true);
                     setSelectedMovimientos(selectedData[0]);  // Guardamos el serie seleccionado
 
-                    console.log("Datos seleccionados movimientos:", selectedData);
+                    // console.log("Datos seleccionados movimientos:", selectedData);
                   }}
                 >
                   <EditIcon />
@@ -701,7 +720,7 @@ const InventoriesTable = () => {
                   const selectedData = Object.keys(rowSelectionMovimientos).map((key) => movimientosData[key]);
 
                   // Pasa solo el ID del serie seleccionado al modal de actualización\
-                  console.log('movimientos delete', selectedData);
+                  // console.log('movimientos delete', selectedData);
                   setDeleteMovimientosShowModal(true);
                   setSelectedMovimientos(selectedData);  // Guardamos el serie seleccionado
 
@@ -790,7 +809,7 @@ const InventoriesTable = () => {
                     setUpdateInfoadShowModal(true);
                     setSelectedInfoad(selectedData[0]);  // Guardamos el serie seleccionado
 
-                    console.log("Datos seleccionados movimientos:", selectedData);
+                    // console.log("Datos seleccionados movimientos:", selectedData);
                   }}
                 >
                   <EditIcon />
@@ -801,7 +820,7 @@ const InventoriesTable = () => {
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
                   // Pasa solo el ID del inventario seleccionado al modal de 
-                  console.log('infoad delete', selectedData);
+                  // console.log('infoad delete', selectedData);
                   setDeleteInfoadShowModal(true);
                   setSelectedInfoad(selectedData);  // Guardamos el inventario seleccionado
                 }}>
@@ -813,7 +832,7 @@ const InventoriesTable = () => {
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionInfoad).map((key) => InfoadData[key]);
                   // Pasa solo el ID del inventario seleccionado al modal de actualización\
-                  console.log('selectedData boton', selectedData);
+                  // console.log('selectedData boton', selectedData);
                   setDetailsInfoadShowModal(true);
                   setSelectedInfoad(selectedData);  // Guardamos el inventario seleccionado
 
@@ -881,7 +900,7 @@ const InventoriesTable = () => {
                       alert("Por favor, seleccione una sola fila para editar.");
                       return;
                     }
-                    console.log("Datos seleccionados ubicaciones:", selectedData);
+                    // console.log("Datos seleccionados ubicaciones:", selectedData);
 
                     setUpdateUbicacionesShowModal(true);
                     setSelectedUbicaciones(selectedData[0]);  // Guardamos el serie seleccionado
@@ -896,7 +915,7 @@ const InventoriesTable = () => {
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionUbicaciones).map((key) => ubicacionesData[key]);
                   // Pasa solo el ID del inventario seleccionado al modal de 
-                  console.log('infoad Ubicaciones', selectedData);
+                  // console.log('infoad Ubicaciones', selectedData);
                   setDeleteUbicacionesShowModal(true);
                   setSelectedUbicaciones(selectedData);  // Guardamos el inventario seleccionado
                 }}>
@@ -908,7 +927,7 @@ const InventoriesTable = () => {
                 <IconButton onClick={() => {
                   const selectedData = Object.keys(rowSelectionUbicaciones).map((key) => ubicacionesData[key]);
                   // Pasa solo el ID del inventario seleccionado al modal de 
-                  console.log('infoadqweq3 Ubicaciones', selectedData);
+                  // console.log('infoadqweq3 Ubicaciones', selectedData);
                   setDetailsUbicacionesShowModal(true);
                   setSelectedUbicaciones(selectedData);  // Guardamos el inventario seleccionado
                 }}>
